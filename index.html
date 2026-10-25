@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="logo.gif">
-<title>بوابة خدمات الإعلام وتكنولوجيا المعلومات - مدرسة تاونزة العلمية</title>
+<title>المنصة الرقمية - مدرسة تاونزة العلمية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -81,49 +81,49 @@ table{width:100%;border-collapse:collapse;background:#fff}
 td,th{border-bottom:1px solid var(--line);padding:8px;text-align:start;font-size:15px}
 footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-top:1px solid var(--line);background:#fff}footer img{display:block;margin:0 auto 6px}
 [hidden]{display:none!important}
-@media (prefers-reduced-motion:no-preference){.card,</style>
+@media (prefers-reduced-motion:no-preference){.card,.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+a.dept{display:block;background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:22px;text-decoration:none;color:inherit}
+a.dept.rust{border-top-color:#c2410c}
+a.dept:hover{border-color:var(--navy)}
+a.dept h3{margin:8px 0 4px;color:var(--deep);font-size:22px}
+a.dept p{margin:0 0 10px;color:var(--mute);font-size:15px}
+a.dept .go{color:var(--navy);font-weight:700}
+.hero.solo{grid-template-columns:1fr;padding-bottom:34px}
+.crumb{display:inline-block;margin-bottom:12px;color:var(--navy);text-decoration:none;font-weight:600}
+.steps{margin:8px 0 0;padding-inline-start:20px;font-size:15px;color:#e5edff}
+.steps li{margin-bottom:4px}
+.pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
+
+</style>
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="#home"><img src="logo.gif" alt="شعار مدرسة تاونزة العلمية"><span>مدرسة تاونزة العلمية<small>قسم الإعلام وتكنولوجيا المعلومات</small></span></a>
+  <a class="brand" href="#home"><img src="logo.gif" alt="شعار مدرسة تاونزة العلمية"><span>مدرسة تاونزة العلمية<small>المنصة الرقمية للخدمات</small></span></a>
   <nav>
-    <a href="#home" data-v="home">الرئيسية والخدمات</a>
+    <a href="#home" data-v="home">الرئيسية والإدارات</a>
     <a href="#new" data-v="new">تقديم طلب جديد</a>
     <a href="#track" data-v="track">تتبع طلباتي</a>
   </nav>
 </div></header>
 
 <main>
-<!-- الرئيسية -->
 <section id="home">
-  <div class="hero">
+  <div class="hero solo">
     <div>
-      <span class="pill">البوابة الرقمية الموحدة - العام الدراسي 2026-2027</span>
-      <h1>مرحباً بك في بوابة خدمات الإعلام وتكنولوجيا المعلومات</h1>
-      <p>منظومة رقمية لخدمة الطاقم التربوي والتعليمي بمدرسة تاونزة العلمية. قدّم طلبك وتابع حالته: جاهز للاستلام، أو قيد التنفيذ، أو يحتاج مزيداً من التفاصيل.</p>
+      <span class="pill">المنصة الرقمية الموحدة - العام الدراسي 2026-2027</span>
+      <h1>مرحباً بك في المنصة الرقمية لمدرسة تاونزة العلمية</h1>
+      <p>اختر الإدارة المعنية، وقدّم طلبك، وتابع حالته من مكان واحد: جاهز للاستلام، أو قيد التنفيذ، أو يحتاج مزيداً من التفاصيل.</p>
       <div class="row"><a class="btn hot" href="#new">تقديم طلب جديد</a><a class="btn ghost" href="#track">متابعة حالة طلباتي</a></div>
     </div>
-    <aside class="quick">
-      <span class="open" id="openNow">...</span><b>مكتب الاستجابة السريعة</b>
-      <p>فريق القسم جاهز لاستقبال طلبات الطباعة والتصميم والتغطية والصيانة.</p>
-      <div style="color:#d3e0fa;font-size:15px">أوقات العمل: السبت إلى الخميس، 08:00 - 13:00</div>
-      <div style="color:#d3e0fa;font-size:15px;margin-top:4px">استقبال المكتب يومياً: 09:30 - 10:00 و11:20 - 11:40</div>
-    </aside>
   </div>
-  <div class="stats">
-    <div class="stat"><span class="si" style="background:#d9f5ee">✅</span><div><b id="sReady">-</b><small>طلبات جاهزة للاستلام</small></div></div>
-    <div class="stat"><span class="si" style="background:#e0e9ff">⏳</span><div><b id="sProg">-</b><small>طلبات قيد التنفيذ</small></div></div>
-    <div class="stat"><span class="si" style="background:#fff0d6">💬</span><div><b id="sInfo">-</b><small>بانتظار مزيد من التفاصيل</small></div></div>
-    <div class="stat"><span class="si" style="background:#ffe9de">📋</span><div><b id="sMine">0</b><small>طلباتي من هذا الجهاز</small></div></div>
-  </div>
-  <h2>الخدمات الأكاديمية والتقنية</h2>
-  <p class="mute" style="margin-top:-6px">اختر الخدمة المطلوبة لتبدأ تعبئة النموذج.</p>
-  <div class="svcs" id="svcCards"></div>
+  <h2>الإدارات والخدمات</h2>
+  <div class="dept-grid" id="deptCards"></div>
 </section>
 
-<!-- طلب جديد -->
+<section id="dept" hidden><div id="deptBox"></div></section>
+
 <section id="new" hidden>
-  <h2 style="margin-top:0">طلب خدمة جديد</h2>
+  <h2 style="margin-top:0">طلب جديد</h2>
   <div id="err" class="err" hidden></div>
   <form id="form" novalidate>
     <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
@@ -131,22 +131,21 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-to
     <div class="two">
       <div class="f"><label for="name">الاسم الكامل</label><input id="name" name="name" required autocomplete="name"></div>
       <div class="f"><label for="email">البريد الإلكتروني (لنرد عليك)</label><input id="email" name="email" type="email" required autocomplete="email"></div>
-      <div class="f"><label for="dept">القسم أو المادة</label><input id="dept" name="dept" required placeholder="مثال: اللغة العربية"></div>
-      <div class="f"><label for="title">عنوان الطلب</label><input id="title" name="title" required placeholder="مثال: اختبار الفصل الأول، 120 نسخة"></div>
+      <div class="f" id="fw_dept"><label for="dept">القسم أو المادة</label><input id="dept" name="dept" required placeholder="مثال: اللغة العربية"></div>
+      <div class="f" id="fw_title"><label for="title">عنوان الطلب</label><input id="title" name="title" required placeholder="مثال: اختبار الفصل الأول، 120 نسخة"></div>
     </div>
-    <div class="f"><label style="color:var(--navy)" id="extraTitle">2. تفاصيل الطلب</label></div>
+    <div class="f"><label style="color:var(--navy)" id="extraTitle">2. التفاصيل</label></div>
     <div class="two" id="extra"></div>
     <div class="two">
-      <div class="f"><label for="due">تاريخ التسليم المطلوب</label><input id="due" name="due" type="date" required></div>
-      <div class="f"><label for="link">رابط الملفات (Google Drive أو غيره)</label><input id="link" name="link" type="url" placeholder="https://..."></div>
+      <div class="f" id="fw_due"><label for="due">تاريخ التسليم المطلوب</label><input id="due" name="due" type="date" required></div>
+      <div class="f" id="fw_link"><label for="link">رابط الملفات (Google Drive أو غيره)</label><input id="link" name="link" type="url" placeholder="https://..."></div>
     </div>
-    <div class="f"><label for="notes">ملاحظات إضافية</label><textarea id="notes" name="notes"></textarea></div>
+    <div class="f"><label for="notes">ملاحظات إضافية (اختياري)</label><textarea id="notes" name="notes"></textarea></div>
     <button class="btn" id="send" type="submit">إرسال الطلب</button>
   </form>
   <div id="done" class="ok" hidden></div>
 </section>
 
-<!-- طلباتي -->
 <section id="track" hidden>
   <h2 style="margin-top:0">طلباتي</h2>
   <div id="mine"></div>
@@ -155,30 +154,15 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-to
   <div id="qres" style="margin-top:12px"></div>
 </section>
 
-<!-- إدارة القسم -->
-<section id="admin" hidden>
-  <h2 style="margin-top:0">تحديث حالات الطلبات (لفريق القسم)</h2>
-  <p class="mute">ضع رقم الطلب الذي وصل بريدك، واختر حالته. حين تنتهي نزّل الملف وارفعه إلى مجلد الموقع ليراه الموظفون.</p>
-  <div id="dirty" class="err" hidden></div>
-  <div class="card">
-    <div class="two">
-      <div class="f"><label for="aid">رقم الطلب</label><input id="aid" dir="ltr" placeholder="TWZ-2026-AB12"></div>
-      <div class="f"><label for="ast">الحالة</label><select id="ast"></select></div>
-    </div>
-    <div class="f"><label for="anote">رسالة للموظف (اختياري)</label><input id="anote" placeholder="مثال: جاهز في مكتب الدعم، الطابق الأول"></div>
-    <div class="row"><button class="btn" id="aadd">حفظ الحالة</button><button class="btn alt" id="adl">تنزيل statuses.json</button></div>
-  </div>
-  <h2>الحالات الحالية</h2>
-  <div id="alist"></div>
-</section>
+<section id="admin" hidden></section>
 </main>
-<footer><img src="logo.gif" alt="" height="56"><div>قسم الإعلام وتكنولوجيا المعلومات - مدرسة تاونزة العلمية</div></footer>
+<footer><img src="logo.gif" alt="" height="56"><div>مدرسة تاونزة العلمية - المنصة الرقمية للخدمات</div></footer>
 
 <script>
 const FORMSPREE = "https://formspree.io/f/mpppqqwe";
-/* الحالات التلقائية: الصق هنا رابط تطبيق Google Apps Script (ينتهي بـ /exec) ورابط جدول Google Sheet */
 const API = "https://script.google.com/macros/s/AKfycbwE4NEa0P8fOtxypP7wJRfDOik5LLwrT2CWLLxcguxUZZmTAlbnU4shldbTTtgWxukT/exec";
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/1hgR-Vq1-lYTlGIxtJtWHoeZUvXe1gIjajq-11p5o5wY/edit";
+
 const ST = {
   new:   ["تم الاستلام", "#475569"],
   prog:  ["قيد التنفيذ", "#1d4ed8"],
@@ -187,100 +171,165 @@ const ST = {
   done:  ["تم التسليم", "#334155"],
   off:   ["ملغى", "#b91c1c"]
 };
+const DOCS = ["شهادة العمل","كشف الأجرة","كشف العمل والأجرة ATS","طلب منح عائلية","طلب تفعيل/استخراج بطاقة الشفاء","تصريح بإستئناف أو عدم إستئناف العمل","نموذج طلب تكوين","شهادة حسن السيرة","وصل خدمات طبية - تعاضدية البنائين","نموذج طلب استقالة"];
+/* الإدارات: لإضافة إدارة جديدة أضف عنصراً هنا وخدماتها في SV */
+const DEPTS = {
+  it: {n:"الإعلام وتكنولوجيا المعلومات", i:"💻", c:"", d:"طباعة الأوراق، التصاميم، تغطية الأحداث، وصيانة الحواسيب.", svc:["print","design","cover","fix"],
+    h1:"بوابة خدمات الإعلام وتكنولوجيا المعلومات",
+    p:"منظومة رقمية لخدمة الطاقم التربوي والتعليمي. قدّم طلبك وتابع حالته: جاهز للاستلام، أو قيد التنفيذ، أو يحتاج مزيداً من التفاصيل.",
+    aside:`<span class="open" id="openNow">...</span><b>مكتب الاستجابة السريعة</b>
+      <p>فريق القسم جاهز لاستقبال طلبات الطباعة والتصميم والتغطية والصيانة.</p>
+      <div style="color:#d3e0fa;font-size:15px">أوقات العمل: السبت إلى الخميس، 08:00 - 13:00</div>
+      <div style="color:#d3e0fa;font-size:15px;margin-top:4px">استقبال المكتب يومياً: 09:30 - 10:00 و11:20 - 11:40</div>`},
+  hr: {n:"الموارد البشرية", i:"👥", c:"rust", d:"طلب الوثائق الإدارية: شهادة العمل، كشف الأجرة، كشف ATS، بطاقة الشفاء وغيرها.", svc:["doc"],
+    h1:"بوابة خدمات الموارد البشرية",
+    p:"آلية رقمية موحدة ورسمية لطلب الوثائق الإدارية، تضمن التنظيم والشفافية وسرعة الاستجابة وحفظ الحقوق.",
+    aside:`<b>خطوات طلب الوثيقة</b><ol class="steps">
+      <li>املأ جميع الخانات بدقة ووضوح، بحسب نوع الوثيقة والغرض الحقيقي من طلبها.</li>
+      <li>تُعالج الطلبات في أجل أقصاه 24 ساعة، ما لم تقتضِ طبيعة الوثيقة مدة إضافية.</li>
+      <li>حين تصبح حالة الطلب «جاهز للاستلام» توجّه إلى مكتب الاستقبال.</li>
+      <li>التوقيع إجباري في سجل استلام الوثائق عند الاستلام.</li>
+      <li>للإدارة حق استدعاء المعني إلى مكتبها إذا كانت الوثيقة ذات طابع خاص أو تحتاج توضيحاً.</li></ol>`}
+};
+/* الخدمات: f = الحقول [الاسم، العنوان، النوع، الخيارات، إجباري] ؛ selo = قائمة مع خيار «أخرى» */
 const SV = {
-  print: {t:"طباعة وتصوير", i:"🖨️", d:"اختبارات، أوراق عمل، شهادات، مطويات", f:[
+  print: {dept:"it", t:"طباعة وتصوير", i:"🖨️", tag:"طباعة داخلية", c:"", d:"إعداد وسحب الاختبارات والفروض وأوراق العمل وشهادات النتائج، مع خيارات التغليف والتدبيس.",
+    ch:["الاختبارات والفروض","أوراق العمل والبطاقات","سحب ملوّن","تغليف وتدبيس"], f:[
     ["copies","عدد النسخ","number"],["size","المقاس","select",["A4","A3","A5"]],
     ["color","اللون","select",["أبيض وأسود","ملوّن"]],["sides","الوجه","select",["وجه واحد","وجهان"]],
     ["finish","التدبيس أو التغليف","select",["بدون","تدبيس","تغليف","تجليد"]]]},
-  design: {t:"تصميم", i:"🎨", d:"شهادات، ملصقات، مطويات، بطاقات", f:[
+  design: {dept:"it", t:"تصميم", i:"🎨", tag:"تصاميم بهوية المدرسة", c:"rust", d:"تصميم الملصقات والمطويات والبطاقات وشهادات التميز والتقدير والعروض التقديمية.",
+    ch:["شهادات التميز والتقدير","ملصقات وبوسترات","مطويات وبطاقات","عروض تقديمية"], f:[
     ["kind","نوع التصميم","select",["شهادة","ملصق","مطوية","بطاقة","مجلة","عرض تقديمي","أخرى"]],
     ["dims","المقاس المطلوب","text"],["content","النص المطلوب إدراجه","area"]]},
-  cover: {t:"تغطية الأحداث", i:"📷", d:"تصوير وفيديو للفعاليات والأنشطة", f:[
+  cover: {dept:"it", t:"تغطية الأحداث", i:"📷", tag:"صور وفيديو", c:"", d:"تصوير وتوثيق الأنشطة والمسابقات والاحتفالات والرحلات وحفظها في الأرشيف.",
+    ch:["الأنشطة والمسابقات","الاحتفالات","الرحلات والمعارض","توثيق أرشيفي"], f:[
     ["event","اسم الفعالية","text"],["edate","تاريخ الفعالية","date"],["etime","الوقت","text"],
     ["place","المكان","text"],["ckind","نوع التغطية","select",["تصوير فوتوغرافي","فيديو","الاثنان"]]]},
-  fix: {t:"صيانة الحواسيب", i:"🛠️", d:"أعطال الحواسيب والطابعات وأجهزة العرض", f:[
+  fix: {dept:"it", t:"صيانة الحواسيب", i:"🛠️", tag:"دعم تقني ميداني", c:"", d:"إصلاح الحواسيب والطابعات وأجهزة العرض والسبورات الذكية ومشاكل الشبكة.",
+    ch:["الحواسيب","الطابعات","أجهزة العرض","الشبكة والإنترنت"], f:[
     ["device","الجهاز","select",["حاسوب","طابعة","جهاز عرض","سبورة ذكية","شبكة أو إنترنت","أخرى"]],
     ["room","القاعة أو المكان","text"],["problem","وصف العطل","area"],
-    ["urgency","الاستعجال","select",["عادي","عاجل","الجهاز متوقف عن العمل"]]]}
+    ["urgency","الاستعجال","select",["عادي","عاجل","الجهاز متوقف عن العمل"]]]},
+  doc: {dept:"hr", t:"طلب وثيقة إدارية", i:"📄", tag:"وثائق إدارية", c:"rust", d:"اطلب شهادة العمل أو كشف الأجرة أو غيرها من الوثائق الإدارية، وتابع حالتها حتى الاستلام.",
+    ch:["شهادة العمل","كشف الأجرة","كشف العمل والأجرة ATS","بطاقة الشفاء"],
+    hideTitle:true, hideDept:true, noDue:true, titleFrom:"docname", f:[
+    ["stage","الطور / مجال العمل","selo",["تحضيري","ابتدائي","متوسط","ثانوي","إدارة","خدمات"],1],
+    ["job","اسم الوظيفة","text",null,1],
+    ["docname","اسم الوثيقة المطلوبة","selo",DOCS,1],
+    ["purpose","الغرض من الوثيقة المطلوبة","selo",["غرض إداري/سكن","غرض طبي","غرض بنكي","غرض اجتماعي (CNAS / تعويضات)","غرض تأشيرة/سفر","غرض مهني داخلي","غرض توظيف خارجي"],1]]}
 };
+
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } };
 const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} };
+const isDept = h => Object.prototype.hasOwnProperty.call(DEPTS, h);
 
 /* التنقل */
 function route(){
-  const h = location.hash.slice(1) || "home";
-  document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== h);
-  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("on", a.dataset.v === h));
-  if (h === "home") homeStats();
+  const h = location.hash.slice(1) || "home", d = isDept(h);
+  document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== (d ? "dept" : h));
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("on", a.dataset.v === (d ? "home" : h)));
+  if (d) renderDept(h);
   if (h === "track") renderMine();
   if (h === "admin") renderAdmin();
   window.scrollTo(0, 0);
 }
 addEventListener("hashchange", route);
 
-/* بطاقات الخدمات + اختيار الخدمة */
-const EX = {
-  print:  {c:"", tag:"طباعة داخلية", d:"إعداد وسحب الاختبارات والفروض وأوراق العمل وشهادات النتائج، مع خيارات التغليف والتدبيس.", ch:["الاختبارات والفروض","أوراق العمل والبطاقات","سحب ملوّن","تغليف وتدبيس"]},
-  design: {c:"rust", tag:"تصاميم بهوية المدرسة", d:"تصميم الملصقات والمطويات والبطاقات وشهادات التميز والتقدير والعروض التقديمية.", ch:["شهادات التميز والتقدير","ملصقات وبوسترات","مطويات وبطاقات","عروض تقديمية"]},
-  cover:  {c:"", tag:"صور وفيديو", d:"تصوير وتوثيق الأنشطة والمسابقات والاحتفالات والرحلات وحفظها في الأرشيف.", ch:["الأنشطة والمسابقات","الاحتفالات","الرحلات والمعارض","توثيق أرشيفي"]},
-  fix:    {c:"", tag:"دعم تقني ميداني", d:"إصلاح الحواسيب والطابعات وأجهزة العرض والسبورات الذكية ومشاكل الشبكة.", ch:["الحواسيب","الطابعات","أجهزة العرض","الشبكة والإنترنت"]}
-};
-$("#svcCards").innerHTML = Object.entries(SV).map(([k,v]) => { const e = EX[k];
-  return `<article class="svc ${e.c}"><div class="top"><span class="tag">${e.tag}</span><span class="big" aria-hidden="true">${v.i}</span></div>
-  <h3>${v.t}</h3><p>${e.d}</p><div class="chips">${e.ch.map(x=>`<span>${x}</span>`).join("")}</div>
-  <button class="cta" data-k="${k}">طلب ${v.t}</button></article>`; }).join("");
-$("#pick").innerHTML = Object.entries(SV).map(([k,v],n) =>
-  `<label><input type="radio" name="service" value="${k}" ${n?"":"checked"}>${v.i} ${v.t}</label>`).join("");
-document.querySelectorAll(".cta").forEach(b => b.onclick = () => {
-  document.querySelector(`#pick input[value="${b.dataset.k}"]`).checked = true;
-  renderExtra(); location.hash = "new";
-});
-async function homeStats(){
-  const d = new Date(), m = d.getHours()*60 + d.getMinutes(), on = d.getDay() !== 5 && ((m >= 570 && m < 600) || (m >= 680 && m < 700));
-  const o = $("#openNow"); o.textContent = on ? "المكتب يستقبل الآن" : "خارج أوقات الاستقبال"; o.classList.toggle("shut", !on);
-  $("#sMine").textContent = load("twz_mine", []).length;
-  let st = null, c = {ready:0, prog:0, info:0};
-  if (API) { try { const r = await fetch(API + "?stats=1"); if (r.ok) { c = await r.json(); st = c; } } catch {} }
-  else { st = await getStatuses(); if (st) Object.values(st).forEach(x => { if (x.s in c) c[x.s]++; }); }
-  $("#sReady").textContent = st ? c.ready : "-"; $("#sProg").textContent = st ? c.prog : "-"; $("#sInfo").textContent = st ? c.info : "-";
+/* الرئيسية: بطاقات الإدارات */
+$("#deptCards").innerHTML = Object.entries(DEPTS).map(([k,D]) =>
+  `<a class="dept ${D.c}" href="#${k}"><span class="big" style="font-size:30px" aria-hidden="true">${D.i}</span><h3>${D.n}</h3><p>${D.d}</p><span class="go">الدخول إلى الإدارة</span></a>`).join("");
+
+/* صفحة الإدارة */
+function renderDept(k){
+  const D = DEPTS[k], mineN = load("twz_mine", []).filter(m => (m.dept || "it") === k).length;
+  $("#deptBox").innerHTML = `<a class="crumb" href="#home">العودة إلى الرئيسية</a>
+  <div class="hero"><div><span class="pill">${D.n}</span><h1>${D.h1}</h1><p>${D.p}</p>
+    <div class="row"><a class="btn hot" href="#new" id="goNew">تقديم طلب جديد</a><a class="btn ghost" href="#track">متابعة حالة طلباتي</a></div></div>
+    <aside class="quick">${D.aside}</aside></div>
+  <div class="stats">
+    <div class="stat"><span class="si" style="background:#d9f5ee">✅</span><div><b id="sReady">-</b><small>طلبات جاهزة للاستلام</small></div></div>
+    <div class="stat"><span class="si" style="background:#e0e9ff">⏳</span><div><b id="sProg">-</b><small>طلبات قيد التنفيذ</small></div></div>
+    <div class="stat"><span class="si" style="background:#fff0d6">💬</span><div><b id="sInfo">-</b><small>بانتظار مزيد من التفاصيل</small></div></div>
+    <div class="stat"><span class="si" style="background:#ffe9de">📋</span><div><b>${mineN}</b><small>طلباتي من هذا الجهاز</small></div></div>
+  </div>
+  <h2>الخدمات</h2>
+  <div class="svcs">${D.svc.map(x => { const v = SV[x];
+    return `<article class="svc ${v.c}"><div class="top"><span class="tag">${v.tag}</span><span class="big" aria-hidden="true">${v.i}</span></div>
+    <h3>${v.t}</h3><p>${v.d}</p><div class="chips">${v.ch.map(c => `<span>${c}</span>`).join("")}</div>
+    <button class="cta" data-k="${x}">${v.t}</button></article>`; }).join("")}</div>`;
+  $("#goNew").onclick = () => pickSvc(D.svc[0]);
+  document.querySelectorAll(".cta").forEach(b => b.onclick = () => { pickSvc(b.dataset.k); location.hash = "new"; });
+  deptStats(k);
 }
+async function deptStats(k){
+  const o = $("#openNow");
+  if (o) { const d = new Date(), m = d.getHours()*60 + d.getMinutes(), on = d.getDay() !== 5 && ((m >= 570 && m < 600) || (m >= 680 && m < 700));
+    o.textContent = on ? "المكتب يستقبل الآن" : "خارج أوقات الاستقبال"; o.classList.toggle("shut", !on); }
+  let c = null;
+  try { const r = await fetch(API + "?stats=1&dept=" + k); if (r.ok) c = await r.json(); } catch {}
+  if (!$("#sReady")) return;
+  $("#sReady").textContent = c ? c.ready : "-"; $("#sProg").textContent = c ? c.prog : "-"; $("#sInfo").textContent = c ? c.info : "-";
+}
+
+/* النموذج */
+$("#pick").innerHTML = Object.entries(SV).map(([k,v],n) =>
+  `<label><input type="radio" name="service" value="${k}" ${n?"":"checked"}>${v.i} ${v.t}<small>${DEPTS[v.dept].n}</small></label>`).join("");
+function pickSvc(k){ document.querySelector(`#pick input[value="${k}"]`).checked = true; renderExtra(); }
 function renderExtra(){
   const k = document.querySelector("#pick input:checked").value, s = SV[k];
-  $("#extraTitle").textContent = "2. تفاصيل " + s.t;
-  $("#extra").innerHTML = s.f.map(([n,l,t,o]) => {
-    const id = "x_" + n;
-    const inp = t === "select" ? `<select id="${id}" name="${n}">${o.map(x=>`<option>${x}</option>`).join("")}</select>`
-      : t === "area" ? `<textarea id="${id}" name="${n}"></textarea>`
-      : `<input id="${id}" name="${n}" type="${t}" ${t==="number"?'min="1" value="1"':""}>`;
-    return `<div class="f"><label for="${id}">${l}</label>${inp}</div>`;
+  $("#extraTitle").textContent = "2. تفاصيل: " + s.t;
+  $("#fw_title").hidden = !!s.hideTitle; $("#title").required = !s.hideTitle;
+  $("#fw_dept").hidden = !!s.hideDept; $("#dept").required = !s.hideDept;
+  $("#fw_due").hidden = $("#fw_link").hidden = !!s.noDue; $("#due").required = !s.noDue;
+  $("#extra").innerHTML = s.f.map(([n,l,t,o,r]) => {
+    const id = "x_" + n, rq = r ? " required" : "", lab = l + (r ? " *" : "");
+    let inp;
+    if (t === "select" || t === "selo")
+      inp = `<select id="${id}" name="${n}"${rq}>${t === "selo" ? '<option value="">اختر...</option>' : ""}${[...o, ...(t === "selo" ? ["أخرى"] : [])].map(x => `<option>${x}</option>`).join("")}</select>` +
+        (t === "selo" ? `<input id="${id}_o" placeholder="اذكر ما تريد" hidden style="margin-top:6px">` : "");
+    else if (t === "area") inp = `<textarea id="${id}" name="${n}"${rq}></textarea>`;
+    else inp = `<input id="${id}" name="${n}" type="${t}"${rq} ${t === "number" ? 'min="1" value="1"' : ""}>`;
+    return `<div class="f"><label for="${id}">${lab}</label>${inp}</div>`;
   }).join("");
 }
+$("#extra").addEventListener("change", e => {
+  const o = document.getElementById(e.target.id + "_o");
+  if (o) { const on = e.target.value === "أخرى"; o.hidden = !on; o.required = on; }
+});
 $("#pick").addEventListener("change", renderExtra);
 renderExtra();
 $("#due").min = new Date().toISOString().slice(0,10);
 
-/* الإرسال إلى Formspree */
+/* الإرسال: Formspree للبريد + Google Sheet للحالات */
 const newId = () => "TWZ-" + new Date().getFullYear() + "-" + Math.random().toString(36).slice(2,6).toUpperCase();
 $("#form").addEventListener("submit", async e => {
   e.preventDefault();
   const f = e.target, err = $("#err"); err.hidden = true;
   if (!f.reportValidity()) return;
-  const id = newId(), k = f.service.value, svc = SV[k].t;
-  const fd = new FormData(f);
-  fd.set("request_id", id); fd.set("service_label", svc);
-  fd.set("_subject", `[${id}] ${svc}: ${f.title.value}`);
+  const id = newId(), S = SV[f.service.value], svc = S.t, dp = S.dept, dn = DEPTS[dp].n;
+  const fd = new FormData(f), det = [];
+  S.f.forEach(([n,l,t]) => {
+    let v = fd.get(n);
+    if (t === "selo" && v === "أخرى") { v = ($("#x_" + n + "_o").value || "").trim(); fd.set(n, v); }
+    if (v) det.push(l + ": " + v);
+  });
+  const title = S.hideTitle ? (fd.get(S.titleFrom) || svc) : f.title.value;
+  fd.set("title", title);
+  fd.set("request_id", id); fd.set("service_label", svc); fd.set("department", dn);
+  fd.set("_subject", `[${id}] ${dn} - ${svc}: ${title}`);
   fd.set("_replyto", f.email.value);
   const btn = $("#send"); btn.disabled = true; btn.textContent = "جارٍ الإرسال...";
   try {
     const r = await fetch(FORMSPREE, {method:"POST", body:fd, headers:{Accept:"application/json"}});
     if (!r.ok) throw new Error((await r.json().catch(()=>({}))).error || r.status);
     const mine = load("twz_mine", []);
-    mine.unshift({id, svc, title:f.title.value, at:new Date().toISOString()});
+    mine.unshift({id, svc, title, dept:dp, at:new Date().toISOString()});
     save("twz_mine", mine);
-    if (API) { try { await fetch(API, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"},
-      body:JSON.stringify({id, name:f.name.value, email:f.email.value, dept:f.dept.value, service:svc, title:f.title.value})}); } catch {} }
+    try { await fetch(API, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify({id, dept:dp, name:f.name.value, email:f.email.value, section:f.dept.value, service:svc, title, details:det.join("\n")})}); } catch {}
     f.hidden = true;
     const d = $("#done"); d.hidden = false;
     d.innerHTML = `<h2 style="margin:0 0 6px">وصل طلبك</h2>
@@ -297,11 +346,7 @@ $("#form").addEventListener("submit", async e => {
 
 /* الحالات */
 async function getStatuses(ids){
-  if (API) {
-    try { const r = await fetch(API + "?ids=" + encodeURIComponent((ids || []).join(","))); if (r.ok) return (await r.json()).items || {}; } catch {}
-    return null;
-  }
-  try { const r = await fetch("statuses.json?t=" + Date.now()); if (r.ok) return (await r.json()).items || {}; } catch {}
+  try { const r = await fetch(API + "?ids=" + encodeURIComponent((ids || []).join(","))); if (r.ok) return (await r.json()).items || {}; } catch {}
   return null;
 }
 const badge = c => { const [t,col] = ST[c] || ST.new; return `<span class="badge" style="color:${col};border-color:${col};background:${col}1a">${t}</span>`; };
@@ -310,11 +355,11 @@ const reqCard = (id, title, svc, s) => `<div class="card" style="margin-bottom:1
   ${s && s.n ? `<div class="note">${esc(s.n)}</div>` : ""}</div>`;
 async function renderMine(){
   const mine = load("twz_mine", []), box = $("#mine");
-  if (!mine.length) { box.innerHTML = `<div class="card">لا توجد طلبات على هذا الجهاز بعد. <a href="#new">قدّم طلباً جديداً</a></div>`; return; }
+  if (!mine.length) { box.innerHTML = `<div class="card">لا توجد طلبات على هذا الجهاز بعد. <a href="#home">اختر إدارة وقدّم طلباً</a></div>`; return; }
   box.innerHTML = `<p class="mute">جارٍ جلب الحالات...</p>`;
   const st = await getStatuses(mine.map(m => m.id));
   box.innerHTML = (st === null ? `<p class="mute">تعذّر جلب الحالات الآن. الحالة المعروضة هي «تم الاستلام» حتى تتحدّث الصفحة.</p>` : "") +
-    mine.map(m => reqCard(m.id, m.title, m.svc, st && st[m.id])).join("");
+    mine.map(m => reqCard(m.id, m.title, (DEPTS[m.dept || "it"].n) + " - " + m.svc, st && st[m.id])).join("");
 }
 $("#qbtn").onclick = async () => {
   const id = $("#q").value.trim().toUpperCase(), out = $("#qres");
@@ -324,37 +369,13 @@ $("#qbtn").onclick = async () => {
   if (st && st[id]) out.innerHTML = reqCard(id, m && m.title, m && m.svc, st[id]);
   else if (m) out.innerHTML = reqCard(id, m.title, m.svc, null);
   else if (st === null) out.innerHTML = `<div class="err">تعذّر جلب الحالات. حاول لاحقاً.</div>`;
-  else out.innerHTML = `<div class="card">لا يوجد طلب مسجّل بالرقم <b dir="ltr">${esc(id)}</b> على هذا الجهاز، ولا حالة مسجّلة له. تأكد من كتابة الرقم، أو راسل القسم.</div>`;
+  else out.innerHTML = `<div class="card">لا يوجد طلب مسجّل بالرقم <b dir="ltr">${esc(id)}</b> على هذا الجهاز، ولا حالة مسجّلة له. تأكد من كتابة الرقم، أو راسل الإدارة المعنية.</div>`;
 };
 
-/* لوحة القسم: الرابط المباشر #admin */
-let adm = null;
-function flag(n){ const d = $("#dirty"); d.hidden = false;
-  d.innerHTML = n === 1 ? "<b>تغييراتك لم تُنشر بعد.</b> هي محفوظة على هذا المتصفح فقط، ولن يراها الموظفون حتى تنزّل <b>statuses.json</b> وترفعه إلى GitHub."
-    : "<b>تم تنزيل الملف.</b> الخطوة الباقية: ارفعه إلى المستودع في GitHub (Add file ثم Upload files ثم Commit changes) ليراه الموظفون بعد دقيقة."; }
-async function renderAdmin(){
-  if (API) {
-    $("#admin").innerHTML = `<h2 style="margin-top:0">تحديث حالات الطلبات</h2><div class="card"><p>تصل الطلبات تلقائياً إلى جدول Google Sheet. لتغيير حالة طلب افتح الجدول واختر الحالة من القائمة في عمود «الحالة»، وأضف رسالة للموظف في العمود الأخير إن أردت. يرى الموظف التغيير فوراً دون أي رفع ملفات.</p>${SHEET_URL ? `<a class="btn" style="text-decoration:none;display:inline-block" href="${SHEET_URL}" target="_blank" rel="noopener">فتح جدول الطلبات</a>` : ""}</div>`;
-    return;
-  }
-  if (!adm) adm = load("twz_adm", null) || await getStatuses() || {};
-  $("#ast").innerHTML = Object.entries(ST).map(([k,v]) => `<option value="${k}">${v[0]}</option>`).join("");
-  const rows = Object.entries(adm);
-  $("#alist").innerHTML = rows.length ? `<table><tr><th>الرقم</th><th>الحالة</th><th>الرسالة</th><th></th></tr>` +
-    rows.map(([id,s]) => `<tr><td dir="ltr">${esc(id)}</td><td>${badge(s.s)}</td><td>${esc(s.n||"")}</td><td><button class="btn alt" data-del="${esc(id)}">حذف</button></td></tr>`).join("") + `</table>`
-    : `<div class="card">لا توجد حالات بعد. أضف أول حالة من النموذج أعلاه.</div>`;
-  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { delete adm[b.dataset.del]; save("twz_adm", adm); flag(1); renderAdmin(); });
+/* لوحة الإدارة: الرابط المباشر #admin */
+function renderAdmin(){
+  $("#admin").innerHTML = `<h2 style="margin-top:0">تحديث حالات الطلبات</h2><div class="card"><p>تصل الطلبات تلقائياً إلى جدول Google Sheet، ولكل إدارة ورقتها: ${Object.values(DEPTS).map(D => "«" + D.n + "»").join(" و")}. لتغيير حالة طلب افتح الورقة المناسبة واختر الحالة من القائمة في عمود «الحالة»، وأضف رسالة للموظف في عمود «رسالة للموظف». يرى الموظف التغيير فوراً دون رفع ملفات.</p><a class="btn" style="text-decoration:none;display:inline-block" href="${SHEET_URL}">فتح جدول الطلبات</a></div>`;
 }
-$("#aadd").onclick = () => {
-  const id = $("#aid").value.trim().toUpperCase();
-  if (!/^TWZ-\d{4}-[A-Z0-9]{4}$/.test(id)) { alert("رقم الطلب غير صحيح. الصيغة: TWZ-2026-AB12"); return; }
-  adm[id] = {s:$("#ast").value, n:$("#anote").value.trim()};
-  save("twz_adm", adm); flag(1); $("#aid").value = ""; $("#anote").value = ""; renderAdmin();
-};
-$("#adl").onclick = () => {
-  const blob = new Blob([JSON.stringify({updated:new Date().toISOString().slice(0,10), items:adm}, null, 2)], {type:"application/json"});
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "statuses.json"; a.click(); flag(2);
-};
 route();
 </script>
 </body>
