@@ -254,9 +254,11 @@ $("#qbtn").onclick = async () => {
   const id = $("#q").value.trim().toUpperCase(), out = $("#qres");
   if (!id) { out.innerHTML = `<div class="err">اكتب رقم الطلب أولاً.</div>`; return; }
   const st = await getStatuses();
-  if (st === null) out.innerHTML = `<div class="err">تعذّر جلب الحالات. حاول لاحقاً.</div>`;
-  else if (!st[id]) out.innerHTML = `<div class="card">لا توجد حالة مسجّلة للرقم <b dir="ltr">${esc(id)}</b> بعد. الطلب قيد المراجعة، أو تأكد من كتابة الرقم.</div>`;
-  else out.innerHTML = reqCard(id, "", "", st[id]);
+  const m = load("twz_mine", []).find(x => x.id === id);
+  if (st && st[id]) out.innerHTML = reqCard(id, m && m.title, m && m.svc, st[id]);
+  else if (m) out.innerHTML = reqCard(id, m.title, m.svc, null);
+  else if (st === null) out.innerHTML = `<div class="err">تعذّر جلب الحالات. حاول لاحقاً.</div>`;
+  else out.innerHTML = `<div class="card">لا يوجد طلب مسجّل بالرقم <b dir="ltr">${esc(id)}</b> على هذا الجهاز، ولا حالة مسجّلة له. تأكد من كتابة الرقم، أو راسل القسم.</div>`;
 };
 
 /* لوحة القسم: الرابط المباشر #admin */
