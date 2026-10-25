@@ -106,7 +106,8 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-to
     <aside class="quick">
       <span class="open" id="openNow">...</span><b>مكتب الاستجابة السريعة</b>
       <p>فريق القسم جاهز لاستقبال طلبات الطباعة والتصميم والتغطية والصيانة.</p>
-      <div class="mute" style="color:#d3e0fa">أوقات العمل: الأحد إلى الخميس، 07:30 - 17:00</div>
+      <div style="color:#d3e0fa;font-size:15px">أوقات العمل: السبت إلى الخميس، 08:00 - 13:00</div>
+      <div style="color:#d3e0fa;font-size:15px;margin-top:4px">استقبال المكتب يومياً: 09:30 - 10:00 و11:20 - 11:40</div>
     </aside>
   </div>
   <div class="stats">
@@ -233,8 +234,8 @@ document.querySelectorAll(".cta").forEach(b => b.onclick = () => {
   renderExtra(); location.hash = "new";
 });
 async function homeStats(){
-  const d = new Date(), m = d.getHours()*60 + d.getMinutes(), on = d.getDay() <= 4 && m >= 450 && m < 1020;
-  const o = $("#openNow"); o.textContent = on ? "مفتوح الآن" : "مغلق الآن"; o.classList.toggle("shut", !on);
+  const d = new Date(), m = d.getHours()*60 + d.getMinutes(), on = d.getDay() !== 5 && ((m >= 570 && m < 600) || (m >= 680 && m < 700));
+  const o = $("#openNow"); o.textContent = on ? "المكتب يستقبل الآن" : "خارج أوقات الاستقبال"; o.classList.toggle("shut", !on);
   $("#sMine").textContent = load("twz_mine", []).length;
   const st = await getStatuses(), c = {ready:0, prog:0, info:0};
   if (st) Object.values(st).forEach(x => { if (x.s in c) c[x.s]++; });
