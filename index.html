@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بوابة خدمات الإعلام وتكنولوجيا المعلومات - مدرسة تاونزة العلمية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0e3a82;--deep:#00255d;--rust:#a73a00;--bg:#f4f6fc;--line:#d9dff0;--ink:#131b2e;--mute:#4a5063}
+*{box-sizing:border-box}
+body{margin:0;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.8;font-size:16px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.bar{max-width:1040px;margin:auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:700;color:var(--navy);margin-inline-end:auto;line-height:1.4}
+.brand small{display:block;font-weight:400;color:var(--rust);font-size:13px}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav a{padding:8px 14px;border-radius:8px;color:var(--ink);text-decoration:none}
+nav a.on{background:var(--navy);color:#fff}
+main{max-width:1040px;margin:auto;padding:20px 16px 70px}
+.hero{background:var(--deep);color:#fff;border-radius:14px;padding:32px 28px;margin-bottom:22px}
+.hero h1{margin:0 0 8px;font-size:30px;line-height:1.4}
+.hero p{margin:0;max-width:60ch;color:#cfdcf7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+.svc-card{cursor:pointer;text-align:start;font:inherit;color:inherit;border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px}
+.svc-card:hover{border-color:var(--navy)}
+.svc-card b{display:block;font-size:18px;color:var(--navy)}
+.svc-card span{color:var(--mute);font-size:15px}
+.ico{font-size:28px;display:block}
+h2{font-size:22px;margin:26px 0 12px;color:var(--deep)}
+label{display:block;font-weight:600;margin:0 0 4px}
+.f{margin-bottom:14px}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #b9bfd3;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:90px}
+:focus-visible{outline:3px solid #fd651e;outline-offset:2px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 14px}
+.pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:18px}
+.pick label{border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;background:#fff;margin:0;font-weight:600}
+.pick input{position:absolute;opacity:0;width:1px;height:1px}
+.pick label:has(input:checked){border-color:var(--navy);background:#e8efff}
+.pick label:has(input:focus-visible){outline:3px solid #fd651e}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:11px 22px;font:inherit;font-weight:700;cursor:pointer}
+.btn.alt{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+.btn[disabled]{opacity:.6;cursor:wait}
+.badge{display:inline-block;padding:2px 12px;border-radius:99px;font-size:14px;font-weight:600;border:1px solid}
+.req{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin-bottom:10px}
+.req b{color:var(--navy)}
+.note{background:#eef2ff;border-radius:8px;padding:8px 12px;margin-top:8px;font-size:15px}
+.ok{background:#e7f6ee;border:1px solid #9bd5b4;border-radius:12px;padding:18px}
+.err{background:#fdecea;border:1px solid #f0a8a2;border-radius:12px;padding:14px;margin-bottom:14px}
+.mute{color:var(--mute);font-size:15px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>input{flex:1;min-width:200px}
+table{width:100%;border-collapse:collapse;background:#fff}
+td,th{border-bottom:1px solid var(--line);padding:8px;text-align:start;font-size:15px}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:20px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:no-preference){.card,.svc-card{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="brand">مدرسة تاونزة العلمية<small>قسم الإعلام وتكنولوجيا المعلومات</small></div>
+  <nav>
+    <a href="#home" data-v="home">الخدمات</a>
+    <a href="#new" data-v="new">طلب جديد</a>
+    <a href="#track" data-v="track">طلباتي</a>
+  </nav>
+</div></header>
+
+<main>
+<!-- الرئيسية -->
+<section id="home">
+  <div class="hero">
+    <h1>اطلب خدمة من قسم الإعلام وتكنولوجيا المعلومات</h1>
+    <p>أرسل طلبك من هنا، وسيرد عليك القسم بحالته: جاهز للاستلام، أو قيد التنفيذ، أو يحتاج مزيداً من التفاصيل.</p>
+  </div>
+  <div class="grid" id="svcCards"></div>
+  <h2>كيف يعمل؟</h2>
+  <div class="card">
+    <p style="margin:0">تملأ نموذج الطلب فيصلنا فوراً ويُعطى رقماً مثل <b>TWZ-2026-AB12</b>. احتفظ بالرقم. تابع حالة الطلب من صفحة «طلباتي»، وقد نراسلك على بريدك إن احتجنا تفاصيل إضافية.</p>
+  </div>
+</section>
+
+<!-- طلب جديد -->
+<section id="new" hidden>
+  <h2 style="margin-top:0">طلب خدمة جديد</h2>
+  <div id="err" class="err" hidden></div>
+  <form id="form" novalidate>
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
+    <div class="f"><label>1. نوع الخدمة</label><div class="pick" id="pick"></div></div>
+    <div class="two">
+      <div class="f"><label for="name">الاسم الكامل</label><input id="name" name="name" required autocomplete="name"></div>
+      <div class="f"><label for="email">البريد الإلكتروني (لنرد عليك)</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+      <div class="f"><label for="dept">القسم أو المادة</label><input id="dept" name="dept" required placeholder="مثال: اللغة العربية"></div>
+      <div class="f"><label for="title">عنوان الطلب</label><input id="title" name="title" required placeholder="مثال: اختبار الفصل الأول، 120 نسخة"></div>
+    </div>
+    <div class="f"><label style="color:var(--navy)" id="extraTitle">2. تفاصيل الطلب</label></div>
+    <div class="two" id="extra"></div>
+    <div class="two">
+      <div class="f"><label for="due">تاريخ التسليم المطلوب</label><input id="due" name="due" type="date" required></div>
+      <div class="f"><label for="link">رابط الملفات (Google Drive أو غيره)</label><input id="link" name="link" type="url" placeholder="https://..."></div>
+    </div>
+    <div class="f"><label for="notes">ملاحظات إضافية</label><textarea id="notes" name="notes"></textarea></div>
+    <button class="btn" id="send" type="submit">إرسال الطلب</button>
+  </form>
+  <div id="done" class="ok" hidden></div>
+</section>
+
+<!-- طلباتي -->
+<section id="track" hidden>
+  <h2 style="margin-top:0">طلباتي</h2>
+  <div id="mine"></div>
+  <h2>ابحث برقم الطلب</h2>
+  <div class="row"><input id="q" placeholder="TWZ-2026-AB12" aria-label="رقم الطلب" dir="ltr"><button class="btn" id="qbtn">عرض الحالة</button></div>
+  <div id="qres" style="margin-top:12px"></div>
+</section>
+
+<!-- إدارة القسم -->
+<section id="admin" hidden>
+  <h2 style="margin-top:0">تحديث حالات الطلبات (لفريق القسم)</h2>
+  <p class="mute">ضع رقم الطلب الذي وصل بريدك، واختر حالته. حين تنتهي نزّل الملف وارفعه إلى مجلد الموقع ليراه الموظفون.</p>
+  <div class="card">
+    <div class="two">
+      <div class="f"><label for="aid">رقم الطلب</label><input id="aid" dir="ltr" placeholder="TWZ-2026-AB12"></div>
+      <div class="f"><label for="ast">الحالة</label><select id="ast"></select></div>
+    </div>
+    <div class="f"><label for="anote">رسالة للموظف (اختياري)</label><input id="anote" placeholder="مثال: جاهز في مكتب الدعم، الطابق الأول"></div>
+    <div class="row"><button class="btn" id="aadd">حفظ الحالة</button><button class="btn alt" id="adl">تنزيل statuses.json</button></div>
+  </div>
+  <h2>الحالات الحالية</h2>
+  <div id="alist"></div>
+</section>
+</main>
+<footer>قسم الإعلام وتكنولوجيا المعلومات - مدرسة تاونزة العلمية</footer>
+
+<script>
+const FORMSPREE = "https://formspree.io/f/mpppqqwe";
+const ST = {
+  new:   ["تم الاستلام", "#475569"],
+  prog:  ["قيد التنفيذ", "#1d4ed8"],
+  info:  ["بانتظار مزيد من التفاصيل", "#b45309"],
+  ready: ["جاهز للاستلام", "#047857"],
+  done:  ["تم التسليم", "#334155"],
+  off:   ["ملغى", "#b91c1c"]
+};
+const SV = {
+  print: {t:"طباعة وتصوير", i:"🖨️", d:"اختبارات، أوراق عمل، شهادات، مطويات", f:[
+    ["copies","عدد النسخ","number"],["size","المقاس","select",["A4","A3","A5"]],
+    ["color","اللون","select",["أبيض وأسود","ملوّن"]],["sides","الوجه","select",["وجه واحد","وجهان"]],
+    ["finish","التدبيس أو التغليف","select",["بدون","تدبيس","تغليف","تجليد"]]]},
+  design: {t:"تصميم", i:"🎨", d:"شهادات، ملصقات، مطويات، بطاقات", f:[
+    ["kind","نوع التصميم","select",["شهادة","ملصق","مطوية","بطاقة","مجلة","عرض تقديمي","أخرى"]],
+    ["dims","المقاس المطلوب","text"],["content","النص المطلوب إدراجه","area"]]},
+  cover: {t:"تغطية الأحداث", i:"📷", d:"تصوير وفيديو للفعاليات والأنشطة", f:[
+    ["event","اسم الفعالية","text"],["edate","تاريخ الفعالية","date"],["etime","الوقت","text"],
+    ["place","المكان","text"],["ckind","نوع التغطية","select",["تصوير فوتوغرافي","فيديو","الاثنان"]]]},
+  fix: {t:"صيانة الحواسيب", i:"🛠️", d:"أعطال الحواسيب والطابعات وأجهزة العرض", f:[
+    ["device","الجهاز","select",["حاسوب","طابعة","جهاز عرض","سبورة ذكية","شبكة أو إنترنت","أخرى"]],
+    ["room","القاعة أو المكان","text"],["problem","وصف العطل","area"],
+    ["urgency","الاستعجال","select",["عادي","عاجل","الجهاز متوقف عن العمل"]]]}
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} };
+
+/* التنقل */
+function route(){
+  const h = location.hash.slice(1) || "home";
+  document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== h);
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("on", a.dataset.v === h));
+  if (h === "track") renderMine();
+  if (h === "admin") renderAdmin();
+  window.scrollTo(0, 0);
+}
+addEventListener("hashchange", route);
+
+/* بطاقات الخدمات + اختيار الخدمة */
+$("#svcCards").innerHTML = Object.entries(SV).map(([k,v]) =>
+  `<button class="svc-card" data-k="${k}"><span class="ico" aria-hidden="true">${v.i}</span><b>${v.t}</b><span>${v.d}</span></button>`).join("");
+$("#pick").innerHTML = Object.entries(SV).map(([k,v],n) =>
+  `<label><input type="radio" name="service" value="${k}" ${n?"":"checked"}>${v.i} ${v.t}</label>`).join("");
+document.querySelectorAll(".svc-card").forEach(b => b.onclick = () => {
+  document.querySelector(`#pick input[value="${b.dataset.k}"]`).checked = true;
+  renderExtra(); location.hash = "new";
+});
+function renderExtra(){
+  const k = document.querySelector("#pick input:checked").value, s = SV[k];
+  $("#extraTitle").textContent = "2. تفاصيل " + s.t;
+  $("#extra").innerHTML = s.f.map(([n,l,t,o]) => {
+    const id = "x_" + n;
+    const inp = t === "select" ? `<select id="${id}" name="${n}">${o.map(x=>`<option>${x}</option>`).join("")}</select>`
+      : t === "area" ? `<textarea id="${id}" name="${n}"></textarea>`
+      : `<input id="${id}" name="${n}" type="${t}" ${t==="number"?'min="1" value="1"':""}>`;
+    return `<div class="f"><label for="${id}">${l}</label>${inp}</div>`;
+  }).join("");
+}
+$("#pick").addEventListener("change", renderExtra);
+renderExtra();
+$("#due").min = new Date().toISOString().slice(0,10);
+
+/* الإرسال إلى Formspree */
+const newId = () => "TWZ-" + new Date().getFullYear() + "-" + Math.random().toString(36).slice(2,6).toUpperCase();
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, err = $("#err"); err.hidden = true;
+  if (!f.reportValidity()) return;
+  const id = newId(), k = f.service.value, svc = SV[k].t;
+  const fd = new FormData(f);
+  fd.set("request_id", id); fd.set("service_label", svc);
+  fd.set("_subject", `[${id}] ${svc}: ${f.title.value}`);
+  fd.set("_replyto", f.email.value);
+  const btn = $("#send"); btn.disabled = true; btn.textContent = "جارٍ الإرسال...";
+  try {
+    const r = await fetch(FORMSPREE, {method:"POST", body:fd, headers:{Accept:"application/json"}});
+    if (!r.ok) throw new Error((await r.json().catch(()=>({}))).error || r.status);
+    const mine = load("twz_mine", []);
+    mine.unshift({id, svc, title:f.title.value, at:new Date().toISOString()});
+    save("twz_mine", mine);
+    f.hidden = true;
+    const d = $("#done"); d.hidden = false;
+    d.innerHTML = `<h2 style="margin:0 0 6px">وصل طلبك</h2>
+      <p>رقم الطلب: <b dir="ltr" style="font-size:20px">${id}</b></p>
+      <p class="mute">احتفظ بالرقم. ستجد حالة الطلب في صفحة «طلباتي».</p>
+      <button class="btn" id="again">طلب آخر</button> <a class="btn alt" style="text-decoration:none;display:inline-block" href="#track">متابعة طلباتي</a>`;
+    $("#again").onclick = () => { f.reset(); renderExtra(); f.hidden = false; d.hidden = true; };
+  } catch (x) {
+    err.hidden = false;
+    err.textContent = "تعذّر إرسال الطلب (" + x.message + "). تحقق من الاتصال بالإنترنت وأعد المحاولة. لم يُحفظ شيء.";
+    err.scrollIntoView({block:"center"});
+  } finally { btn.disabled = false; btn.textContent = "إرسال الطلب"; }
+});
+
+/* الحالات */
+async function getStatuses(){
+  try { const r = await fetch("statuses.json?t=" + Date.now()); if (r.ok) return (await r.json()).items || {}; } catch {}
+  return null;
+}
+const badge = c => { const [t,col] = ST[c] || ST.new; return `<span class="badge" style="color:${col};border-color:${col};background:${col}1a">${t}</span>`; };
+const reqCard = (id, title, svc, s) => `<div class="card" style="margin-bottom:10px"><div class="req">
+  <div><b dir="ltr">${esc(id)}</b><div>${esc(title||"")}</div><div class="mute">${esc(svc||"")}</div></div>${badge(s && s.s)}</div>
+  ${s && s.n ? `<div class="note">${esc(s.n)}</div>` : ""}</div>`;
+async function renderMine(){
+  const mine = load("twz_mine", []), box = $("#mine");
+  if (!mine.length) { box.innerHTML = `<div class="card">لا توجد طلبات على هذا الجهاز بعد. <a href="#new">قدّم طلباً جديداً</a></div>`; return; }
+  box.innerHTML = `<p class="mute">جارٍ جلب الحالات...</p>`;
+  const st = await getStatuses();
+  box.innerHTML = (st === null ? `<p class="mute">تعذّر جلب الحالات الآن. الحالة المعروضة هي «تم الاستلام» حتى تتحدّث الصفحة.</p>` : "") +
+    mine.map(m => reqCard(m.id, m.title, m.svc, st && st[m.id])).join("");
+}
+$("#qbtn").onclick = async () => {
+  const id = $("#q").value.trim().toUpperCase(), out = $("#qres");
+  if (!id) { out.innerHTML = `<div class="err">اكتب رقم الطلب أولاً.</div>`; return; }
+  const st = await getStatuses();
+  if (st === null) out.innerHTML = `<div class="err">تعذّر جلب الحالات. حاول لاحقاً.</div>`;
+  else if (!st[id]) out.innerHTML = `<div class="card">لا توجد حالة مسجّلة للرقم <b dir="ltr">${esc(id)}</b> بعد. الطلب قيد المراجعة، أو تأكد من كتابة الرقم.</div>`;
+  else out.innerHTML = reqCard(id, "", "", st[id]);
+};
+
+/* لوحة القسم: الرابط المباشر #admin */
+let adm = null;
+async function renderAdmin(){
+  if (!adm) adm = load("twz_adm", null) || await getStatuses() || {};
+  $("#ast").innerHTML = Object.entries(ST).map(([k,v]) => `<option value="${k}">${v[0]}</option>`).join("");
+  const rows = Object.entries(adm);
+  $("#alist").innerHTML = rows.length ? `<table><tr><th>الرقم</th><th>الحالة</th><th>الرسالة</th><th></th></tr>` +
+    rows.map(([id,s]) => `<tr><td dir="ltr">${esc(id)}</td><td>${badge(s.s)}</td><td>${esc(s.n||"")}</td><td><button class="btn alt" data-del="${esc(id)}">حذف</button></td></tr>`).join("") + `</table>`
+    : `<div class="card">لا توجد حالات بعد. أضف أول حالة من النموذج أعلاه.</div>`;
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { delete adm[b.dataset.del]; save("twz_adm", adm); renderAdmin(); });
+}
+$("#aadd").onclick = () => {
+  const id = $("#aid").value.trim().toUpperCase();
+  if (!/^TWZ-\d{4}-[A-Z0-9]{4}$/.test(id)) { alert("رقم الطلب غير صحيح. الصيغة: TWZ-2026-AB12"); return; }
+  adm[id] = {s:$("#ast").value, n:$("#anote").value.trim()};
+  save("twz_adm", adm); $("#aid").value = ""; $("#anote").value = ""; renderAdmin();
+};
+$("#adl").onclick = () => {
+  const blob = new Blob([JSON.stringify({updated:new Date().toISOString().slice(0,10), items:adm}, null, 2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "statuses.json"; a.click();
+};
+route();
+</script>
+</body>
+</html>
