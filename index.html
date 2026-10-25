@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="logo.gif">
 <title>بوابة خدمات الإعلام وتكنولوجيا المعلومات - مدرسة تاونزة العلمية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,22 +12,46 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.8;font-size:16px}
 header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-.bar{max-width:1040px;margin:auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.brand{font-weight:700;color:var(--navy);margin-inline-end:auto;line-height:1.4}
+.bar{max-width:1040px;margin:auto;padding:8px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--navy);margin-inline-end:auto;line-height:1.35;text-decoration:none}
+.brand img{height:50px;width:auto}
 .brand small{display:block;font-weight:400;color:var(--rust);font-size:13px}
 nav{display:flex;gap:6px;flex-wrap:wrap}
 nav a{padding:8px 14px;border-radius:8px;color:var(--ink);text-decoration:none}
 nav a.on{background:var(--navy);color:#fff}
 main{max-width:1040px;margin:auto;padding:20px 16px 70px}
-.hero{background:var(--deep);color:#fff;border-radius:14px;padding:32px 28px;margin-bottom:22px}
-.hero h1{margin:0 0 8px;font-size:30px;line-height:1.4}
-.hero p{margin:0;max-width:60ch;color:#cfdcf7}
+.hero{background:linear-gradient(135deg,#00255d,#0e3a82);color:#fff;border-radius:16px;padding:34px 30px 56px;display:grid;grid-template-columns:1.7fr 1fr;gap:26px;align-items:center}
+.hero h1{margin:12px 0 10px;font-size:32px;line-height:1.5}
+.hero p{margin:0 0 20px;max-width:58ch;color:#d3e0fa}
+.pill{display:inline-block;background:rgba(255,255,255,.14);border-radius:99px;padding:3px 14px;font-size:14px}
+.btn.hot{background:#c2410c;text-decoration:none;display:inline-block}
+.btn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4);text-decoration:none;display:inline-block}
+.quick{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:18px}
+.quick b{font-size:18px}.quick p{font-size:15px;margin:8px 0}
+.open{float:left;font-size:13px;padding:1px 10px;border-radius:99px;background:#d1fae5;color:#065f46}
+.open.shut{background:#fee2e2;color:#991b1b}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:-32px 18px 0;position:relative}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 18px rgba(14,58,130,.08)}
+.stat .si{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:22px}
+.stat b{display:block;font-size:26px;line-height:1.2;color:var(--deep)}
+.stat small{color:var(--mute);font-size:14px}
+.svcs{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.svc{background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.svc.rust{border-top-color:#c2410c}
+.svc .top{display:flex;justify-content:space-between;align-items:center}
+.tag{font-size:13px;background:#e8efff;color:var(--navy);border-radius:99px;padding:2px 12px}
+.svc.rust .tag{background:#ffe9de;color:#9a3412}
+.svc .big{width:52px;height:52px;border-radius:12px;background:#e8efff;display:grid;place-items:center;font-size:26px}
+.svc.rust .big{background:#ffe9de}
+.svc h3{margin:0;font-size:22px;color:var(--deep)}
+.svc p{margin:0;color:var(--mute);font-size:15px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips span{background:#f1f4fc;border-radius:8px;padding:7px 10px;font-size:14px}
+.cta{align-self:flex-start;margin-top:auto;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-weight:700;cursor:pointer}
+.svc.rust .cta{background:#a73a00}
+@media (max-width:760px){.svcs{grid-template-columns:1fr}.hero{grid-template-columns:1fr;padding:26px 20px 52px}.hero h1{font-size:26px}.chips{grid-template-columns:1fr}}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
-.svc-card{cursor:pointer;text-align:start;font:inherit;color:inherit;border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px}
-.svc-card:hover{border-color:var(--navy)}
-.svc-card b{display:block;font-size:18px;color:var(--navy)}
-.svc-card span{color:var(--mute);font-size:15px}
 .ico{font-size:28px;display:block}
 h2{font-size:22px;margin:26px 0 12px;color:var(--deep)}
 label{display:block;font-weight:600;margin:0 0 4px}
@@ -54,18 +79,17 @@ textarea{min-height:90px}
 .row>input{flex:1;min-width:200px}
 table{width:100%;border-collapse:collapse;background:#fff}
 td,th{border-bottom:1px solid var(--line);padding:8px;text-align:start;font-size:15px}
-footer{text-align:center;color:var(--mute);font-size:14px;padding:20px}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-top:1px solid var(--line);background:#fff}footer img{display:block;margin:0 auto 6px}
 [hidden]{display:none!important}
-@media (prefers-reduced-motion:no-preference){.card,.svc-card{transition:border-color .15s}}
-</style>
+@media (prefers-reduced-motion:no-preference){.card,</style>
 </head>
 <body>
 <header><div class="bar">
-  <div class="brand">مدرسة تاونزة العلمية<small>قسم الإعلام وتكنولوجيا المعلومات</small></div>
+  <a class="brand" href="#home"><img src="logo.gif" alt="شعار مدرسة تاونزة العلمية"><span>مدرسة تاونزة العلمية<small>قسم الإعلام وتكنولوجيا المعلومات</small></span></a>
   <nav>
-    <a href="#home" data-v="home">الخدمات</a>
-    <a href="#new" data-v="new">طلب جديد</a>
-    <a href="#track" data-v="track">طلباتي</a>
+    <a href="#home" data-v="home">الرئيسية والخدمات</a>
+    <a href="#new" data-v="new">تقديم طلب جديد</a>
+    <a href="#track" data-v="track">تتبع طلباتي</a>
   </nav>
 </div></header>
 
@@ -73,14 +97,27 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:20px}
 <!-- الرئيسية -->
 <section id="home">
   <div class="hero">
-    <h1>اطلب خدمة من قسم الإعلام وتكنولوجيا المعلومات</h1>
-    <p>أرسل طلبك من هنا، وسيرد عليك القسم بحالته: جاهز للاستلام، أو قيد التنفيذ، أو يحتاج مزيداً من التفاصيل.</p>
+    <div>
+      <span class="pill">البوابة الرقمية الموحدة - العام الدراسي 2026-2027</span>
+      <h1>مرحباً بك في بوابة خدمات الإعلام وتكنولوجيا المعلومات</h1>
+      <p>منظومة رقمية لخدمة الطاقم التربوي والتعليمي بمدرسة تاونزة العلمية. قدّم طلبك وتابع حالته: جاهز للاستلام، أو قيد التنفيذ، أو يحتاج مزيداً من التفاصيل.</p>
+      <div class="row"><a class="btn hot" href="#new">تقديم طلب جديد</a><a class="btn ghost" href="#track">متابعة حالة طلباتي</a></div>
+    </div>
+    <aside class="quick">
+      <span class="open" id="openNow">...</span><b>مكتب الاستجابة السريعة</b>
+      <p>فريق القسم جاهز لاستقبال طلبات الطباعة والتصميم والتغطية والصيانة.</p>
+      <div class="mute" style="color:#d3e0fa">أوقات العمل: الأحد إلى الخميس، 07:30 - 17:00</div>
+    </aside>
   </div>
-  <div class="grid" id="svcCards"></div>
-  <h2>كيف يعمل؟</h2>
-  <div class="card">
-    <p style="margin:0">تملأ نموذج الطلب فيصلنا فوراً ويُعطى رقماً مثل <b>TWZ-2026-AB12</b>. احتفظ بالرقم. تابع حالة الطلب من صفحة «طلباتي»، وقد نراسلك على بريدك إن احتجنا تفاصيل إضافية.</p>
+  <div class="stats">
+    <div class="stat"><span class="si" style="background:#d9f5ee">✅</span><div><b id="sReady">-</b><small>طلبات جاهزة للاستلام</small></div></div>
+    <div class="stat"><span class="si" style="background:#e0e9ff">⏳</span><div><b id="sProg">-</b><small>طلبات قيد التنفيذ</small></div></div>
+    <div class="stat"><span class="si" style="background:#fff0d6">💬</span><div><b id="sInfo">-</b><small>بانتظار مزيد من التفاصيل</small></div></div>
+    <div class="stat"><span class="si" style="background:#ffe9de">📋</span><div><b id="sMine">0</b><small>طلباتي من هذا الجهاز</small></div></div>
   </div>
+  <h2>الخدمات الأكاديمية والتقنية</h2>
+  <p class="mute" style="margin-top:-6px">اختر الخدمة المطلوبة لتبدأ تعبئة النموذج.</p>
+  <div class="svcs" id="svcCards"></div>
 </section>
 
 <!-- طلب جديد -->
@@ -133,7 +170,7 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:20px}
   <div id="alist"></div>
 </section>
 </main>
-<footer>قسم الإعلام وتكنولوجيا المعلومات - مدرسة تاونزة العلمية</footer>
+<footer><img src="logo.gif" alt="" height="56"><div>قسم الإعلام وتكنولوجيا المعلومات - مدرسة تاونزة العلمية</div></footer>
 
 <script>
 const FORMSPREE = "https://formspree.io/f/mpppqqwe";
@@ -171,6 +208,7 @@ function route(){
   const h = location.hash.slice(1) || "home";
   document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== h);
   document.querySelectorAll("nav a").forEach(a => a.classList.toggle("on", a.dataset.v === h));
+  if (h === "home") homeStats();
   if (h === "track") renderMine();
   if (h === "admin") renderAdmin();
   window.scrollTo(0, 0);
@@ -178,14 +216,30 @@ function route(){
 addEventListener("hashchange", route);
 
 /* بطاقات الخدمات + اختيار الخدمة */
-$("#svcCards").innerHTML = Object.entries(SV).map(([k,v]) =>
-  `<button class="svc-card" data-k="${k}"><span class="ico" aria-hidden="true">${v.i}</span><b>${v.t}</b><span>${v.d}</span></button>`).join("");
+const EX = {
+  print:  {c:"", tag:"طباعة داخلية", d:"إعداد وسحب الاختبارات والفروض وأوراق العمل وشهادات النتائج، مع خيارات التغليف والتدبيس.", ch:["الاختبارات والفروض","أوراق العمل والبطاقات","سحب ملوّن","تغليف وتدبيس"]},
+  design: {c:"rust", tag:"تصاميم بهوية المدرسة", d:"تصميم الملصقات والمطويات والبطاقات وشهادات التميز والتقدير والعروض التقديمية.", ch:["شهادات التميز والتقدير","ملصقات وبوسترات","مطويات وبطاقات","عروض تقديمية"]},
+  cover:  {c:"", tag:"صور وفيديو", d:"تصوير وتوثيق الأنشطة والمسابقات والاحتفالات والرحلات وحفظها في الأرشيف.", ch:["الأنشطة والمسابقات","الاحتفالات","الرحلات والمعارض","توثيق أرشيفي"]},
+  fix:    {c:"", tag:"دعم تقني ميداني", d:"إصلاح الحواسيب والطابعات وأجهزة العرض والسبورات الذكية ومشاكل الشبكة.", ch:["الحواسيب","الطابعات","أجهزة العرض","الشبكة والإنترنت"]}
+};
+$("#svcCards").innerHTML = Object.entries(SV).map(([k,v]) => { const e = EX[k];
+  return `<article class="svc ${e.c}"><div class="top"><span class="tag">${e.tag}</span><span class="big" aria-hidden="true">${v.i}</span></div>
+  <h3>${v.t}</h3><p>${e.d}</p><div class="chips">${e.ch.map(x=>`<span>${x}</span>`).join("")}</div>
+  <button class="cta" data-k="${k}">طلب ${v.t}</button></article>`; }).join("");
 $("#pick").innerHTML = Object.entries(SV).map(([k,v],n) =>
   `<label><input type="radio" name="service" value="${k}" ${n?"":"checked"}>${v.i} ${v.t}</label>`).join("");
-document.querySelectorAll(".svc-card").forEach(b => b.onclick = () => {
+document.querySelectorAll(".cta").forEach(b => b.onclick = () => {
   document.querySelector(`#pick input[value="${b.dataset.k}"]`).checked = true;
   renderExtra(); location.hash = "new";
 });
+async function homeStats(){
+  const d = new Date(), m = d.getHours()*60 + d.getMinutes(), on = d.getDay() <= 4 && m >= 450 && m < 1020;
+  const o = $("#openNow"); o.textContent = on ? "مفتوح الآن" : "مغلق الآن"; o.classList.toggle("shut", !on);
+  $("#sMine").textContent = load("twz_mine", []).length;
+  const st = await getStatuses(), c = {ready:0, prog:0, info:0};
+  if (st) Object.values(st).forEach(x => { if (x.s in c) c[x.s]++; });
+  $("#sReady").textContent = st ? c.ready : "-"; $("#sProg").textContent = st ? c.prog : "-"; $("#sInfo").textContent = st ? c.info : "-";
+}
 function renderExtra(){
   const k = document.querySelector("#pick input:checked").value, s = SV[k];
   $("#extraTitle").textContent = "2. تفاصيل " + s.t;
