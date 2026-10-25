@@ -159,6 +159,7 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-to
 <section id="admin" hidden>
   <h2 style="margin-top:0">تحديث حالات الطلبات (لفريق القسم)</h2>
   <p class="mute">ضع رقم الطلب الذي وصل بريدك، واختر حالته. حين تنتهي نزّل الملف وارفعه إلى مجلد الموقع ليراه الموظفون.</p>
+  <div id="dirty" class="err" hidden></div>
   <div class="card">
     <div class="two">
       <div class="f"><label for="aid">رقم الطلب</label><input id="aid" dir="ltr" placeholder="TWZ-2026-AB12"></div>
@@ -175,6 +176,9 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-to
 
 <script>
 const FORMSPREE = "https://formspree.io/f/mpppqqwe";
+/* الحالات التلقائية: الصق هنا رابط تطبيق Google Apps Script (ينتهي بـ /exec) ورابط جدول Google Sheet */
+const API = "https://script.google.com/macros/s/AKfycbwE4NEa0P8fOtxypP7wJRfDOik5LLwrT2CWLLxcguxUZZmTAlbnU4shldbTTtgWxukT/exec";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/1hgR-Vq1-lYTlGIxtJtWHoeZUvXe1gIjajq-11p5o5wY/edit";
 const ST = {
   new:   ["تم الاستلام", "#475569"],
   prog:  ["قيد التنفيذ", "#1d4ed8"],
@@ -237,8 +241,9 @@ async function homeStats(){
   const d = new Date(), m = d.getHours()*60 + d.getMinutes(), on = d.getDay() !== 5 && ((m >= 570 && m < 600) || (m >= 680 && m < 700));
   const o = $("#openNow"); o.textContent = on ? "المكتب يستقبل الآن" : "خارج أوقات الاستقبال"; o.classList.toggle("shut", !on);
   $("#sMine").textContent = load("twz_mine", []).length;
-  const st = await getStatuses(), c = {ready:0, prog:0, info:0};
-  if (st) Object.values(st).forEach(x => { if (x.s in c) c[x.s]++; });
+  let st = null, c = {ready:0, prog:0, info:0};
+  if (API) { try { const r = await fetch(API + "?stats=1"); if (r.ok) { c = await r.json(); st = c; } } catch {} }
+  else { st = await getStatuses(); if (st) Object.values(st).forEach(x => { if (x.s in c) c[x.s]++; }); }
   $("#sReady").textContent = st ? c.ready : "-"; $("#sProg").textContent = st ? c.prog : "-"; $("#sInfo").textContent = st ? c.info : "-";
 }
 function renderExtra(){
@@ -274,6 +279,8 @@ $("#form").addEventListener("submit", async e => {
     const mine = load("twz_mine", []);
     mine.unshift({id, svc, title:f.title.value, at:new Date().toISOString()});
     save("twz_mine", mine);
+    if (API) { try { await fetch(API, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify({id, name:f.name.value, email:f.email.value, dept:f.dept.value, service:svc, title:f.title.value})}); } catch {} }
     f.hidden = true;
     const d = $("#done"); d.hidden = false;
     d.innerHTML = `<h2 style="margin:0 0 6px">وصل طلبك</h2>
@@ -289,7 +296,11 @@ $("#form").addEventListener("submit", async e => {
 });
 
 /* الحالات */
-async function getStatuses(){
+async function getStatuses(ids){
+  if (API) {
+    try { const r = await fetch(API + "?ids=" + encodeURIComponent((ids || []).join(","))); if (r.ok) return (await r.json()).items || {}; } catch {}
+    return null;
+  }
   try { const r = await fetch("statuses.json?t=" + Date.now()); if (r.ok) return (await r.json()).items || {}; } catch {}
   return null;
 }
@@ -301,14 +312,14 @@ async function renderMine(){
   const mine = load("twz_mine", []), box = $("#mine");
   if (!mine.length) { box.innerHTML = `<div class="card">لا توجد طلبات على هذا الجهاز بعد. <a href="#new">قدّم طلباً جديداً</a></div>`; return; }
   box.innerHTML = `<p class="mute">جارٍ جلب الحالات...</p>`;
-  const st = await getStatuses();
+  const st = await getStatuses(mine.map(m => m.id));
   box.innerHTML = (st === null ? `<p class="mute">تعذّر جلب الحالات الآن. الحالة المعروضة هي «تم الاستلام» حتى تتحدّث الصفحة.</p>` : "") +
     mine.map(m => reqCard(m.id, m.title, m.svc, st && st[m.id])).join("");
 }
 $("#qbtn").onclick = async () => {
   const id = $("#q").value.trim().toUpperCase(), out = $("#qres");
   if (!id) { out.innerHTML = `<div class="err">اكتب رقم الطلب أولاً.</div>`; return; }
-  const st = await getStatuses();
+  const st = await getStatuses([id]);
   const m = load("twz_mine", []).find(x => x.id === id);
   if (st && st[id]) out.innerHTML = reqCard(id, m && m.title, m && m.svc, st[id]);
   else if (m) out.innerHTML = reqCard(id, m.title, m.svc, null);
@@ -318,24 +329,31 @@ $("#qbtn").onclick = async () => {
 
 /* لوحة القسم: الرابط المباشر #admin */
 let adm = null;
+function flag(n){ const d = $("#dirty"); d.hidden = false;
+  d.innerHTML = n === 1 ? "<b>تغييراتك لم تُنشر بعد.</b> هي محفوظة على هذا المتصفح فقط، ولن يراها الموظفون حتى تنزّل <b>statuses.json</b> وترفعه إلى GitHub."
+    : "<b>تم تنزيل الملف.</b> الخطوة الباقية: ارفعه إلى المستودع في GitHub (Add file ثم Upload files ثم Commit changes) ليراه الموظفون بعد دقيقة."; }
 async function renderAdmin(){
+  if (API) {
+    $("#admin").innerHTML = `<h2 style="margin-top:0">تحديث حالات الطلبات</h2><div class="card"><p>تصل الطلبات تلقائياً إلى جدول Google Sheet. لتغيير حالة طلب افتح الجدول واختر الحالة من القائمة في عمود «الحالة»، وأضف رسالة للموظف في العمود الأخير إن أردت. يرى الموظف التغيير فوراً دون أي رفع ملفات.</p>${SHEET_URL ? `<a class="btn" style="text-decoration:none;display:inline-block" href="${SHEET_URL}" target="_blank" rel="noopener">فتح جدول الطلبات</a>` : ""}</div>`;
+    return;
+  }
   if (!adm) adm = load("twz_adm", null) || await getStatuses() || {};
   $("#ast").innerHTML = Object.entries(ST).map(([k,v]) => `<option value="${k}">${v[0]}</option>`).join("");
   const rows = Object.entries(adm);
   $("#alist").innerHTML = rows.length ? `<table><tr><th>الرقم</th><th>الحالة</th><th>الرسالة</th><th></th></tr>` +
     rows.map(([id,s]) => `<tr><td dir="ltr">${esc(id)}</td><td>${badge(s.s)}</td><td>${esc(s.n||"")}</td><td><button class="btn alt" data-del="${esc(id)}">حذف</button></td></tr>`).join("") + `</table>`
     : `<div class="card">لا توجد حالات بعد. أضف أول حالة من النموذج أعلاه.</div>`;
-  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { delete adm[b.dataset.del]; save("twz_adm", adm); renderAdmin(); });
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { delete adm[b.dataset.del]; save("twz_adm", adm); flag(1); renderAdmin(); });
 }
 $("#aadd").onclick = () => {
   const id = $("#aid").value.trim().toUpperCase();
   if (!/^TWZ-\d{4}-[A-Z0-9]{4}$/.test(id)) { alert("رقم الطلب غير صحيح. الصيغة: TWZ-2026-AB12"); return; }
   adm[id] = {s:$("#ast").value, n:$("#anote").value.trim()};
-  save("twz_adm", adm); $("#aid").value = ""; $("#anote").value = ""; renderAdmin();
+  save("twz_adm", adm); flag(1); $("#aid").value = ""; $("#anote").value = ""; renderAdmin();
 };
 $("#adl").onclick = () => {
   const blob = new Blob([JSON.stringify({updated:new Date().toISOString().slice(0,10), items:adm}, null, 2)], {type:"application/json"});
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "statuses.json"; a.click();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "statuses.json"; a.click(); flag(2);
 };
 route();
 </script>
