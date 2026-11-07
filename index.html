@@ -503,7 +503,7 @@ async function loadAdmin(){
   if ($("#ad")) $("#ad").onchange = e => { AD = e.target.value; drawAdmin(); };
   $("#ak").onclick = e => { const b = e.target.closest("[data-f]"); if (b) { AF = b.dataset.f; drawAdmin(); } };
   $("#al").onclick = onAdminClick;
-  drawAdmin();
+  drawAdmin(); startPoll();
 }
 function rowHtml(r){
   const det = parseDet(r.details), m = Object.fromEntries(det), open = OPEN === r.id;
@@ -537,6 +537,21 @@ function drawAdmin(){
     .sort((a,b) => (a.status === "new" ? 0 : 1) - (b.status === "new" ? 0 : 1) || new Date(b.created_at) - new Date(a.created_at));
   $("#al").innerHTML = rows.length ? rows.map(rowHtml).join("") : `<div class="card">لا توجد طلبات مطابقة.</div>`;
 }
+/* تحديث تلقائي كل دقيقة أثناء فتح اللوحة، مع عدّاد في عنوان التبويب للطلبات الجديدة */
+const BASE_TITLE = document.title; let POLL = null, NEWN = 0;
+function startPoll(){ clearInterval(POLL); POLL = setInterval(pollAdmin, 60000); }
+async function pollAdmin(){
+  if (!tok() || location.hash !== "#admin") return;
+  const a = document.activeElement; if (a && a.closest && a.closest("#al")) return;   // لا نقاطع من يكتب رسالة
+  try {
+    const rows = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=500");
+    const known = new Set(ADM.map(r => r.id)), fresh = rows.filter(r => !known.has(r.id));
+    ADM = rows;
+    if (fresh.length) { NEWN += fresh.length; if (document.hidden) document.title = "(" + NEWN + ") طلب جديد - " + BASE_TITLE; drawAdmin(); }
+  } catch {}
+}
+addEventListener("focus", () => { NEWN = 0; document.title = BASE_TITLE; });
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { NEWN = 0; document.title = BASE_TITLE; } });
 function exportCsv(){
   const q = AQ.trim().toLowerCase();
   const rows = ADM.filter(r => (!AD || r.dept === AD) && (!AF || r.status === AF) &&
