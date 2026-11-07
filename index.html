@@ -93,6 +93,23 @@ a.dept .go{color:var(--navy);font-weight:700}
 .steps{margin:8px 0 0;padding-inline-start:20px;font-size:15px;color:#e5edff}
 .steps li{margin-bottom:4px}
 .det{background:#f1f4fc;border-radius:8px;padding:8px 12px;white-space:pre-wrap;font:inherit;margin:8px 0;font-size:15px}
+.kpis{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.kpi{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font:inherit;color:inherit;display:flex;gap:8px;align-items:center}
+.kpi b{font-size:20px;color:var(--deep)}
+.kpi.on{border-color:var(--navy);background:#e8efff}
+.rq{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.rq.isnew{border-inline-start:5px solid #1d4ed8}
+.rqh{display:grid;grid-template-columns:150px 1fr 1.5fr auto;gap:12px;align-items:center;padding:12px 14px;cursor:pointer;width:100%;text-align:start;background:none;border:0;font:inherit;color:inherit}
+.rqh:hover{background:#f6f8ff}
+.rqh small{display:block;color:var(--mute);font-size:13px}
+.rqb{padding:16px;border-top:1px solid var(--line);background:#fafbff;display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+.rqb h3{margin:0 0 8px;font-size:16px;color:var(--deep)}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0 0 10px}
+.kv dt{color:var(--mute)}.kv dd{margin:0;font-weight:600}
+.urg{background:#fee2e2;color:#991b1b;border-radius:99px;padding:1px 10px;font-size:13px;font-weight:700}
+.qa{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.qa button{background:#fff;border:1px solid var(--navy);color:var(--navy);border-radius:8px;padding:6px 12px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+@media (max-width:760px){.rqh{grid-template-columns:1fr auto}.rqh>span:nth-child(3){grid-column:1/-1}.rqb{grid-template-columns:1fr}}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -455,40 +472,99 @@ function renderAdmin(){
   }
   loadAdmin();
 }
-let ADM = [];
+let ADM = [], AF = "", AQ = "", AD = "", OPEN = null, LAST = null;
+const ago = d => {
+  try {
+    const s = (new Date(d) - Date.now()) / 1000, a = Math.abs(s), rtf = new Intl.RelativeTimeFormat("ar-DZ-u-nu-latn", {numeric:"auto"});
+    if (a < 60) return "الآن";
+    if (a < 3600) return rtf.format(Math.round(s / 60), "minute");
+    if (a < 86400) return rtf.format(Math.round(s / 3600), "hour");
+    return rtf.format(Math.round(s / 86400), "day");
+  } catch { return ""; }
+};
+const fdate = d => new Date(d).toLocaleString("ar-DZ-u-nu-latn", {dateStyle:"medium", timeStyle:"short"});
+const parseDet = t => String(t || "").split("\n").map(l => { const i = l.indexOf(":"); return i > 0 ? [l.slice(0,i).trim(), l.slice(i+1).trim()] : ["", l.trim()]; }).filter(x => x[1]);
+const QA = {prog:"بدء التنفيذ", info:"طلب تفاصيل", buy:"بانتظار الاقتناء", ready:"جاهز للاستلام", done:"تم التسليم", off:"إلغاء الطلب"};
 async function loadAdmin(){
   const box = $("#admin");
   box.innerHTML = `<p class="mute">جارٍ التحميل...</p>`;
   try {
-    ADM = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=200");
+    ADM = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=500");
   } catch (x) { if (x.status === 401 || x.status === 403) return logout(); box.innerHTML = `<div class="err">تعذّر تحميل الطلبات: ${esc(x.message)}</div>`; return; }
   const who = sessionStorage.getItem("twz_who");
   box.innerHTML = `<div class="req"><h2 style="margin:0">طلبات ${who === "all" ? "كل الإدارات" : esc(DEPTS[who] ? DEPTS[who].n : "")}</h2>
-    <div class="row"><select id="af" aria-label="تصفية" style="width:auto"><option value="">كل الحالات</option>${Object.entries(ST).map(([k,v]) => `<option value="${k}">${v[0]}</option>`).join("")}</select>
-    <button class="btn alt" id="ar">تحديث</button><button class="btn alt" id="ao">خروج</button></div></div><div id="al" style="margin-top:12px"></div>`;
-  $("#af").onchange = drawAdmin; $("#ar").onclick = loadAdmin; $("#ao").onclick = logout;
+    <div class="row"><button class="btn alt" id="ax">تصدير CSV</button><button class="btn alt" id="ar">تحديث</button><button class="btn alt" id="ao">خروج</button></div></div>
+    <div class="kpis" id="ak"></div>
+    <div class="row" style="margin-bottom:12px"><input id="aq" type="search" placeholder="ابحث بالرقم أو الاسم أو عنوان الطلب" aria-label="بحث" style="flex:2;min-width:220px" value="${esc(AQ)}">
+      ${who === "all" ? `<select id="ad" aria-label="الإدارة" style="flex:1;min-width:180px"><option value="">كل الإدارات</option>${Object.entries(DEPTS).map(([k,D]) => `<option value="${k}" ${AD === k ? "selected" : ""}>${D.n}</option>`).join("")}</select>` : ""}</div>
+    <div id="al"></div>`;
+  $("#ar").onclick = loadAdmin; $("#ao").onclick = logout; $("#ax").onclick = exportCsv;
+  $("#aq").oninput = e => { AQ = e.target.value; drawAdmin(); };
+  if ($("#ad")) $("#ad").onchange = e => { AD = e.target.value; drawAdmin(); };
+  $("#ak").onclick = e => { const b = e.target.closest("[data-f]"); if (b) { AF = b.dataset.f; drawAdmin(); } };
+  $("#al").onclick = onAdminClick;
   drawAdmin();
 }
+function rowHtml(r){
+  const det = parseDet(r.details), m = Object.fromEntries(det), open = OPEN === r.id;
+  const urgent = ["عاجل", "الجهاز متوقف عن العمل"].includes(m["الاستعجال"]) || m["الأولوية"] === "A";
+  const dn = (DEPTS[r.dept] || {}).n || r.dept;
+  const head = `<button class="rqh" data-t="${esc(r.id)}" aria-expanded="${open}">
+    <span><b dir="ltr">${esc(r.code)}</b><small>${esc(ago(r.created_at))}</small></span>
+    <span><b>${esc(r.name)}</b><small>${esc(r.section || dn)}</small></span>
+    <span>${esc(r.title)}<small>${esc(dn)} - ${esc(r.service)}</small></span>
+    <span>${urgent ? '<span class="urg">عاجل</span> ' : ""}${badge(r.status)}</span></button>`;
+  if (!open) return `<div class="rq ${r.status === "new" ? "isnew" : ""}">${head}</div>`;
+  const msg = LAST && LAST.id === r.id ? LAST.text : "";
+  return `<div class="rq ${r.status === "new" ? "isnew" : ""}" data-id="${esc(r.id)}">${head}
+    <div class="rqb"><div><h3>تفاصيل الطلب</h3>
+      <dl class="kv">${det.length ? det.map(([k,v]) => `<dt>${esc(k || "ملاحظة")}</dt><dd>${esc(v)}</dd>`).join("") : "<dt>التفاصيل</dt><dd>لا توجد</dd>"}</dl>
+      <p class="mute" style="margin:0">مقدّم الطلب: <b>${esc(r.name)}</b>${r.email ? ` - <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}<br>وصل الطلب: ${esc(fdate(r.created_at))}</p></div>
+    <div><h3>الإجراء</h3>
+      <div class="qa">${Object.entries(QA).filter(([k]) => k !== r.status && (k !== "buy" || r.dept === "mt")).map(([k,l]) => `<button data-q="${k}">${l}</button>`).join("")}</div>
+      <div class="f"><label>رسالة للموظف (تظهر له مع الحالة)</label><input data-n value="${esc(r.note)}" maxlength="500" placeholder="مثال: جاهز في مكتب الاستقبال"></div>
+      <div class="f"><label>الحالة</label><select data-s>${Object.entries(ST).map(([k,v]) => `<option value="${k}" ${k === r.status ? "selected" : ""}>${v[0]}</option>`).join("")}</select></div>
+      <button class="btn" data-save>حفظ</button> <span class="mute">${esc(msg)}</span></div></div></div>`;
+}
 function drawAdmin(){
-  const f = $("#af").value, rows = ADM.filter(r => !f || r.status === f);
-  $("#al").innerHTML = rows.length ? rows.map(r => `<div class="card" style="margin-bottom:12px" data-id="${esc(r.id)}">
-    <div class="req"><div><b dir="ltr">${esc(r.code)}</b> <span class="mute">${esc(new Date(r.created_at).toLocaleString("ar-DZ-u-nu-latn",{dateStyle:"short",timeStyle:"short"}))}</span>
-      <div>${esc(r.title)}</div><div class="mute">${esc((DEPTS[r.dept]||{}).n || r.dept)} - ${esc(r.service)}</div>
-      <div>${esc(r.name)}${r.email ? ` - <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}${r.section ? " - " + esc(r.section) : ""}</div></div>${badge(r.status)}</div>
-    ${r.details ? `<pre class="det">${esc(r.details)}</pre>` : ""}
-    <div class="two"><div class="f"><label>الحالة</label><select data-s>${Object.entries(ST).map(([k,v]) => `<option value="${k}" ${k === r.status ? "selected" : ""}>${v[0]}</option>`).join("")}</select></div>
-    <div class="f"><label>رسالة للموظف (اختياري)</label><input data-n value="${esc(r.note)}" maxlength="500"></div></div>
-    <button class="btn" data-save>حفظ</button> <span class="mute" data-msg></span></div>`).join("") : `<div class="card">لا توجد طلبات.</div>`;
-  document.querySelectorAll("[data-save]").forEach(b => b.onclick = async () => {
-    const c = b.closest(".card"), m = c.querySelector("[data-msg]");
-    try {
-      const res = await authed("/rest/v1/requests?id=eq." + encodeURIComponent(c.dataset.id), {method:"PATCH", headers:{Prefer:"return=representation"},
-        body:JSON.stringify({status:c.querySelector("[data-s]").value, note:c.querySelector("[data-n]").value.trim()})});
-      const u = res && res[0]; if (!u) throw new Error("لا صلاحية لتعديل هذا الطلب");
-      const i = ADM.findIndex(x => x.id === u.id); if (i > -1) ADM[i] = u;
-      m.textContent = "تم الحفظ"; c.querySelector(".badge").outerHTML = badge(u.status);
-    } catch (x) { m.textContent = "تعذّر الحفظ: " + x.message; }
-  });
+  const q = AQ.trim().toLowerCase();
+  const base = ADM.filter(r => (!AD || r.dept === AD) && (!q || [r.code, r.name, r.title, r.service, r.section, r.email].join(" ").toLowerCase().includes(q)));
+  const cnt = k => base.filter(r => r.status === k).length;
+  $("#ak").innerHTML = [["", "الكل", base.length], ...Object.entries(ST).map(([k,v]) => [k, v[0], cnt(k)])]
+    .filter(([k,,n]) => k === "" || n > 0 || k === AF)
+    .map(([k,l,n]) => `<button class="kpi ${AF === k ? "on" : ""}" data-f="${k}"><b>${n}</b><span>${l}</span></button>`).join("");
+  const rows = base.filter(r => !AF || r.status === AF)
+    .sort((a,b) => (a.status === "new" ? 0 : 1) - (b.status === "new" ? 0 : 1) || new Date(b.created_at) - new Date(a.created_at));
+  $("#al").innerHTML = rows.length ? rows.map(rowHtml).join("") : `<div class="card">لا توجد طلبات مطابقة.</div>`;
+}
+function exportCsv(){
+  const q = AQ.trim().toLowerCase();
+  const rows = ADM.filter(r => (!AD || r.dept === AD) && (!AF || r.status === AF) &&
+    (!q || [r.code, r.name, r.title, r.service, r.section, r.email].join(" ").toLowerCase().includes(q)));
+  const cell = v => '"' + String(v ?? "").replace(/"/g, '""').replace(/\n/g, " | ") + '"';
+  const head = ["الرقم","التاريخ","الإدارة","الاسم","البريد","الخدمة","العنوان","الحالة","رسالة للموظف","التفاصيل"];
+  const lines = [head, ...rows.map(r => [r.code, fdate(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.email, r.service, r.title, (ST[r.status] || ST.new)[0], r.note, r.details])];
+  const blob = new Blob(["\ufeff" + lines.map(l => l.map(cell).join(",")).join("\r\n")], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "طلبات-" + new Date().toISOString().slice(0,10) + ".csv"; a.click();
+}
+async function saveReq(id, status, note){
+  try {
+    const res = await authed("/rest/v1/requests?id=eq." + encodeURIComponent(id), {method:"PATCH", headers:{Prefer:"return=representation"},
+      body:JSON.stringify({status, note})});
+    const u = res && res[0]; if (!u) throw new Error("لا صلاحية لتعديل هذا الطلب");
+    const i = ADM.findIndex(x => x.id === u.id); if (i > -1) ADM[i] = u;
+    LAST = {id, text:"تم الحفظ"};
+  } catch (x) { LAST = {id, text:"تعذّر الحفظ: " + x.message}; }
+  drawAdmin();
+}
+function onAdminClick(e){
+  const t = e.target.closest("[data-t]");
+  if (t) { OPEN = OPEN === t.dataset.t ? null : t.dataset.t; LAST = null; drawAdmin(); return; }
+  const c = e.target.closest(".rq[data-id]"); if (!c) return;
+  const note = c.querySelector("[data-n]").value.trim();
+  const q = e.target.closest("[data-q]");
+  if (q) return saveReq(c.dataset.id, q.dataset.q, note);
+  if (e.target.closest("[data-save]")) saveReq(c.dataset.id, c.querySelector("[data-s]").value, note);
 }
 if (!CONFIGURED) document.querySelector("main").insertAdjacentHTML("afterbegin", '<div class="err">لم يُضبط الربط بقاعدة البيانات بعد: ضع SB_URL وSB_KEY في أعلى كود الصفحة.</div>');
 route();
