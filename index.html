@@ -110,6 +110,12 @@ a.dept .go{color:var(--navy);font-weight:700}
 .qa{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .qa button{background:#fff;border:1px solid var(--navy);color:var(--navy);border-radius:8px;padding:6px 12px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
 @media (max-width:760px){.rqh{grid-template-columns:1fr auto}.rqh>span:nth-child(3){grid-column:1/-1}.rqb{grid-template-columns:1fr}}
+nav a.dp{border:1px solid var(--line)}
+nav a.dp.on{border-color:var(--navy)}
+.hero.cmp{padding:22px 26px;grid-template-columns:1.5fr 1fr;margin-bottom:16px}
+.hero.cmp h1{font-size:26px;margin:8px 0}
+.hero.cmp p{margin:0}
+@media (max-width:760px){.hero.cmp{grid-template-columns:1fr}}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -117,11 +123,7 @@ a.dept .go{color:var(--navy);font-weight:700}
 <body>
 <header><div class="bar">
   <a class="brand" href="#home"><img src="logo.gif" alt="شعار مدرسة تاونزة العلمية"><span>مدرسة تاونزة العلمية<small>المنصة الرقمية للخدمات</small></span></a>
-  <nav>
-    <a href="#home" data-v="home">الرئيسية والإدارات</a>
-    <a href="#new" data-v="new">تقديم طلب جديد</a>
-    <a href="#track" data-v="track">تتبع طلباتي</a>
-  </nav>
+  <nav id="nav"></nav>
 </div></header>
 
 <main>
@@ -131,28 +133,26 @@ a.dept .go{color:var(--navy);font-weight:700}
       <span class="pill">المنصة الرقمية الموحدة - العام الدراسي 2026-2027</span>
       <h1>مرحباً بك في المنصة الرقمية لمدرسة تاونزة العلمية</h1>
       <p>اختر الإدارة المعنية، وقدّم طلبك، وتابع حالته من مكان واحد: جاهز للاستلام، أو قيد التنفيذ، أو يحتاج مزيداً من التفاصيل.</p>
-      <div class="row"><a class="btn hot" href="#new">تقديم طلب جديد</a><a class="btn ghost" href="#track">متابعة حالة طلباتي</a></div>
+      <div class="row"><a class="btn ghost" href="#track">متابعة حالة طلباتي</a></div>
     </div>
   </div>
   <h2>الإدارات والخدمات</h2>
   <div class="dept-grid" id="deptCards"></div>
 </section>
 
-<section id="dept" hidden><div id="deptBox"></div></section>
-
 <section id="new" hidden>
-  <h2 style="margin-top:0">طلب جديد</h2>
+  <div id="fmHead"></div>
   <div id="err" class="err" hidden></div>
-  <form id="form" novalidate>
+  <div class="card" id="fmCard"><form id="form" novalidate>
     <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
-    <div class="f"><label>1. نوع الخدمة</label><div class="pick" id="pick"></div></div>
+    <div class="f" id="pickWrap"><label>نوع الخدمة</label><div class="pick" id="pick"></div></div>
     <div class="two">
       <div class="f"><label for="name">الاسم الكامل</label><input id="name" name="name" required autocomplete="name"></div>
       <div class="f"><label for="email">البريد الإلكتروني (لنرد عليك)</label><input id="email" name="email" type="email" required autocomplete="email"></div>
       <div class="f" id="fw_dept"><label for="sect">القسم أو المادة</label><input id="sect" name="dept" required placeholder="مثال: اللغة العربية"></div>
       <div class="f" id="fw_title"><label for="title">عنوان الطلب</label><input id="title" name="title" required placeholder="مثال: اختبار الفصل الأول، 120 نسخة"></div>
     </div>
-    <div class="f"><label style="color:var(--navy)" id="extraTitle">2. التفاصيل</label></div>
+    <div class="f"><label style="color:var(--navy)" id="extraTitle">التفاصيل</label></div>
     <div class="two" id="extra"></div>
     <div class="two">
       <div class="f" id="fw_due"><label for="due">تاريخ التسليم المطلوب</label><input id="due" name="due" type="date" required></div>
@@ -161,7 +161,7 @@ a.dept .go{color:var(--navy);font-weight:700}
     <div class="f"><label for="notes">ملاحظات إضافية (اختياري)</label><textarea id="notes" name="notes"></textarea></div>
     <button class="btn" id="send" type="submit">إرسال الطلب</button>
   </form>
-  <div id="done" class="ok" hidden></div>
+  <div id="done" class="ok" hidden></div></div>
 </section>
 
 <section id="track" hidden>
@@ -208,14 +208,14 @@ const ST = {
 const DOCS = ["شهادة العمل","كشف الأجرة","كشف العمل والأجرة ATS","طلب منح عائلية","طلب تفعيل/استخراج بطاقة الشفاء","تصريح بإستئناف أو عدم إستئناف العمل","نموذج طلب تكوين","شهادة حسن السيرة","وصل خدمات طبية - تعاضدية البنائين","نموذج طلب استقالة"];
 /* الإدارات: لإضافة إدارة جديدة أضف عنصراً هنا وخدماتها في SV، ثم أضف رمزها في قيود dept بملف SQL */
 const DEPTS = {
-  it: {n:"الإعلام وتكنولوجيا المعلومات", i:"💻", c:"", d:"طباعة الأوراق، التصاميم، تغطية الأحداث، وصيانة الحواسيب.", svc:["print","design","cover","fix"],
+  it: {n:"الإعلام وتكنولوجيا المعلومات", s:"الإعلام والتقنية", i:"💻", c:"", d:"طباعة الأوراق، التصاميم، تغطية الأحداث، وصيانة الحواسيب.", svc:["print","design","cover","fix"],
     h1:"بوابة خدمات الإعلام وتكنولوجيا المعلومات",
     p:"منظومة رقمية لخدمة الطاقم التربوي والتعليمي. قدّم طلبك وتابع حالته: جاهز للاستلام، أو قيد التنفيذ، أو يحتاج مزيداً من التفاصيل.",
     aside:`<span class="open" id="openNow">...</span><b>مكتب الاستجابة السريعة</b>
       <p>فريق القسم جاهز لاستقبال طلبات الطباعة والتصميم والتغطية والصيانة.</p>
       <div style="color:#d3e0fa;font-size:15px">أوقات العمل: السبت إلى الخميس، 08:00 - 13:00</div>
       <div style="color:#d3e0fa;font-size:15px;margin-top:4px">استقبال المكتب يومياً: 09:30 - 10:00 و11:20 - 11:40</div>`},
-  hr: {n:"الموارد البشرية", i:"👥", c:"rust", d:"طلب الوثائق الإدارية: شهادة العمل، كشف الأجرة، كشف ATS، بطاقة الشفاء وغيرها.", svc:["doc"],
+  hr: {n:"الموارد البشرية", s:"الموارد البشرية", i:"👥", c:"rust", d:"طلب الوثائق الإدارية: شهادة العمل، كشف الأجرة، كشف ATS، بطاقة الشفاء وغيرها.", svc:["doc"],
     h1:"بوابة خدمات الموارد البشرية",
     p:"آلية رقمية موحدة ورسمية لطلب الوثائق الإدارية، تضمن التنظيم والشفافية وسرعة الاستجابة وحفظ الحقوق.",
     aside:`<b>خطوات طلب الوثيقة</b><ol class="steps">
@@ -224,7 +224,7 @@ const DEPTS = {
       <li>حين تصبح حالة الطلب «جاهز للاستلام» توجّه إلى مكتب الاستقبال.</li>
       <li>التوقيع إجباري في سجل استلام الوثائق عند الاستلام.</li>
       <li>للإدارة حق استدعاء المعني إلى مكتبها إذا كانت الوثيقة ذات طابع خاص أو تحتاج توضيحاً.</li></ol>`},
-  mt: {n:"الصيانة", i:"🔧", c:"", d:"طلبات صيانة القاعات والمرافق والتجهيزات، مع تتبع الحالة حتى التنفيذ.", svc:["maint"],
+  mt: {n:"الصيانة", s:"الصيانة", i:"🔧", c:"", d:"طلبات صيانة القاعات والمرافق والتجهيزات، مع تتبع الحالة حتى التنفيذ.", svc:["maint"],
     h1:"بوابة طلبات الصيانة 2026/2027",
     p:"قدّم طلب الصيانة الخاص بقسمك أو قاعتك أو المكان المعني، وتابع حالته حتى التنفيذ.",
     aside:`<b>معلومات مهمة عن الآجال</b><ol class="steps">
@@ -275,10 +275,15 @@ const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catc
 const isDept = h => Object.prototype.hasOwnProperty.call(DEPTS, h);
 
 /* التنقل */
+$("#nav").innerHTML = `<a href="#home" data-v="home">الرئيسية</a>` +
+  Object.entries(DEPTS).map(([k,D]) => `<a class="dp" href="#${k}" data-v="${k}">${D.i} ${D.s}</a>`).join("") +
+  `<a href="#track" data-v="track">طلباتي</a>`;
 function route(){
-  const h = location.hash.slice(1) || "home", d = isDept(h);
-  document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== (d ? "dept" : h));
-  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("on", a.dataset.v === (d ? "home" : h)));
+  let h = location.hash.slice(1) || "home"; if (h === "new") h = "home";
+  const d = isDept(h);
+  document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== (d ? "new" : h));
+  document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.v === h));
+  if (!d && !$("#done").hidden) CUR = null;
   if (d) renderDept(h);
   if (h === "track") renderMine();
   if (h === "admin") renderAdmin();
@@ -290,45 +295,26 @@ addEventListener("hashchange", route);
 $("#deptCards").innerHTML = Object.entries(DEPTS).map(([k,D]) =>
   `<a class="dept ${D.c}" href="#${k}"><span class="big" style="font-size:30px" aria-hidden="true">${D.i}</span><h3>${D.n}</h3><p>${D.d}</p><span class="go">الدخول إلى الإدارة</span></a>`).join("");
 
-/* صفحة الإدارة */
+/* صفحة الإدارة = نموذجها مباشرة */
+let CUR = null;
 function renderDept(k){
-  const D = DEPTS[k], mineN = load("twz_mine", []).filter(m => (m.dept || "it") === k).length;
-  $("#deptBox").innerHTML = `<a class="crumb" href="#home">العودة إلى الرئيسية</a>
-  <div class="hero"><div><span class="pill">${D.n}</span><h1>${D.h1}</h1><p>${D.p}</p>
-    <div class="row"><a class="btn hot" href="#new" id="goNew">تقديم طلب جديد</a><a class="btn ghost" href="#track">متابعة حالة طلباتي</a></div></div>
-    <aside class="quick">${D.aside}</aside></div>
-  <div class="stats">
-    <div class="stat"><span class="si" style="background:#d9f5ee">✅</span><div><b id="sReady">-</b><small>طلبات جاهزة للاستلام</small></div></div>
-    <div class="stat"><span class="si" style="background:#e0e9ff">⏳</span><div><b id="sProg">-</b><small>طلبات قيد التنفيذ</small></div></div>
-    <div class="stat"><span class="si" style="background:#fff0d6">💬</span><div><b id="sInfo">-</b><small>بانتظار مزيد من التفاصيل</small></div></div>
-    <div class="stat"><span class="si" style="background:#ffe9de">📋</span><div><b>${mineN}</b><small>طلباتي من هذا الجهاز</small></div></div>
-  </div>
-  <h2>الخدمات</h2>
-  <div class="svcs">${D.svc.map(x => { const v = SV[x];
-    return `<article class="svc ${v.c}"><div class="top"><span class="tag">${v.tag}</span><span class="big" aria-hidden="true">${v.i}</span></div>
-    <h3>${v.t}</h3><p>${v.d}</p><div class="chips">${v.ch.map(c => `<span>${c}</span>`).join("")}</div>
-    <button class="cta" data-k="${x}">${v.t}</button></article>`; }).join("")}</div>`;
-  $("#goNew").onclick = () => pickSvc(D.svc[0]);
-  document.querySelectorAll(".cta").forEach(b => b.onclick = () => { pickSvc(b.dataset.k); location.hash = "new"; });
-  deptStats(k);
-}
-async function deptStats(k){
+  const D = DEPTS[k];
+  $("#fmHead").innerHTML = `<div class="hero cmp"><div><span class="pill">${D.i} ${D.n}</span><h1>${D.h1}</h1><p>${D.p}</p></div><aside class="quick">${D.aside}</aside></div>`;
+  if (CUR !== k) {
+    $("#form").reset(); $("#form").hidden = false; $("#done").hidden = true; $("#err").hidden = true;
+    $("#pick").innerHTML = D.svc.map((x,n) => `<label><input type="radio" name="service" value="${x}" ${n ? "" : "checked"}>${SV[x].i} ${SV[x].t}</label>`).join("");
+    $("#pickWrap").hidden = D.svc.length < 2;
+    CUR = k; renderExtra();
+  }
   const o = $("#openNow");
   if (o) { const d = new Date(), m = d.getHours()*60 + d.getMinutes(), on = d.getDay() !== 5 && ((m >= 570 && m < 600) || (m >= 680 && m < 700));
     o.textContent = on ? "المكتب يستقبل الآن" : "خارج أوقات الاستقبال"; o.classList.toggle("shut", !on); }
-  let c = null;
-  if (CONFIGURED) { try { c = await sb("/rest/v1/rpc/dept_stats", {method:"POST", body:JSON.stringify({d:k})}); } catch {} }
-  if (!$("#sReady")) return;
-  $("#sReady").textContent = c ? c.ready : "-"; $("#sProg").textContent = c ? c.prog : "-"; $("#sInfo").textContent = c ? c.info : "-";
 }
 
 /* النموذج */
-$("#pick").innerHTML = Object.entries(SV).map(([k,v],n) =>
-  `<label><input type="radio" name="service" value="${k}" ${n?"":"checked"}>${v.i} ${v.t}<small>${DEPTS[v.dept].n}</small></label>`).join("");
-function pickSvc(k){ document.querySelector(`#pick input[value="${k}"]`).checked = true; renderExtra(); }
 function renderExtra(){
   const k = document.querySelector("#pick input:checked").value, s = SV[k];
-  $("#extraTitle").textContent = "2. تفاصيل: " + s.t;
+  $("#extraTitle").textContent = "تفاصيل: " + s.t;
   $("#fw_title").hidden = !!s.hideTitle; $("#title").required = !s.hideTitle;
   $("#fw_dept").hidden = !!s.hideDept; $("#sect").required = !s.hideDept;
   $("#fw_due").hidden = $("#fw_link").hidden = !!s.noDue; $("#due").required = !s.noDue;
@@ -348,7 +334,6 @@ $("#extra").addEventListener("change", e => {
   if (o) { const on = e.target.value === "أخرى"; o.hidden = !on; o.required = on; }
 });
 $("#pick").addEventListener("change", renderExtra);
-renderExtra();
 $("#due").min = new Date().toISOString().slice(0,10);
 
 /* الإرسال إلى Supabase */
