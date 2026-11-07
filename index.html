@@ -92,6 +92,7 @@ a.dept .go{color:var(--navy);font-weight:700}
 .crumb{display:inline-block;margin-bottom:12px;color:var(--navy);text-decoration:none;font-weight:600}
 .steps{margin:8px 0 0;padding-inline-start:20px;font-size:15px;color:#e5edff}
 .steps li{margin-bottom:4px}
+.det{background:#f1f4fc;border-radius:8px;padding:8px 12px;white-space:pre-wrap;font:inherit;margin:8px 0;font-size:15px}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -131,7 +132,7 @@ a.dept .go{color:var(--navy);font-weight:700}
     <div class="two">
       <div class="f"><label for="name">الاسم الكامل</label><input id="name" name="name" required autocomplete="name"></div>
       <div class="f"><label for="email">البريد الإلكتروني (لنرد عليك)</label><input id="email" name="email" type="email" required autocomplete="email"></div>
-      <div class="f" id="fw_dept"><label for="dept">القسم أو المادة</label><input id="dept" name="dept" required placeholder="مثال: اللغة العربية"></div>
+      <div class="f" id="fw_dept"><label for="sect">القسم أو المادة</label><input id="sect" name="dept" required placeholder="مثال: اللغة العربية"></div>
       <div class="f" id="fw_title"><label for="title">عنوان الطلب</label><input id="title" name="title" required placeholder="مثال: اختبار الفصل الأول، 120 نسخة"></div>
     </div>
     <div class="f"><label style="color:var(--navy)" id="extraTitle">2. التفاصيل</label></div>
@@ -156,12 +157,27 @@ a.dept .go{color:var(--navy);font-weight:700}
 
 <section id="admin" hidden></section>
 </main>
-<footer><img src="logo.gif" alt="" height="56"><div>مدرسة تاونزة العلمية - المنصة الرقمية للخدمات</div></footer>
+<footer><img src="logo.gif" alt="" height="56"><div>مدرسة تاونزة العلمية - المنصة الرقمية للخدمات</div><div style="margin-top:6px"><a href="#admin" style="color:var(--mute)">دخول المسؤولين</a></div></footer>
 
 <script>
-const FORMSPREE = "https://formspree.io/f/mpppqqwe";
-const API = "https://script.google.com/macros/s/AKfycbwE4NEa0P8fOtxypP7wJRfDOik5LLwrT2CWLLxcguxUZZmTAlbnU4shldbTTtgWxukT/exec";
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/1hgR-Vq1-lYTlGIxtJtWHoeZUvXe1gIjajq-11p5o5wY/edit";
+/* ضع هنا بيانات مشروعك من Supabase: Project Settings ثم API */
+const SB_URL = "https://vzvkpobtsvofizagiraa.supabase.co";
+const SB_KEY = "sb_publishable_H7POoqOnaMziz9IZFMt0fQ_2f0SzbgJ";
+const CONFIGURED = !/YOUR-/.test(SB_URL + SB_KEY);
+const isJwt = t => /^eyJ/.test(t || "");
+function hdr(extra, token){
+  const h = Object.assign({apikey: SB_KEY, "Content-Type": "application/json"}, extra || {});
+  const t = token || (isJwt(SB_KEY) ? SB_KEY : "");
+  if (t) h.Authorization = "Bearer " + t;
+  return h;
+}
+async function sb(path, o){
+  o = o || {};
+  const r = await fetch(SB_URL + path, {method:o.method || "GET", headers:hdr(o.headers, o.token), body:o.body});
+  const tx = await r.text(); let j = null; try { j = tx ? JSON.parse(tx) : null; } catch {}
+  if (!r.ok) throw Object.assign(new Error((j && (j.message || j.msg || j.error_description)) || r.status), {status:r.status, data:j});
+  return j;
+}
 
 const ST = {
   new:   ["تم الاستلام", "#475569"],
@@ -173,7 +189,7 @@ const ST = {
   off:   ["ملغى", "#b91c1c"]
 };
 const DOCS = ["شهادة العمل","كشف الأجرة","كشف العمل والأجرة ATS","طلب منح عائلية","طلب تفعيل/استخراج بطاقة الشفاء","تصريح بإستئناف أو عدم إستئناف العمل","نموذج طلب تكوين","شهادة حسن السيرة","وصل خدمات طبية - تعاضدية البنائين","نموذج طلب استقالة"];
-/* الإدارات: لإضافة إدارة جديدة أضف عنصراً هنا وخدماتها في SV */
+/* الإدارات: لإضافة إدارة جديدة أضف عنصراً هنا وخدماتها في SV، ثم أضف رمزها في قيود dept بملف SQL */
 const DEPTS = {
   it: {n:"الإعلام وتكنولوجيا المعلومات", i:"💻", c:"", d:"طباعة الأوراق، التصاميم، تغطية الأحداث، وصيانة الحواسيب.", svc:["print","design","cover","fix"],
     h1:"بوابة خدمات الإعلام وتكنولوجيا المعلومات",
@@ -284,7 +300,7 @@ async function deptStats(k){
   if (o) { const d = new Date(), m = d.getHours()*60 + d.getMinutes(), on = d.getDay() !== 5 && ((m >= 570 && m < 600) || (m >= 680 && m < 700));
     o.textContent = on ? "المكتب يستقبل الآن" : "خارج أوقات الاستقبال"; o.classList.toggle("shut", !on); }
   let c = null;
-  try { const r = await fetch(API + "?stats=1&dept=" + k); if (r.ok) c = await r.json(); } catch {}
+  if (CONFIGURED) { try { c = await sb("/rest/v1/rpc/dept_stats", {method:"POST", body:JSON.stringify({d:k})}); } catch {} }
   if (!$("#sReady")) return;
   $("#sReady").textContent = c ? c.ready : "-"; $("#sProg").textContent = c ? c.prog : "-"; $("#sInfo").textContent = c ? c.info : "-";
 }
@@ -297,7 +313,7 @@ function renderExtra(){
   const k = document.querySelector("#pick input:checked").value, s = SV[k];
   $("#extraTitle").textContent = "2. تفاصيل: " + s.t;
   $("#fw_title").hidden = !!s.hideTitle; $("#title").required = !s.hideTitle;
-  $("#fw_dept").hidden = !!s.hideDept; $("#dept").required = !s.hideDept;
+  $("#fw_dept").hidden = !!s.hideDept; $("#sect").required = !s.hideDept;
   $("#fw_due").hidden = $("#fw_link").hidden = !!s.noDue; $("#due").required = !s.noDue;
   $("#extra").innerHTML = s.f.map(([n,l,t,o,r]) => {
     const id = "x_" + n, rq = r ? " required" : "", lab = l + (r ? " *" : "");
@@ -318,33 +334,42 @@ $("#pick").addEventListener("change", renderExtra);
 renderExtra();
 $("#due").min = new Date().toISOString().slice(0,10);
 
-/* الإرسال: Formspree للبريد + Google Sheet للحالات */
+/* الإرسال إلى Supabase */
 const newId = () => "TWZ-" + new Date().getFullYear() + "-" + Math.random().toString(36).slice(2,6).toUpperCase();
 $("#form").addEventListener("submit", async e => {
   e.preventDefault();
   const f = e.target, err = $("#err"); err.hidden = true;
+  if (f._gotcha.value) return;
+  if (!CONFIGURED) { err.hidden = false; err.textContent = "لم يُضبط الربط بقاعدة البيانات بعد."; return; }
   if (!f.reportValidity()) return;
-  const id = newId(), S = SV[f.service.value], svc = S.t, dp = S.dept, dn = DEPTS[dp].n;
+  const S = SV[f.service.value], svc = S.t, dp = S.dept;
   const fd = new FormData(f), det = [];
   S.f.forEach(([n,l,t]) => {
     let v = fd.get(n);
-    if (t === "selo" && v === "أخرى") { v = ($("#x_" + n + "_o").value || "").trim(); fd.set(n, v); }
+    if (t === "selo" && v === "أخرى") { v = ($("#x_" + n + "_o").value || "").trim(); }
     if (v) det.push(l + ": " + v);
+    if (n === S.titleFrom) fd.set(n, v);
   });
+  const nt = (fd.get("notes") || "").trim(); if (nt) det.push("ملاحظات: " + nt);
+  const lk = (fd.get("link") || "").trim(); if (lk && !S.noDue) det.push("رابط الملفات: " + lk);
+  if (!S.noDue && fd.get("due")) det.push("التسليم المطلوب: " + fd.get("due"));
   const title = S.hideTitle ? (fd.get(S.titleFrom) || svc) : f.title.value;
-  fd.set("title", title);
-  fd.set("request_id", id); fd.set("service_label", svc); fd.set("department", dn);
-  fd.set("_subject", `[${id}] ${dn} - ${svc}: ${title}`);
-  fd.set("_replyto", f.email.value);
   const btn = $("#send"); btn.disabled = true; btn.textContent = "جارٍ الإرسال...";
   try {
-    const r = await fetch(FORMSPREE, {method:"POST", body:fd, headers:{Accept:"application/json"}});
-    if (!r.ok) throw new Error((await r.json().catch(()=>({}))).error || r.status);
+    let id = "", ok = false, last = null;
+    for (let i = 0; i < 3 && !ok; i++) {
+      id = newId();
+      try {
+        await sb("/rest/v1/requests", {method:"POST", headers:{Prefer:"return=minimal"},
+          body:JSON.stringify({code:id, dept:dp, name:f.name.value.trim(), email:f.email.value.trim(), section:f.dept.value.trim(),
+            service:svc, title:String(title).slice(0,300), details:det.join("\n")})});
+        ok = true;
+      } catch (x) { last = x; if (x.status !== 409) break; }
+    }
+    if (!ok) throw last;
     const mine = load("twz_mine", []);
     mine.unshift({id, svc, title, dept:dp, at:new Date().toISOString()});
     save("twz_mine", mine);
-    try { await fetch(API, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"},
-      body:JSON.stringify({id, dept:dp, name:f.name.value, email:f.email.value, section:f.dept.value, service:svc, title, details:det.join("\n")})}); } catch {}
     f.hidden = true;
     const d = $("#done"); d.hidden = false;
     d.innerHTML = `<h2 style="margin:0 0 6px">وصل طلبك</h2>
@@ -354,15 +379,19 @@ $("#form").addEventListener("submit", async e => {
     $("#again").onclick = () => { f.reset(); renderExtra(); f.hidden = false; d.hidden = true; };
   } catch (x) {
     err.hidden = false;
-    err.textContent = "تعذّر إرسال الطلب (" + x.message + "). تحقق من الاتصال بالإنترنت وأعد المحاولة. لم يُحفظ شيء.";
+    err.textContent = "تعذّر إرسال الطلب (" + x.message + "). تحقق من الاتصال وأعد المحاولة. لم يُحفظ شيء.";
     err.scrollIntoView({block:"center"});
   } finally { btn.disabled = false; btn.textContent = "إرسال الطلب"; }
 });
 
 /* الحالات */
 async function getStatuses(ids){
-  try { const r = await fetch(API + "?ids=" + encodeURIComponent((ids || []).join(","))); if (r.ok) return (await r.json()).items || {}; } catch {}
-  return null;
+  if (!CONFIGURED) return null;
+  try {
+    const a = await sb("/rest/v1/rpc/request_status", {method:"POST", body:JSON.stringify({ids:ids || []})}), m = {};
+    (a || []).forEach(r => m[r.code] = {s:r.status, n:r.note});
+    return m;
+  } catch { return null; }
 }
 const badge = c => { const [t,col] = ST[c] || ST.new; return `<span class="badge" style="color:${col};border-color:${col};background:${col}1a">${t}</span>`; };
 const reqCard = (id, title, svc, s) => `<div class="card" style="margin-bottom:10px"><div class="req">
@@ -387,10 +416,81 @@ $("#qbtn").onclick = async () => {
   else out.innerHTML = `<div class="card">لا يوجد طلب مسجّل بالرقم <b dir="ltr">${esc(id)}</b> على هذا الجهاز، ولا حالة مسجّلة له. تأكد من كتابة الرقم، أو راسل الإدارة المعنية.</div>`;
 };
 
-/* لوحة الإدارة: الرابط المباشر #admin */
-function renderAdmin(){
-  $("#admin").innerHTML = `<h2 style="margin-top:0">تحديث حالات الطلبات</h2><div class="card"><p>تصل الطلبات تلقائياً إلى جدول Google Sheet، ولكل إدارة ورقتها: ${Object.values(DEPTS).map(D => "«" + D.n + "»").join(" و")}. لتغيير حالة طلب افتح الورقة المناسبة واختر الحالة من القائمة في عمود «الحالة»، وأضف رسالة للموظف في عمود «رسالة للموظف». يرى الموظف التغيير فوراً دون رفع ملفات.</p><a class="btn" style="text-decoration:none;display:inline-block" href="${SHEET_URL}">فتح جدول الطلبات</a></div>`;
+/* لوحة المسؤولين: الرابط #admin */
+const tok = () => sessionStorage.getItem("twz_tok");
+const clearSess = () => ["twz_tok","twz_rt","twz_who"].forEach(k => sessionStorage.removeItem(k));
+const logout = () => { clearSess(); renderAdmin(); };
+async function refreshTok(){
+  const j = await sb("/auth/v1/token?grant_type=refresh_token", {method:"POST", body:JSON.stringify({refresh_token:sessionStorage.getItem("twz_rt")})});
+  sessionStorage.setItem("twz_tok", j.access_token); sessionStorage.setItem("twz_rt", j.refresh_token);
 }
+async function authed(path, o){
+  o = Object.assign({}, o || {});
+  try { return await sb(path, Object.assign(o, {token:tok()})); }
+  catch (x) {
+    if (x.status === 401 && sessionStorage.getItem("twz_rt")) { await refreshTok(); return await sb(path, Object.assign(o, {token:tok()})); }
+    throw x;
+  }
+}
+function renderAdmin(){
+  const box = $("#admin");
+  if (!tok()) {
+    box.innerHTML = `<h2 style="margin-top:0">دخول المسؤولين</h2><form id="lg" class="card" style="max-width:420px">
+      <div id="lgerr" class="err" hidden></div>
+      <div class="f"><label for="lm">البريد الإلكتروني</label><input id="lm" type="email" required autocomplete="username"></div>
+      <div class="f"><label for="lp">كلمة المرور</label><input id="lp" type="password" required autocomplete="current-password"></div>
+      <button class="btn" type="submit">دخول</button></form>`;
+    $("#lg").onsubmit = async ev => {
+      ev.preventDefault();
+      const e2 = $("#lgerr"); e2.hidden = true;
+      try {
+        const j = await sb("/auth/v1/token?grant_type=password", {method:"POST", body:JSON.stringify({email:$("#lm").value.trim(), password:$("#lp").value})});
+        const m = await sb("/rest/v1/managers?select=dept", {token:j.access_token});
+        if (!m || !m.length) throw new Error("not-manager");
+        sessionStorage.setItem("twz_tok", j.access_token); sessionStorage.setItem("twz_rt", j.refresh_token || ""); sessionStorage.setItem("twz_who", m[0].dept);
+        renderAdmin();
+      } catch (x) { e2.hidden = false; e2.textContent = x.message === "not-manager" ? "هذا الحساب غير مخوّل بإدارة الطلبات." : "تعذّر الدخول. تحقق من البريد وكلمة المرور."; }
+    };
+    return;
+  }
+  loadAdmin();
+}
+let ADM = [];
+async function loadAdmin(){
+  const box = $("#admin");
+  box.innerHTML = `<p class="mute">جارٍ التحميل...</p>`;
+  try {
+    ADM = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=200");
+  } catch (x) { if (x.status === 401 || x.status === 403) return logout(); box.innerHTML = `<div class="err">تعذّر تحميل الطلبات: ${esc(x.message)}</div>`; return; }
+  const who = sessionStorage.getItem("twz_who");
+  box.innerHTML = `<div class="req"><h2 style="margin:0">طلبات ${who === "all" ? "كل الإدارات" : esc(DEPTS[who] ? DEPTS[who].n : "")}</h2>
+    <div class="row"><select id="af" aria-label="تصفية" style="width:auto"><option value="">كل الحالات</option>${Object.entries(ST).map(([k,v]) => `<option value="${k}">${v[0]}</option>`).join("")}</select>
+    <button class="btn alt" id="ar">تحديث</button><button class="btn alt" id="ao">خروج</button></div></div><div id="al" style="margin-top:12px"></div>`;
+  $("#af").onchange = drawAdmin; $("#ar").onclick = loadAdmin; $("#ao").onclick = logout;
+  drawAdmin();
+}
+function drawAdmin(){
+  const f = $("#af").value, rows = ADM.filter(r => !f || r.status === f);
+  $("#al").innerHTML = rows.length ? rows.map(r => `<div class="card" style="margin-bottom:12px" data-id="${esc(r.id)}">
+    <div class="req"><div><b dir="ltr">${esc(r.code)}</b> <span class="mute">${esc(new Date(r.created_at).toLocaleString("ar-DZ-u-nu-latn",{dateStyle:"short",timeStyle:"short"}))}</span>
+      <div>${esc(r.title)}</div><div class="mute">${esc((DEPTS[r.dept]||{}).n || r.dept)} - ${esc(r.service)}</div>
+      <div>${esc(r.name)}${r.email ? ` - <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}${r.section ? " - " + esc(r.section) : ""}</div></div>${badge(r.status)}</div>
+    ${r.details ? `<pre class="det">${esc(r.details)}</pre>` : ""}
+    <div class="two"><div class="f"><label>الحالة</label><select data-s>${Object.entries(ST).map(([k,v]) => `<option value="${k}" ${k === r.status ? "selected" : ""}>${v[0]}</option>`).join("")}</select></div>
+    <div class="f"><label>رسالة للموظف (اختياري)</label><input data-n value="${esc(r.note)}" maxlength="500"></div></div>
+    <button class="btn" data-save>حفظ</button> <span class="mute" data-msg></span></div>`).join("") : `<div class="card">لا توجد طلبات.</div>`;
+  document.querySelectorAll("[data-save]").forEach(b => b.onclick = async () => {
+    const c = b.closest(".card"), m = c.querySelector("[data-msg]");
+    try {
+      const res = await authed("/rest/v1/requests?id=eq." + encodeURIComponent(c.dataset.id), {method:"PATCH", headers:{Prefer:"return=representation"},
+        body:JSON.stringify({status:c.querySelector("[data-s]").value, note:c.querySelector("[data-n]").value.trim()})});
+      const u = res && res[0]; if (!u) throw new Error("لا صلاحية لتعديل هذا الطلب");
+      const i = ADM.findIndex(x => x.id === u.id); if (i > -1) ADM[i] = u;
+      m.textContent = "تم الحفظ"; c.querySelector(".badge").outerHTML = badge(u.status);
+    } catch (x) { m.textContent = "تعذّر الحفظ: " + x.message; }
+  });
+}
+if (!CONFIGURED) document.querySelector("main").insertAdjacentHTML("afterbegin", '<div class="err">لم يُضبط الربط بقاعدة البيانات بعد: ضع SB_URL وSB_KEY في أعلى كود الصفحة.</div>');
 route();
 </script>
 </body>
