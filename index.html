@@ -502,12 +502,12 @@ async function loadAdmin(){
   } catch (x) { if (x.status === 401 || x.status === 403) return logout(); box.innerHTML = `<div class="err">تعذّر تحميل الطلبات: ${esc(x.message)}</div>`; return; }
   const who = sessionStorage.getItem("twz_who");
   box.innerHTML = `<div class="req"><h2 style="margin:0">طلبات ${who === "all" ? "كل الإدارات" : esc(DEPTS[who] ? DEPTS[who].n : "")}</h2>
-    <div class="row"><button class="btn alt" id="ax">تصدير CSV</button><button class="btn alt" id="ar">تحديث</button><button class="btn alt" id="ao">خروج</button></div></div>
+    <div class="row"><button class="btn alt" id="ax">تصدير Excel</button><button class="btn alt" id="ar">تحديث</button><button class="btn alt" id="ao">خروج</button></div></div>
     <div class="kpis" id="ak"></div>
     <div class="row" style="margin-bottom:12px"><input id="aq" type="search" placeholder="ابحث بالرقم أو الاسم أو عنوان الطلب" aria-label="بحث" style="flex:2;min-width:220px" value="${esc(AQ)}">
       ${who === "all" ? `<select id="ad" aria-label="الإدارة" style="flex:1;min-width:180px"><option value="">كل الإدارات</option>${Object.entries(DEPTS).map(([k,D]) => `<option value="${k}" ${AD === k ? "selected" : ""}>${D.n}</option>`).join("")}</select>` : ""}</div>
     <div id="al"></div>`;
-  $("#ar").onclick = loadAdmin; $("#ao").onclick = logout; $("#ax").onclick = exportCsv;
+  $("#ar").onclick = loadAdmin; $("#ao").onclick = logout; $("#ax").onclick = exportXlsx;
   $("#aq").oninput = e => { AQ = e.target.value; drawAdmin(); };
   if ($("#ad")) $("#ad").onchange = e => { AD = e.target.value; drawAdmin(); };
   $("#ak").onclick = e => { const b = e.target.closest("[data-f]"); if (b) { AF = b.dataset.f; drawAdmin(); } };
@@ -561,6 +561,32 @@ async function pollAdmin(){
 }
 addEventListener("focus", () => { NEWN = 0; document.title = BASE_TITLE; });
 document.addEventListener("visibilitychange", () => { if (!document.hidden) { NEWN = 0; document.title = BASE_TITLE; } });
+/* تصدير إلى Excel (.xlsx): تُحمَّل مكتبة SheetJS عند أول ضغطة فقط */
+const XLSX_SRC = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+function loadXlsx(){
+  if (window.XLSX) return Promise.resolve();
+  return new Promise((ok, no) => { const t = document.createElement("script"); t.src = XLSX_SRC; t.onload = ok; t.onerror = () => no(new Error("load")); document.head.appendChild(t); });
+}
+async function exportXlsx(){
+  const btn = $("#ax"), txt = btn.textContent; btn.disabled = true; btn.textContent = "جارٍ التجهيز...";
+  try {
+    await loadXlsx();
+    const q = AQ.trim().toLowerCase();
+    const rows = ADM.filter(r => (!AD || r.dept === AD) && (!AF || r.status === AF) &&
+      (!q || [r.code, r.name, r.title, r.service, r.section, r.email].join(" ").toLowerCase().includes(q)));
+    const head = ["الرقم","التاريخ","الإدارة","الاسم","البريد","القسم أو المادة","الخدمة","العنوان","الحالة","رسالة للموظف","التفاصيل"];
+    const data = [head, ...rows.map(r => [r.code, new Date(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.email || "", r.section || "",
+      r.service, r.title, (ST[r.status] || ST.new)[0], r.note || "", String(r.details || "").replace(/\n/g, "\n")])];
+    const ws = XLSX.utils.aoa_to_sheet(data, {cellDates:true});
+    ws["!cols"] = [16,18,24,20,26,18,22,32,20,30,60].map(w => ({wch:w}));
+    for (let i = 1; i < data.length; i++) { const c = ws["B" + (i + 1)]; if (c) c.z = "yyyy-mm-dd hh:mm"; }
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "الطلبات");
+    wb.Workbook = {Views:[{RTL:true}]};
+    XLSX.writeFile(wb, "طلبات-" + new Date().toISOString().slice(0,10) + ".xlsx");
+  } catch (x) {
+    if (confirm("تعذّر تحميل أداة Excel (تحتاج اتصالاً بالإنترنت). هل تريد تنزيل الطلبات بصيغة CSV بدلاً منها؟")) exportCsv();
+  } finally { btn.disabled = false; btn.textContent = txt; }
+}
 function exportCsv(){
   const q = AQ.trim().toLowerCase();
   const rows = ADM.filter(r => (!AD || r.dept === AD) && (!AF || r.status === AF) &&
