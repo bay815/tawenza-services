@@ -2,13 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<meta name="theme-color" content="#0e3a82">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="logo.gif">
 <title>المنصة الرقمية - مدرسة تاونزة العلمية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0e3a82;--deep:#00255d;--rust:#a73a00;--bg:#f4f6fc;--line:#d9dff0;--ink:#131b2e;--mute:#4a5063}
+:root{--soft:#e8efff;--navy:#0e3a82;--deep:#00255d;--rust:#a73a00;--bg:#f4f6fc;--line:#d9dff0;--ink:#131b2e;--mute:#4a5063}
 *{box-sizing:border-box}
 body{margin:0;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.8;font-size:16px}
 header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
@@ -20,7 +21,7 @@ nav{display:flex;gap:6px;flex-wrap:wrap}
 nav a{padding:8px 14px;border-radius:8px;color:var(--ink);text-decoration:none}
 nav a.on{background:var(--navy);color:#fff}
 main{max-width:1040px;margin:auto;padding:20px 16px 70px}
-.hero{background:linear-gradient(135deg,#00255d,#0e3a82);color:#fff;border-radius:16px;padding:34px 30px 56px;display:grid;grid-template-columns:1.7fr 1fr;gap:26px;align-items:center}
+.hero{background:linear-gradient(135deg,var(--deep),var(--navy));color:#fff;border-radius:16px;padding:34px 30px 56px;display:grid;grid-template-columns:1.7fr 1fr;gap:26px;align-items:center}
 .hero h1{margin:12px 0 10px;font-size:32px;line-height:1.5}
 .hero p{margin:0 0 20px;max-width:58ch;color:#d3e0fa}
 .pill{display:inline-block;background:rgba(255,255,255,.14);border-radius:99px;padding:3px 14px;font-size:14px}
@@ -63,7 +64,7 @@ textarea{min-height:90px}
 .pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:18px}
 .pick label{border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;background:#fff;margin:0;font-weight:600}
 .pick input{position:absolute;opacity:0;width:1px;height:1px}
-.pick label:has(input:checked){border-color:var(--navy);background:#e8efff}
+.pick label:has(input:checked){border-color:var(--navy);background:var(--soft)}
 .pick label:has(input:focus-visible){outline:3px solid #fd651e}
 .btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:11px 22px;font:inherit;font-weight:700;cursor:pointer}
 .btn.alt{background:#fff;color:var(--navy);border:1px solid var(--navy)}
@@ -71,7 +72,7 @@ textarea{min-height:90px}
 .badge{display:inline-block;padding:2px 12px;border-radius:99px;font-size:14px;font-weight:600;border:1px solid}
 .req{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin-bottom:10px}
 .req b{color:var(--navy)}
-.note{background:#eef2ff;border-radius:8px;padding:8px 12px;margin-top:8px;font-size:15px}
+.note{background:var(--soft);border-radius:8px;padding:8px 12px;margin-top:8px;font-size:15px}
 .ok{background:#e7f6ee;border:1px solid #9bd5b4;border-radius:12px;padding:18px}
 .err{background:#fdecea;border:1px solid #f0a8a2;border-radius:12px;padding:14px;margin-bottom:14px}
 .mute{color:var(--mute);font-size:15px}
@@ -82,12 +83,13 @@ td,th{border-bottom:1px solid var(--line);padding:8px;text-align:start;font-size
 footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-top:1px solid var(--line);background:#fff}footer img{display:block;margin:0 auto 6px}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:no-preference){.card,.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-a.dept{display:block;background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:22px;text-decoration:none;color:inherit}
+a.dept{display:block;background:#fff;border:1px solid var(--line);border-top:5px solid var(--c);border-radius:14px;padding:22px;text-decoration:none;color:inherit}
 a.dept.rust{border-top-color:#c2410c}
-a.dept:hover{border-color:var(--navy)}
+a.dept:hover{border-color:var(--c)}
+a.dept .big{width:54px;height:54px;border-radius:12px;background:var(--cs);display:grid;place-items:center}
 a.dept h3{margin:8px 0 4px;color:var(--deep);font-size:22px}
 a.dept p{margin:0 0 10px;color:var(--mute);font-size:15px}
-a.dept .go{color:var(--navy);font-weight:700}
+a.dept .go{color:var(--c);font-weight:700}
 .hero.solo{grid-template-columns:1fr;padding-bottom:34px}
 .crumb{display:inline-block;margin-bottom:12px;color:var(--navy);text-decoration:none;font-weight:600}
 .steps{margin:8px 0 0;padding-inline-start:20px;font-size:15px;color:#e5edff}
@@ -110,8 +112,12 @@ a.dept .go{color:var(--navy);font-weight:700}
 .qa{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .qa button{background:#fff;border:1px solid var(--navy);color:var(--navy);border-radius:8px;padding:6px 12px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
 @media (max-width:760px){.rqh{grid-template-columns:1fr auto}.rqh>span:nth-child(3){grid-column:1/-1}.rqb{grid-template-columns:1fr}}
-nav a.dp{border:1px solid var(--line)}
-nav a.dp.on{border-color:var(--navy)}
+nav a.dp{border:1.5px solid var(--c)}
+nav a.dp:hover{background:var(--cs)}
+nav a.dp.on{background:var(--c);color:#fff}
+header{border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#7e22ce,#0e7490,#047857,#c2410c) 1}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference){main>section{animation:rise .35s ease}a.dept{transition:transform .2s,box-shadow .2s}a.dept:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.10)}}
 .hero.cmp{padding:22px 26px;grid-template-columns:1.5fr 1fr;margin-bottom:16px}
 .hero.cmp h1{font-size:26px;margin:8px 0}
 .hero.cmp p{margin:0}
@@ -221,21 +227,21 @@ const ST = {
 const DOCS = ["شهادة العمل","كشف الأجرة","كشف كل أجور فترة التصريح (RELEVE DES EMOLUMENTS)","كشف العمل والأجرة (ATS)","طلب منح عائلية","طلب تفعيل/استخراج بطاقة الشفاء","تصريح بإستئناف أو عدم إستئناف العمل","نموذج طلب تكوين","شهادة حسن السيرة","وصل خدمات طبية - تعاضدية البنائين","وصل استفادة - الفرابي للنظارات الطبية","سند التكفل بالعلاج - مصحة القصور","نموذج طلب استقالة"];
 /* الإدارات: لإضافة إدارة جديدة أضف عنصراً هنا وخدماتها في SV، ثم أضف رمزها في قيود dept بملف SQL */
 const DEPTS = {
-  md: {n:"الإعلام والتسويق", s:"الإعلام والتسويق", i:"📣", c:"rust", d:"طباعة الأوراق والتصاميم الجرافيكية وتغطية الأحداث بالصور والفيديو.", svc:["print","design","cover"],
+  md: {n:"الإعلام والتسويق", s:"الإعلام والتسويق", i:"📣", col:"#7e22ce", deep:"#4c1d95", soft:"#f3e8ff", c:"rust", d:"طباعة الأوراق والتصاميم الجرافيكية وتغطية الأحداث بالصور والفيديو.", svc:["print","design","cover"],
     h1:"بوابة خدمات الإعلام والتسويق",
     p:"اطلب طباعة الأوراق، أو تصميم الملصقات والمطويات والشهادات، أو تغطية فعالية بالصور والفيديو، وتابع حالة طلبك حتى الجاهزية.",
     aside:`<span class="open" id="openNow">...</span><b>مكتب الاستقبال</b>
       <p>يستقبل الفريق طلبات الطباعة والتصميم والتغطية الإعلامية.</p>
       <div style="color:#d3e0fa;font-size:15px">أوقات العمل: السبت إلى الخميس، 08:00 - 13:00</div>
       <div style="color:#d3e0fa;font-size:15px;margin-top:4px">استقبال المكتب يومياً: 09:30 - 10:00 و11:20 - 11:40</div>`},
-  it: {n:"تقنية المعلومات", s:"تقنية المعلومات", i:"💻", c:"", d:"الأعطال التقنية وطلبات التكوين وشراء العتاد التقني.", svc:["fix","train","gear"],
+  it: {n:"تقنية المعلومات", s:"تقنية المعلومات", i:"💻", col:"#0e7490", deep:"#164e63", soft:"#e0f7fa", c:"", d:"الأعطال التقنية وطلبات التكوين وشراء العتاد التقني.", svc:["fix","train","gear"],
     h1:"بوابة خدمات تقنية المعلومات",
     p:"أبلغ عن خلل تقني، أو اطلب تكويناً، أو شراء عتاد تقني، وتابع حالة طلبك حتى الجاهزية.",
     aside:`<span class="open" id="openNow">...</span><b>مكتب الاستجابة السريعة</b>
       <p>فريق القسم جاهز لاستقبال طلبات الأعطال التقنية والتكوين وشراء العتاد.</p>
       <div style="color:#d3e0fa;font-size:15px">أوقات العمل: السبت إلى الخميس، 08:00 - 13:00</div>
       <div style="color:#d3e0fa;font-size:15px;margin-top:4px">استقبال المكتب يومياً: 09:30 - 10:00 و11:20 - 11:40</div>`},
-  hr: {n:"الموارد البشرية", s:"الموارد البشرية", i:"👥", c:"rust", d:"طلب الوثائق الإدارية: شهادة العمل، كشف الأجرة، كشف ATS، بطاقة الشفاء وغيرها.", svc:["doc"],
+  hr: {n:"الموارد البشرية", s:"الموارد البشرية", i:"👥", col:"#047857", deep:"#064e3b", soft:"#dcfce7", c:"rust", d:"طلب الوثائق الإدارية: شهادة العمل، كشف الأجرة، كشف ATS، بطاقة الشفاء وغيرها.", svc:["doc"],
     h1:"بوابة خدمات الموارد البشرية",
     p:"آلية رقمية موحدة ورسمية لطلب الوثائق الإدارية، تضمن التنظيم والشفافية وسرعة الاستجابة وحفظ الحقوق.",
     aside:`<b>خطوات طلب الوثيقة</b><ol class="steps">
@@ -244,7 +250,7 @@ const DEPTS = {
       <li>إشعار الجاهزية: ستبلغك الموارد البشرية عند جاهزية الوثيقة (يظهر الإشعار في «طلباتي»)، وتوجّهك إلى مكتب الاستقبال لاستلامها.</li>
       <li>أكّد الاستلام: وقّع في سجل الاستلام بمكتب الاستقبال.</li></ol>
       <p style="font-size:14px;color:#d3e0fa">قد تتطلب بعض الطلبات تواصلاً معك أو حضورك إلى مكتب الموارد البشرية لاستكمال الإجراءات أو التوضيح. وإن طلبت الإدارة معلومات إضافية فستجد طلبها في «طلباتي» وتردّ عليه من هناك.</p>`},
-  mt: {n:"الصيانة", s:"الصيانة", i:"🔧", c:"", d:"طلبات صيانة القاعات والمرافق والتجهيزات، مع تتبع الحالة حتى التنفيذ.", svc:["maint"],
+  mt: {n:"الصيانة", s:"الصيانة", i:"🔧", col:"#c2410c", deep:"#7c2d12", soft:"#ffedd5", c:"", d:"طلبات صيانة القاعات والمرافق والتجهيزات، مع تتبع الحالة حتى التنفيذ.", svc:["maint"],
     h1:"بوابة طلبات الصيانة 2026/2027",
     p:"قدّم طلب الصيانة الخاص بقسمك أو قاعتك أو المكان المعني، وتابع حالته حتى التنفيذ.",
     aside:`<b>معلومات مهمة عن الآجال</b><ol class="steps">
@@ -309,7 +315,7 @@ const isDept = h => Object.prototype.hasOwnProperty.call(DEPTS, h);
 
 /* التنقل */
 $("#nav").innerHTML = `<a href="#home" data-v="home">الرئيسية</a>` +
-  Object.entries(DEPTS).map(([k,D]) => `<a class="dp" href="#${k}" data-v="${k}">${D.i} ${D.s}</a>`).join("") +
+  Object.entries(DEPTS).map(([k,D]) => `<a class="dp" href="#${k}" data-v="${k}" style="--c:${D.col};--cs:${D.soft}">${D.i} ${D.s}</a>`).join("") +
   `<a href="#track" data-v="track">طلباتي</a>`;
 $("#nav").addEventListener("click", e => {   // الضغط على زر الإدارة نفسها يفتح نموذجاً جديداً بعد الإرسال
   const a = e.target.closest("a");
@@ -320,6 +326,10 @@ function route(){
   const d = isDept(h);
   document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== (d ? "new" : h));
   document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.v === h));
+  const R = document.documentElement.style, D = d ? DEPTS[h] : null;
+  if (D) { R.setProperty("--navy", D.col); R.setProperty("--deep", D.deep); R.setProperty("--soft", D.soft); }
+  else ["--navy","--deep","--soft"].forEach(v => R.removeProperty(v));
+  const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = D ? D.col : "#0e3a82";
   if (!d && !$("#done").hidden) CUR = null;
   if (d) renderDept(h);
   if (h === "track") renderMine();
@@ -330,7 +340,7 @@ addEventListener("hashchange", route);
 
 /* الرئيسية: بطاقات الإدارات */
 $("#deptCards").innerHTML = Object.entries(DEPTS).map(([k,D]) =>
-  `<a class="dept ${D.c}" href="#${k}"><span class="big" style="font-size:30px" aria-hidden="true">${D.i}</span><h3>${D.n}</h3><p>${D.d}</p><span class="go">الدخول إلى الإدارة</span></a>`).join("");
+  `<a class="dept" href="#${k}" style="--c:${D.col};--cs:${D.soft}"><span class="big" style="font-size:30px" aria-hidden="true">${D.i}</span><h3>${D.n}</h3><p>${D.d}</p><span class="go">الدخول إلى الإدارة</span></a>`).join("");
 
 /* صفحة الإدارة = نموذجها مباشرة */
 let CUR = null;
