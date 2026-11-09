@@ -124,6 +124,7 @@ a.lk .ic{width:46px;height:46px;flex:none;border-radius:10px;display:grid;place-
 a.lk b{display:block;color:var(--deep)}
 a.lk small{color:var(--mute);font-size:13px}
 .flinks{margin-bottom:6px}.flinks a{margin:0 10px;color:var(--navy);text-decoration:none;white-space:nowrap}
+.rf{margin-top:10px}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -209,6 +210,7 @@ async function sb(path, o){
 
 const ST = {
   new:   ["تم الاستلام", "#475569"],
+  replied: ["تم إرسال المعلومات - بانتظار المراجعة", "#0f766e"],
   prog:  ["قيد التنفيذ", "#1d4ed8"],
   info:  ["بانتظار مزيد من التفاصيل", "#b45309"],
   ready: ["جاهز للاستلام", "#047857"],
@@ -216,7 +218,7 @@ const ST = {
   buy:   ["بانتظار الاقتناء", "#7c3aed"],
   off:   ["ملغى", "#b91c1c"]
 };
-const DOCS = ["شهادة العمل","كشف الأجرة","كشف العمل والأجرة ATS","طلب منح عائلية","طلب تفعيل/استخراج بطاقة الشفاء","تصريح بإستئناف أو عدم إستئناف العمل","نموذج طلب تكوين","شهادة حسن السيرة","وصل خدمات طبية - تعاضدية البنائين","نموذج طلب استقالة"];
+const DOCS = ["شهادة العمل","كشف الأجرة","كشف كل أجور فترة التصريح (RELEVE DES EMOLUMENTS)","كشف العمل والأجرة (ATS)","طلب منح عائلية","طلب تفعيل/استخراج بطاقة الشفاء","تصريح بإستئناف أو عدم إستئناف العمل","نموذج طلب تكوين","شهادة حسن السيرة","وصل خدمات طبية - تعاضدية البنائين","وصل استفادة - الفرابي للنظارات الطبية","سند التكفل بالعلاج - مصحة القصور","نموذج طلب استقالة"];
 /* الإدارات: لإضافة إدارة جديدة أضف عنصراً هنا وخدماتها في SV، ثم أضف رمزها في قيود dept بملف SQL */
 const DEPTS = {
   md: {n:"الإعلام والتسويق", s:"الإعلام والتسويق", i:"📣", c:"rust", d:"طباعة الأوراق والتصاميم الجرافيكية وتغطية الأحداث بالصور والفيديو.", svc:["print","design","cover"],
@@ -241,7 +243,8 @@ const DEPTS = {
       <li>تُعالج الطلبات في أجل أقصاه 24 ساعة، ما لم تقتضِ طبيعة الوثيقة مدة إضافية.</li>
       <li>حين تصبح حالة الطلب «جاهز للاستلام» توجّه إلى مكتب الاستقبال.</li>
       <li>التوقيع إجباري في سجل استلام الوثائق عند الاستلام.</li>
-      <li>للإدارة حق استدعاء المعني إلى مكتبها إذا كانت الوثيقة ذات طابع خاص أو تحتاج توضيحاً.</li></ol>`},
+      <li>للإدارة حق استدعاء المعني إلى مكتبها إذا كانت الوثيقة ذات طابع خاص أو تحتاج توضيحاً.</li>
+      <li>إن طلبت الإدارة معلومات إضافية، فستجد طلبها في «طلباتي» وتردّ عليه من هناك.</li></ol>`},
   mt: {n:"الصيانة", s:"الصيانة", i:"🔧", c:"", d:"طلبات صيانة القاعات والمرافق والتجهيزات، مع تتبع الحالة حتى التنفيذ.", svc:["maint"],
     h1:"بوابة طلبات الصيانة 2026/2027",
     p:"قدّم طلب الصيانة الخاص بقسمك أو قاعتك أو المكان المعني، وتابع حالته حتى التنفيذ.",
@@ -284,10 +287,10 @@ const SV = {
     ["reason","سبب الحاجة والاستخدام","area",null,1],
     ["urgency","الاستعجال","select",["عادي","عاجل"],1]]},
   doc: {dept:"hr", t:"طلب وثيقة إدارية", i:"📄", tag:"وثائق إدارية", c:"rust", d:"اطلب شهادة العمل أو كشف الأجرة أو غيرها من الوثائق الإدارية، وتابع حالتها حتى الاستلام.",
-    ch:["شهادة العمل","كشف الأجرة","كشف العمل والأجرة ATS","بطاقة الشفاء"],
+    ch:["شهادة العمل","كشف الأجرة","كشف العمل والأجرة (ATS)","بطاقة الشفاء"],
     hideTitle:true, hideDept:true, noDue:true, titleFrom:"docname", f:[
-    ["stage","الطور / مجال العمل","selo",["تحضيري","ابتدائي","متوسط","ثانوي","إدارة","خدمات"],1],
     ["job","اسم الوظيفة","text",null,1],
+    ["stage","الطور / مجال العمل","selo",["تحضيري","ابتدائي","متوسط","ثانوي","إدارة","خدمات"],1],
     ["docname","اسم الوثيقة المطلوبة","selo",DOCS,1],
     ["purpose","الغرض من الوثيقة المطلوبة","selo",["غرض إداري/سكن","غرض طبي","غرض بنكي","غرض اجتماعي (CNAS / تعويضات)","غرض تأشيرة/سفر","غرض مهني داخلي","غرض توظيف خارجي"],1]]},
   maint: {dept:"mt", t:"طلب صيانة", i:"🔧", tag:"صيانة المرافق", c:"", d:"اطلب إصلاح أو صيانة في قسمك أو قاعتك أو أي مكان في المؤسسة، وحدّد أولوية الطلب.",
@@ -418,7 +421,7 @@ $("#form").addEventListener("submit", async e => {
     }
     if (!ok) throw last;
     const mine = load("twz_mine", []);
-    mine.unshift({id, svc, title, dept:dp, at:new Date().toISOString()});
+    mine.unshift({id, svc, title, dept:dp, email:f.email.value.trim(), at:new Date().toISOString()});
     save("twz_mine", mine);
     f.hidden = true;
     const d = $("#done"); d.hidden = false;
@@ -439,29 +442,55 @@ async function getStatuses(ids){
   if (!CONFIGURED) return null;
   try {
     const a = await sb("/rest/v1/rpc/request_status", {method:"POST", body:JSON.stringify({ids:ids || []})}), m = {};
-    (a || []).forEach(r => m[r.code] = {s:r.status, n:r.note});
+    (a || []).forEach(r => m[r.code] = {s:r.status, n:r.note, r:r.reply});
     return m;
   } catch { return null; }
 }
 const badge = c => { const [t,col] = ST[c] || ST.new; return `<span class="badge" style="color:${col};border-color:${col};background:${col}1a">${t}</span>`; };
-const reqCard = (id, title, svc, s) => `<div class="card" style="margin-bottom:10px"><div class="req">
-  <div><b dir="ltr">${esc(id)}</b><div>${esc(title||"")}</div><div class="mute">${esc(svc||"")}</div></div>${badge(s && s.s)}</div>
-  ${s && s.n ? `<div class="note">${esc(s.n)}</div>` : ""}</div>`;
+const replyForm = (id, email) => `<form class="rf" data-code="${esc(id)}" ${email ? `data-email="${esc(email)}"` : ""}>
+  <div class="f"><label>أرسل المعلومات المطلوبة</label><textarea name="body" required maxlength="1500" placeholder="اكتب هنا ما طُلب منك..."></textarea></div>
+  <div class="f"><label>رابط ملف (اختياري)</label><input name="link" type="url" placeholder="https://..."></div>
+  ${email ? "" : `<div class="f"><label>بريدك الإلكتروني المستعمل في الطلب</label><input name="email" type="email" required></div>`}
+  <button class="btn" type="submit">إرسال الرد</button> <span class="mute msg"></span></form>`;
+const reqCard = (id, title, svc, s, email) => {
+  const st = s && s.s; let extra = "";
+  if (st === "info") extra = `<div class="note"><b>طلبت الإدارة منك:</b> ${esc(s.n || "تفاصيل إضافية")}</div>` + replyForm(id, email);
+  else if (st === "replied") extra = (s.n ? `<div class="note">${esc(s.n)}</div>` : "") + (s.r ? `<div class="note" style="background:#e7f6ee">ردّك المرسل: ${esc(s.r)}</div>` : "") +
+    `<p class="mute" style="margin:6px 0">أُرسل ردّك وهو بانتظار مراجعة الإدارة.</p><details><summary class="mute" style="cursor:pointer">إضافة معلومات أخرى</summary>${replyForm(id, email)}</details>`;
+  else if (s && s.n) extra = `<div class="note">${esc(s.n)}</div>`;
+  return `<div class="card" style="margin-bottom:10px"><div class="req">
+    <div><b dir="ltr">${esc(id)}</b><div>${esc(title||"")}</div><div class="mute">${esc(svc||"")}</div></div>${badge(st)}</div>${extra}</div>`;
+};
+document.addEventListener("submit", async e => {
+  const f = e.target.closest ? e.target.closest("form.rf") : null; if (!f) return;
+  e.preventDefault();
+  const msg = f.querySelector(".msg"), btn = f.querySelector("button[type=submit]"), code = f.dataset.code;
+  const email = f.dataset.email || (f.email ? f.email.value.trim() : "");
+  btn.disabled = true; msg.textContent = "جارٍ الإرسال...";
+  try {
+    const r = await sb("/rest/v1/rpc/request_reply", {method:"POST", body:JSON.stringify({p_code:code, p_email:email, p_body:f.body.value.trim(), p_link:f.link.value.trim()})});
+    if (r === "ok") {
+      const m = load("twz_mine", []), x = m.find(y => y.id === code); if (x && !x.email) { x.email = email; save("twz_mine", m); }
+      msg.textContent = "تم إرسال ردّك."; if (f.closest("#qres")) $("#qbtn").onclick(); else renderMine();
+    } else msg.textContent = {not_found:"تعذّر التحقق: تأكد من أن البريد هو نفسه المستعمل في الطلب.", not_waiting:"هذا الطلب لا ينتظر معلومات منك الآن.", empty:"اكتب الرد أولاً."}[r] || "تعذّر الإرسال.";
+  } catch (x) { msg.textContent = "تعذّر الإرسال: " + x.message; }
+  finally { btn.disabled = false; }
+});
 async function renderMine(){
   const mine = load("twz_mine", []), box = $("#mine");
   if (!mine.length) { box.innerHTML = `<div class="card">لا توجد طلبات على هذا الجهاز بعد. <a href="#home">اختر إدارة وقدّم طلباً</a></div>`; return; }
   box.innerHTML = `<p class="mute">جارٍ جلب الحالات...</p>`;
   const st = await getStatuses(mine.map(m => m.id));
   box.innerHTML = (st === null ? `<p class="mute">تعذّر جلب الحالات الآن. الحالة المعروضة هي «تم الاستلام» حتى تتحدّث الصفحة.</p>` : "") +
-    mine.map(m => reqCard(m.id, m.title, (DEPTS[m.dept || "it"].n) + " - " + m.svc, st && st[m.id])).join("");
+    mine.map(m => reqCard(m.id, m.title, (DEPTS[m.dept || "it"].n) + " - " + m.svc, st && st[m.id], m.email)).join("");
 }
 $("#qbtn").onclick = async () => {
   const id = $("#q").value.trim().toUpperCase(), out = $("#qres");
   if (!id) { out.innerHTML = `<div class="err">اكتب رقم الطلب أولاً.</div>`; return; }
   const st = await getStatuses([id]);
   const m = load("twz_mine", []).find(x => x.id === id);
-  if (st && st[id]) out.innerHTML = reqCard(id, m && m.title, m && m.svc, st[id]);
-  else if (m) out.innerHTML = reqCard(id, m.title, m.svc, null);
+  if (st && st[id]) out.innerHTML = reqCard(id, m && m.title, m && m.svc, st[id], m && m.email);
+  else if (m) out.innerHTML = reqCard(id, m.title, m.svc, null, m.email);
   else if (st === null) out.innerHTML = `<div class="err">تعذّر جلب الحالات. حاول لاحقاً.</div>`;
   else out.innerHTML = `<div class="card">لا يوجد طلب مسجّل بالرقم <b dir="ltr">${esc(id)}</b> على هذا الجهاز، ولا حالة مسجّلة له. تأكد من كتابة الرقم، أو راسل الإدارة المعنية.</div>`;
 };
@@ -505,7 +534,17 @@ function renderAdmin(){
   }
   loadAdmin();
 }
-let ADM = [], AF = "", AQ = "", AD = "", OPEN = null, LAST = null;
+let ADM = [], AF = "", AQ = "", AD = "", OPEN = null, LAST = null, REP = {};
+const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "";
+async function loadReplies(){
+  try {
+    const rs = await authed("/rest/v1/request_replies?select=request_id,body,link,created_at&order=created_at.asc&limit=1000");
+    REP = {}; rs.forEach(x => (REP[x.request_id] = REP[x.request_id] || []).push(x));
+  } catch { REP = {}; }
+}
+const repHtml = r => (REP[r.id] || []).length ? `<h3 style="margin-top:14px">ردود صاحب الطلب</h3>` + REP[r.id].map(x =>
+  `<div class="note" style="background:#e7f6ee"><div>${esc(x.body)}</div>${safeUrl(x.link) ? `<div><a href="${esc(safeUrl(x.link))}" target="_blank" rel="noopener noreferrer">فتح الرابط المرفق</a></div>` : ""}<small class="mute">${esc(fdate(x.created_at))}</small></div>`).join("") : "";
+const needsAction = r => r.status === "new" || r.status === "replied";
 const ago = d => {
   try {
     const s = (new Date(d) - Date.now()) / 1000, a = Math.abs(s), rtf = new Intl.RelativeTimeFormat("ar-DZ-u-nu-latn", {numeric:"auto"});
@@ -524,6 +563,7 @@ async function loadAdmin(){
   try {
     ADM = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=500");
   } catch (x) { if (x.status === 401 || x.status === 403) return logout(); box.innerHTML = `<div class="err">تعذّر تحميل الطلبات: ${esc(x.message)}</div>`; return; }
+  await loadReplies();
   const who = sessionStorage.getItem("twz_who");
   box.innerHTML = `<div class="req"><h2 style="margin:0">طلبات ${who === "all" ? "كل الإدارات" : esc(DEPTS[who] ? DEPTS[who].n : "")}</h2>
     <div class="row"><button class="btn alt" id="ax">تصدير Excel</button><button class="btn alt" id="ar">تحديث</button><button class="btn alt" id="ao">خروج</button></div></div>
@@ -547,12 +587,12 @@ function rowHtml(r){
     <span><b>${esc(r.name)}</b><small>${esc(r.section || dn)}</small></span>
     <span>${esc(r.title)}<small>${esc(dn)} - ${esc(r.service)}</small></span>
     <span>${urgent ? '<span class="urg">عاجل</span> ' : ""}${badge(r.status)}</span></button>`;
-  if (!open) return `<div class="rq ${r.status === "new" ? "isnew" : ""}">${head}</div>`;
+  if (!open) return `<div class="rq ${needsAction(r) ? "isnew" : ""}">${head}</div>`;
   const msg = LAST && LAST.id === r.id ? LAST.text : "";
-  return `<div class="rq ${r.status === "new" ? "isnew" : ""}" data-id="${esc(r.id)}">${head}
+  return `<div class="rq ${needsAction(r) ? "isnew" : ""}" data-id="${esc(r.id)}">${head}
     <div class="rqb"><div><h3>تفاصيل الطلب</h3>
       <dl class="kv">${det.length ? det.map(([k,v]) => `<dt>${esc(k || "ملاحظة")}</dt><dd>${esc(v)}</dd>`).join("") : "<dt>التفاصيل</dt><dd>لا توجد</dd>"}</dl>
-      <p class="mute" style="margin:0">مقدّم الطلب: <b>${esc(r.name)}</b>${r.email ? ` - <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}<br>وصل الطلب: ${esc(fdate(r.created_at))}</p></div>
+      <p class="mute" style="margin:0">مقدّم الطلب: <b>${esc(r.name)}</b>${r.email ? ` - <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}<br>وصل الطلب: ${esc(fdate(r.created_at))}</p>${repHtml(r)}</div>
     <div><h3>الإجراء</h3>
       <div class="qa">${Object.entries(QA).filter(([k]) => k !== r.status && (k !== "buy" || r.dept === "mt" || r.service === "شراء عتاد تقني")).map(([k,l]) => `<button data-q="${k}">${l}</button>`).join("")}</div>
       <div class="f"><label>رسالة للموظف (تظهر له مع الحالة)</label><input data-n value="${esc(r.note)}" maxlength="500" placeholder="مثال: جاهز في مكتب الاستقبال"></div>
@@ -567,7 +607,7 @@ function drawAdmin(){
     .filter(([k,,n]) => k === "" || n > 0 || k === AF)
     .map(([k,l,n]) => `<button class="kpi ${AF === k ? "on" : ""}" data-f="${k}"><b>${n}</b><span>${l}</span></button>`).join("");
   const rows = base.filter(r => !AF || r.status === AF)
-    .sort((a,b) => (a.status === "new" ? 0 : 1) - (b.status === "new" ? 0 : 1) || new Date(b.created_at) - new Date(a.created_at));
+    .sort((a,b) => (needsAction(a) ? 0 : 1) - (needsAction(b) ? 0 : 1) || new Date(b.created_at) - new Date(a.created_at));
   $("#al").innerHTML = rows.length ? rows.map(rowHtml).join("") : `<div class="card">لا توجد طلبات مطابقة.</div>`;
 }
 /* تحديث تلقائي كل دقيقة أثناء فتح اللوحة، مع عدّاد في عنوان التبويب للطلبات الجديدة */
@@ -578,8 +618,8 @@ async function pollAdmin(){
   const a = document.activeElement; if (a && a.closest && a.closest("#al")) return;   // لا نقاطع من يكتب رسالة
   try {
     const rows = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=500");
-    const known = new Set(ADM.map(r => r.id)), fresh = rows.filter(r => !known.has(r.id));
-    ADM = rows;
+    const old = new Map(ADM.map(r => [r.id, r.status])), fresh = rows.filter(r => !old.has(r.id) || (r.status === "replied" && old.get(r.id) !== "replied"));
+    ADM = rows; if (fresh.length) await loadReplies();
     if (fresh.length) { NEWN += fresh.length; if (document.hidden) document.title = "(" + NEWN + ") طلب جديد - " + BASE_TITLE; drawAdmin(); }
   } catch {}
 }
