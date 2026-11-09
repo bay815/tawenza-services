@@ -159,7 +159,7 @@ a.lk small{color:var(--mute);font-size:13px}
     <div class="f" id="pickWrap"><label>نوع الخدمة</label><div class="pick" id="pick"></div></div>
     <div class="two">
       <div class="f"><label for="name">الاسم الكامل</label><select id="name" name="name" required></select><input id="name_o" placeholder="اكتب اسمك الكامل" hidden style="margin-top:6px"></div>
-      <div class="f"><label for="email">البريد الإلكتروني (لنرد عليك)</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+      
       <div class="f" id="fw_dept"><label for="sect">القسم أو المادة</label><input id="sect" name="dept" required placeholder="مثال: اللغة العربية"></div>
       <div class="f" id="fw_title"><label for="title">عنوان الطلب</label><input id="title" name="title" required placeholder="مثال: اختبار الفصل الأول، 120 نسخة"></div>
     </div>
@@ -239,12 +239,11 @@ const DEPTS = {
     h1:"بوابة خدمات الموارد البشرية",
     p:"آلية رقمية موحدة ورسمية لطلب الوثائق الإدارية، تضمن التنظيم والشفافية وسرعة الاستجابة وحفظ الحقوق.",
     aside:`<b>خطوات طلب الوثيقة</b><ol class="steps">
-      <li>املأ جميع الخانات بدقة ووضوح، بحسب نوع الوثيقة والغرض الحقيقي من طلبها.</li>
-      <li>تُعالج الطلبات في أجل أقصاه 24 ساعة، ما لم تقتضِ طبيعة الوثيقة مدة إضافية.</li>
-      <li>حين تصبح حالة الطلب «جاهز للاستلام» توجّه إلى مكتب الاستقبال.</li>
-      <li>التوقيع إجباري في سجل استلام الوثائق عند الاستلام.</li>
-      <li>للإدارة حق استدعاء المعني إلى مكتبها إذا كانت الوثيقة ذات طابع خاص أو تحتاج توضيحاً.</li>
-      <li>إن طلبت الإدارة معلومات إضافية، فستجد طلبها في «طلباتي» وتردّ عليه من هناك.</li></ol>`},
+      <li>حدّد الوثيقة التي تحتاجها، ثم أرسل الطلب.</li>
+      <li>انتظر المعالجة: تُعالج الموارد البشرية الطلب خلال 24 ساعة عمل، وقد تستغرق بعض الطلبات وقتاً إضافياً.</li>
+      <li>إشعار الجاهزية: ستبلغك الموارد البشرية عند جاهزية الوثيقة (يظهر الإشعار في «طلباتي»)، وتوجّهك إلى مكتب الاستقبال لاستلامها.</li>
+      <li>أكّد الاستلام: وقّع في سجل الاستلام بمكتب الاستقبال.</li></ol>
+      <p style="font-size:14px;color:#d3e0fa">قد تتطلب بعض الطلبات تواصلاً معك أو حضورك إلى مكتب الموارد البشرية لاستكمال الإجراءات أو التوضيح. وإن طلبت الإدارة معلومات إضافية فستجد طلبها في «طلباتي» وتردّ عليه من هناك.</p>`},
   mt: {n:"الصيانة", s:"الصيانة", i:"🔧", c:"", d:"طلبات صيانة القاعات والمرافق والتجهيزات، مع تتبع الحالة حتى التنفيذ.", svc:["maint"],
     h1:"بوابة طلبات الصيانة 2026/2027",
     p:"قدّم طلب الصيانة الخاص بقسمك أو قاعتك أو المكان المعني، وتابع حالته حتى التنفيذ.",
@@ -428,14 +427,14 @@ $("#form").addEventListener("submit", async e => {
       id = newId();
       try {
         await sb("/rest/v1/requests", {method:"POST", headers:{Prefer:"return=minimal"},
-          body:JSON.stringify({code:id, dept:dp, name:nameVal(), email:f.email.value.trim(), section:f.dept.value.trim(),
+          body:JSON.stringify({code:id, dept:dp, name:nameVal(), section:f.dept.value.trim(),
             service:svc, title:String(title).slice(0,300), details:det.join("\n")})});
         ok = true;
       } catch (x) { last = x; if (x.status !== 409) break; }
     }
     if (!ok) throw last;
     const mine = load("twz_mine", []);
-    mine.unshift({id, svc, title, dept:dp, email:f.email.value.trim(), at:new Date().toISOString()});
+    mine.unshift({id, svc, title, dept:dp, who:nameVal(), at:new Date().toISOString()});
     save("twz_mine", mine);
     f.hidden = true;
     const d = $("#done"); d.hidden = false;
@@ -456,37 +455,48 @@ async function getStatuses(ids){
   if (!CONFIGURED) return null;
   try {
     const a = await sb("/rest/v1/rpc/request_status", {method:"POST", body:JSON.stringify({ids:ids || []})}), m = {};
-    (a || []).forEach(r => m[r.code] = {s:r.status, n:r.note, r:r.reply});
+    (a || []).forEach(r => m[r.code] = {s:r.status, n:r.note, r:r.reply, d:r.dept});
     return m;
   } catch { return null; }
 }
 const badge = c => { const [t,col] = ST[c] || ST.new; return `<span class="badge" style="color:${col};border-color:${col};background:${col}1a">${t}</span>`; };
-const replyForm = (id, email) => `<form class="rf" data-code="${esc(id)}" ${email ? `data-email="${esc(email)}"` : ""}>
+const staffOpts = () => `<option value="">اختر اسمك...</option>` + [...STAFF].sort((a,b) => a.localeCompare(b, "ar")).map(n => `<option>${esc(n)}</option>`).join("") + `<option value="__other">اسمي غير مدرج في القائمة</option>`;
+const replyForm = (id, who) => `<form class="rf" data-code="${esc(id)}" ${who ? `data-who="${esc(who)}"` : ""}>
   <div class="f"><label>أرسل المعلومات المطلوبة</label><textarea name="body" required maxlength="1500" placeholder="اكتب هنا ما طُلب منك..."></textarea></div>
   <div class="f"><label>رابط ملف (اختياري)</label><input name="link" type="url" placeholder="https://..."></div>
-  ${email ? "" : `<div class="f"><label>بريدك الإلكتروني المستعمل في الطلب</label><input name="email" type="email" required></div>`}
+  ${who ? "" : `<div class="f"><label>اسمك كما سجّلتَه في الطلب</label><select name="who" required>${staffOpts()}</select><input name="who_o" placeholder="اكتب اسمك كما سجّلتَه" hidden style="margin-top:6px"></div>`}
   <button class="btn" type="submit">إرسال الرد</button> <span class="mute msg"></span></form>`;
-const reqCard = (id, title, svc, s, email) => {
+const readyNotice = who => {
+  const t = who ? (/\sبنت\s/.test(" " + who + " ") ? "سيدتي " : "سيدي ") + esc(who) + " " : "";
+  return `<div class="note" style="background:#e7f6ee;line-height:2"><b>السلام عليكم، تحية طيبة وبعد؛</b><br>نُعلمكم ${t}بأن وثيقتكم المطلوبة أصبحت جاهزة.<br>يرجى التوجّه إلى مكتب الاستقبال لاستلامها والتوقيع بالاستلام.<br>تسعدنا خدمتكم وراحتكم. 🌹<br><small class="mute">#مدير_الموارد_البشرية</small></div>`;
+};
+const reqCard = (id, title, svc, s, who) => {
   const st = s && s.s; let extra = "";
-  if (st === "info") extra = `<div class="note"><b>طلبت الإدارة منك:</b> ${esc(s.n || "تفاصيل إضافية")}</div>` + replyForm(id, email);
+  if (st === "info") extra = `<div class="note"><b>طلبت الإدارة منك:</b> ${esc(s.n || "تفاصيل إضافية")}</div>` + replyForm(id, who);
   else if (st === "replied") extra = (s.n ? `<div class="note">${esc(s.n)}</div>` : "") + (s.r ? `<div class="note" style="background:#e7f6ee">ردّك المرسل: ${esc(s.r)}</div>` : "") +
-    `<p class="mute" style="margin:6px 0">أُرسل ردّك وهو بانتظار مراجعة الإدارة.</p><details><summary class="mute" style="cursor:pointer">إضافة معلومات أخرى</summary>${replyForm(id, email)}</details>`;
+    `<p class="mute" style="margin:6px 0">أُرسل ردّك وهو بانتظار مراجعة الإدارة.</p><details><summary class="mute" style="cursor:pointer">إضافة معلومات أخرى</summary>${replyForm(id, who)}</details>`;
+  else if (st === "ready" && s.d === "hr") extra = readyNotice(who) + (s.n ? `<div class="note">${esc(s.n)}</div>` : "");
   else if (s && s.n) extra = `<div class="note">${esc(s.n)}</div>`;
   return `<div class="card" style="margin-bottom:10px"><div class="req">
     <div><b dir="ltr">${esc(id)}</b><div>${esc(title||"")}</div><div class="mute">${esc(svc||"")}</div></div>${badge(st)}</div>${extra}</div>`;
 };
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.matches && t.matches("form.rf select[name=who]")) { const o = t.form.who_o; o.hidden = t.value !== "__other"; o.required = t.value === "__other"; }
+});
 document.addEventListener("submit", async e => {
   const f = e.target.closest ? e.target.closest("form.rf") : null; if (!f) return;
   e.preventDefault();
   const msg = f.querySelector(".msg"), btn = f.querySelector("button[type=submit]"), code = f.dataset.code;
-  const email = f.dataset.email || (f.email ? f.email.value.trim() : "");
+  const who = f.dataset.who || (f.who ? (f.who.value === "__other" ? f.who_o.value.trim() : f.who.value) : "");
+  if (!who) { msg.textContent = "اختر اسمك أولاً."; return; }
   btn.disabled = true; msg.textContent = "جارٍ الإرسال...";
   try {
-    const r = await sb("/rest/v1/rpc/request_reply", {method:"POST", body:JSON.stringify({p_code:code, p_email:email, p_body:f.body.value.trim(), p_link:f.link.value.trim()})});
+    const r = await sb("/rest/v1/rpc/request_reply", {method:"POST", body:JSON.stringify({p_code:code, p_name:who, p_body:f.body.value.trim(), p_link:f.link.value.trim()})});
     if (r === "ok") {
-      const m = load("twz_mine", []), x = m.find(y => y.id === code); if (x && !x.email) { x.email = email; save("twz_mine", m); }
+      const m = load("twz_mine", []), x = m.find(y => y.id === code); if (x && !x.who) { x.who = who; save("twz_mine", m); }
       msg.textContent = "تم إرسال ردّك."; if (f.closest("#qres")) $("#qbtn").onclick(); else renderMine();
-    } else msg.textContent = {not_found:"تعذّر التحقق: تأكد من أن البريد هو نفسه المستعمل في الطلب.", not_waiting:"هذا الطلب لا ينتظر معلومات منك الآن.", empty:"اكتب الرد أولاً."}[r] || "تعذّر الإرسال.";
+    } else msg.textContent = {not_found:"تعذّر التحقق: تأكد من أن الاسم هو نفسه الذي سجّلتَ به الطلب.", not_waiting:"هذا الطلب لا ينتظر معلومات منك الآن.", empty:"اكتب الرد أولاً."}[r] || "تعذّر الإرسال.";
   } catch (x) { msg.textContent = "تعذّر الإرسال: " + x.message; }
   finally { btn.disabled = false; }
 });
@@ -496,15 +506,15 @@ async function renderMine(){
   box.innerHTML = `<p class="mute">جارٍ جلب الحالات...</p>`;
   const st = await getStatuses(mine.map(m => m.id));
   box.innerHTML = (st === null ? `<p class="mute">تعذّر جلب الحالات الآن. الحالة المعروضة هي «تم الاستلام» حتى تتحدّث الصفحة.</p>` : "") +
-    mine.map(m => reqCard(m.id, m.title, (DEPTS[m.dept || "it"].n) + " - " + m.svc, st && st[m.id], m.email)).join("");
+    mine.map(m => reqCard(m.id, m.title, (DEPTS[m.dept || "it"].n) + " - " + m.svc, st && st[m.id], m.who)).join("");
 }
 $("#qbtn").onclick = async () => {
   const id = $("#q").value.trim().toUpperCase(), out = $("#qres");
   if (!id) { out.innerHTML = `<div class="err">اكتب رقم الطلب أولاً.</div>`; return; }
   const st = await getStatuses([id]);
   const m = load("twz_mine", []).find(x => x.id === id);
-  if (st && st[id]) out.innerHTML = reqCard(id, m && m.title, m && m.svc, st[id], m && m.email);
-  else if (m) out.innerHTML = reqCard(id, m.title, m.svc, null, m.email);
+  if (st && st[id]) out.innerHTML = reqCard(id, m && m.title, m && m.svc, st[id], m && m.who);
+  else if (m) out.innerHTML = reqCard(id, m.title, m.svc, null, m.who);
   else if (st === null) out.innerHTML = `<div class="err">تعذّر جلب الحالات. حاول لاحقاً.</div>`;
   else out.innerHTML = `<div class="card">لا يوجد طلب مسجّل بالرقم <b dir="ltr">${esc(id)}</b> على هذا الجهاز، ولا حالة مسجّلة له. تأكد من كتابة الرقم، أو راسل الإدارة المعنية.</div>`;
 };
@@ -652,11 +662,11 @@ async function exportXlsx(){
     const q = AQ.trim().toLowerCase();
     const rows = ADM.filter(r => (!AD || r.dept === AD) && (!AF || r.status === AF) &&
       (!q || [r.code, r.name, r.title, r.service, r.section, r.email].join(" ").toLowerCase().includes(q)));
-    const head = ["الرقم","التاريخ","الإدارة","الاسم","البريد","القسم أو المادة","الخدمة","العنوان","الحالة","رسالة للموظف","التفاصيل"];
-    const data = [head, ...rows.map(r => [r.code, new Date(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.email || "", r.section || "",
+    const head = ["الرقم","التاريخ","الإدارة","الاسم","القسم أو المادة","الخدمة","العنوان","الحالة","رسالة للموظف","التفاصيل"];
+    const data = [head, ...rows.map(r => [r.code, new Date(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.section || "",
       r.service, r.title, (ST[r.status] || ST.new)[0], r.note || "", String(r.details || "").replace(/\n/g, "\n")])];
     const ws = XLSX.utils.aoa_to_sheet(data, {cellDates:true});
-    ws["!cols"] = [16,18,24,20,26,18,22,32,20,30,60].map(w => ({wch:w}));
+    ws["!cols"] = [16,18,24,20,18,22,32,20,30,60].map(w => ({wch:w}));
     for (let i = 1; i < data.length; i++) { const c = ws["B" + (i + 1)]; if (c) c.z = "yyyy-mm-dd hh:mm"; }
     const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "الطلبات");
     wb.Workbook = {Views:[{RTL:true}]};
@@ -670,8 +680,8 @@ function exportCsv(){
   const rows = ADM.filter(r => (!AD || r.dept === AD) && (!AF || r.status === AF) &&
     (!q || [r.code, r.name, r.title, r.service, r.section, r.email].join(" ").toLowerCase().includes(q)));
   const cell = v => '"' + String(v ?? "").replace(/"/g, '""').replace(/\n/g, " | ") + '"';
-  const head = ["الرقم","التاريخ","الإدارة","الاسم","البريد","الخدمة","العنوان","الحالة","رسالة للموظف","التفاصيل"];
-  const lines = [head, ...rows.map(r => [r.code, fdate(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.email, r.service, r.title, (ST[r.status] || ST.new)[0], r.note, r.details])];
+  const head = ["الرقم","التاريخ","الإدارة","الاسم","الخدمة","العنوان","الحالة","رسالة للموظف","التفاصيل"];
+  const lines = [head, ...rows.map(r => [r.code, fdate(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.service, r.title, (ST[r.status] || ST.new)[0], r.note, r.details])];
   const blob = new Blob(["\ufeff" + lines.map(l => l.map(cell).join(",")).join("\r\n")], {type:"text/csv;charset=utf-8"});
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "طلبات-" + new Date().toISOString().slice(0,10) + ".csv"; a.click();
 }
