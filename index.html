@@ -2,14 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="theme-color" content="#0e3a82">
+<meta name="theme-color" content="#014baa">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="logo.gif">
 <title>المنصة الرقمية - مدرسة تاونزة العلمية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--soft:#e8efff;--navy:#0e3a82;--deep:#00255d;--rust:#a73a00;--bg:#f4f6fc;--line:#d9dff0;--ink:#131b2e;--mute:#4a5063}
+:root{--soft:#e6f0fb;--navy:#014baa;--deep:#2b2e73;--rust:#c93b08;--orange:#f44c10;--sky:#019ce2;--bg:#f4f7fc;--line:#d6e0f0;--ink:#131b2e;--mute:#4a5063}
 *{box-sizing:border-box}
 body{margin:0;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.8;font-size:16px}
 header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
@@ -17,15 +17,15 @@ header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--navy);margin-inline-end:auto;line-height:1.35;text-decoration:none}
 .brand img{height:50px;width:auto}
 .brand small{display:block;font-weight:400;color:var(--rust);font-size:13px}
-nav{display:flex;gap:6px;flex-wrap:wrap}
-nav a{padding:8px 14px;border-radius:8px;color:var(--ink);text-decoration:none}
+nav{display:flex;gap:5px;flex-wrap:wrap}
+nav a{padding:8px 11px;font-size:15px;border-radius:8px;color:var(--ink);text-decoration:none}
 nav a.on{background:var(--navy);color:#fff}
 main{max-width:1040px;margin:auto;padding:20px 16px 70px}
-.hero{background:linear-gradient(135deg,var(--deep),var(--navy));color:#fff;border-radius:16px;padding:34px 30px 56px;display:grid;grid-template-columns:1.7fr 1fr;gap:26px;align-items:center}
+.hero{background:radial-gradient(120% 80% at 50% 135%,var(--glow,rgba(244,76,16,.55)),transparent 62%),linear-gradient(135deg,var(--deep),var(--navy));color:#fff;border-radius:16px;padding:34px 30px 56px;display:grid;grid-template-columns:1.7fr 1fr;gap:26px;align-items:center}
 .hero h1{margin:12px 0 10px;font-size:32px;line-height:1.5}
 .hero p{margin:0 0 20px;max-width:58ch;color:#d3e0fa}
 .pill{display:inline-block;background:rgba(255,255,255,.14);border-radius:99px;padding:3px 14px;font-size:14px}
-.btn.hot{background:#c2410c;text-decoration:none;display:inline-block}
+.btn.hot{background:#c93b08;text-decoration:none;display:inline-block}
 .btn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4);text-decoration:none;display:inline-block}
 .quick{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:18px}
 .quick b{font-size:18px}.quick p{font-size:15px;margin:8px 0}
@@ -41,15 +41,15 @@ main{max-width:1040px;margin:auto;padding:20px 16px 70px}
 .svc.rust{border-top-color:#c2410c}
 .svc .top{display:flex;justify-content:space-between;align-items:center}
 .tag{font-size:13px;background:#e8efff;color:var(--navy);border-radius:99px;padding:2px 12px}
-.svc.rust .tag{background:#ffe9de;color:#9a3412}
+.svc.rust .tag{background:#ffece4;color:#8f2a05}
 .svc .big{width:52px;height:52px;border-radius:12px;background:#e8efff;display:grid;place-items:center;font-size:26px}
-.svc.rust .big{background:#ffe9de}
+.svc.rust .big{background:#ffece4}
 .svc h3{margin:0;font-size:22px;color:var(--deep)}
 .svc p{margin:0;color:var(--mute);font-size:15px}
 .chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .chips span{background:#f1f4fc;border-radius:8px;padding:7px 10px;font-size:14px}
 .cta{align-self:flex-start;margin-top:auto;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-weight:700;cursor:pointer}
-.svc.rust .cta{background:#a73a00}
+.svc.rust .cta{background:#c93b08}
 @media (max-width:760px){.svcs{grid-template-columns:1fr}.hero{grid-template-columns:1fr;padding:26px 20px 52px}.hero h1{font-size:26px}.chips{grid-template-columns:1fr}}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
@@ -59,13 +59,13 @@ label{display:block;font-weight:600;margin:0 0 4px}
 .f{margin-bottom:14px}
 input,select,textarea{width:100%;padding:10px 12px;border:1px solid #b9bfd3;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
 textarea{min-height:90px}
-:focus-visible{outline:3px solid #fd651e;outline-offset:2px}
+:focus-visible{outline:3px solid #f44c10;outline-offset:2px}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 14px}
 .pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:18px}
 .pick label{border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;background:#fff;margin:0;font-weight:600}
 .pick input{position:absolute;opacity:0;width:1px;height:1px}
 .pick label:has(input:checked){border-color:var(--navy);background:var(--soft)}
-.pick label:has(input:focus-visible){outline:3px solid #fd651e}
+.pick label:has(input:focus-visible){outline:3px solid #f44c10}
 .btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:11px 22px;font:inherit;font-weight:700;cursor:pointer}
 .btn.alt{background:#fff;color:var(--navy);border:1px solid var(--navy)}
 .btn[disabled]{opacity:.6;cursor:wait}
@@ -115,7 +115,7 @@ a.dept .go{color:var(--c);font-weight:700}
 nav a.dp{border:1.5px solid var(--c)}
 nav a.dp:hover{background:var(--cs)}
 nav a.dp.on{background:var(--c);color:#fff}
-header{border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#7e22ce,#0e7490,#047857,#c2410c) 1}
+header{border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#2b2e73,#014baa,#0071bb,#019ce2,#e88e54,#f44c10) 1}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:no-preference){main>section{animation:rise .35s ease}a.dept{transition:transform .2s,box-shadow .2s}a.dept:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.10)}}
 .hero.cmp{padding:22px 26px;grid-template-columns:1.5fr 1fr;margin-bottom:16px}
@@ -131,6 +131,29 @@ a.lk b{display:block;color:var(--deep)}
 a.lk small{color:var(--mute);font-size:13px}
 .flinks{margin-bottom:6px}.flinks a{margin:0 10px;color:var(--navy);text-decoration:none;white-space:nowrap}
 .rf{margin-top:10px}
+#card>.card{display:block}
+#card #cform .f{display:block}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 18px;font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
+.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.rcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.rc{border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:flex;gap:8px;align-items:center;cursor:pointer;background:#fff;margin:0;font-weight:500}
+.rc:has(input:checked){border-color:var(--navy);background:var(--soft)}
+.rc input{width:auto}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500}.chk input{width:auto;margin-top:6px}
+.cd summary{cursor:pointer}.cd ul,.cd ol{margin:6px 0 12px;padding-inline-start:22px}
+.rtag{display:inline-block;background:var(--soft);color:var(--deep);border-radius:99px;padding:1px 10px;font-size:13px;margin:2px 0 2px 4px}
+#pres{position:fixed;inset:0;z-index:60;background:radial-gradient(120% 80% at 50% 135%,rgba(244,76,16,.5),transparent 60%),linear-gradient(135deg,#2b2e73,#014baa);color:#fff;display:flex;flex-direction:column}
+#pres[hidden]{display:none}
+#pres .sl{flex:1;overflow:auto;padding:4vh 6vw;display:flex;flex-direction:column;justify-content:center}
+#pres h1{font-size:clamp(28px,5vw,56px);margin:0 0 14px;line-height:1.4}
+#pres .sub{font-size:clamp(16px,2vw,24px);color:#cfdcf7;margin-bottom:18px}
+#pres ul{font-size:clamp(18px,2.4vw,30px);line-height:1.9;margin:0;padding-inline-start:1.2em}
+#pres table{border-collapse:collapse;width:100%;font-size:clamp(14px,1.8vw,24px);background:rgba(255,255,255,.08)}
+#pres th,#pres td{border:1px solid rgba(255,255,255,.3);padding:8px 12px;text-align:center}
+#pres th{background:rgba(255,255,255,.2)}
+#pres .ct{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:rgba(0,0,0,.25)}
+#pres .ct button{background:#fff;color:#0e3a82;border:0;border-radius:8px;padding:8px 18px;font:inherit;font-weight:700;cursor:pointer}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -181,15 +204,61 @@ a.lk small{color:var(--mute);font-size:13px}
   <div id="done" class="ok" hidden></div></div>
 </section>
 
+<section id="card" hidden>
+  <div class="hero cmp"><div><span class="pill">🛑 نظام Stop Card</span><h1>بطاقة فليغيره</h1>
+    <p>ملاحظة بنّاءة تُوجَّه إلى من تختارهم من أعضاء المجلس التنفيذي، ويتولى كل منهم الإجابة عنها. الموسم الدراسي 2026/2027.</p></div>
+    <aside class="quick"><b>مبادئ النظام</b><ol class="steps">
+      <li>عدم التشكيك في النوايا والتركيز على الفعل.</li>
+      <li>البطاقة ملاحظة وليست حكماً.</li>
+      <li>ملاحظة السلوك دون ذكر اسم الشخص.</li>
+      <li>يحتكم الجميع إلى الحق ولا يحتكم الحق إلى أحد.</li></ol></aside></div>
+  <details class="card cd" style="margin-bottom:14px"><summary><b>ما هو نظام Stop Card؟ أهدافه وأخلاقيات الملاحِظ والملاحَظ له</b></summary>
+    <p>هو نظام يحدد مواطن الخلل في أي مؤسسة، وهو إحدى الآليات المعتمدة في النسق المفتوح ضمن نظام المعلومات، ويقوم على أهم عامل وهو تقبّل أعضاء المؤسسة للنقد.</p>
+    <h4>أهداف النظام</h4><ol>
+      <li>التطوير والتحسين الفردي والجماعي دون التدخل الخارجي.</li>
+      <li>تنمية روح النقد وآدابها والتدرب على تقبل النقد.</li>
+      <li>ترصيص الجماعة وتمتين العلاقات: «إذا زادت الألفة زالت الكلفة».</li>
+      <li>تطوير الذات والعمل على تصحيح ما بالأنفس.</li>
+      <li>قياس مستوى التحسن وتفادي الوقوع في نفس الأخطاء.</li></ol>
+    <h4>أخلاق الملاحِظ</h4><ul>
+      <li>إخلاص النية لله.</li>
+      <li>يحترم أخلاق الحوار، ويوظف عبارات وألفاظاً لينة وواضحة.</li>
+      <li>يبتعد عن سوء الظن، وعن التعميم والأحكام المسبقة ما استطاع إلى ذلك سبيلاً.</li>
+      <li>يقصد من نقده النفع والتصويب لا الضر والتجريح.</li>
+      <li>أنا أنقد الفعل لا أنقد الشخص.</li></ul>
+    <h4>أخلاق الملاحَظ له</h4><ul>
+      <li>استجلاء سلبياته ونقاط ضعفه أكثر من حرصه على إبراز إيجابياته ومحاسنه.</li>
+      <li>يتعلم السماع إلى من ينقده دون تعصب أو تشنج.</li>
+      <li>يعلم أن كل ملاحظة قيلت عنه هي فرصة للسمو لا تعوّض، وهبة من السماء لا تشترى بمال الدنيا كلها.</li>
+      <li>تقبل النقد والاعتراف بالخطأ.</li></ul>
+    <p><b>«لا خير فيكم إن لم تقولوها، ولا خير فينا إن لم نقبلها»</b></p></details>
+  <div class="card">
+    <p class="mute" style="margin-top:0">في حال الصيانة: املأ <a href="#mt">طلب الصيانة</a> بدل البطاقة.</p>
+    <div id="cerr" class="err" hidden></div>
+    <form id="cform" novalidate>
+      <div class="f"><label for="cname">الاسم الكامل</label><select id="cname" required></select><input id="cname_o" placeholder="اكتب اسمك الكامل" hidden style="margin-top:6px"></div>
+      <div class="f"><label>إلى من توجّه البطاقة؟ (يمكنك اختيار أكثر من عضو)</label><div class="rcs" id="croles"></div></div>
+      <div class="f"><label for="cbody">الملاحظة (صف الفعل أو الموقف دون ذكر اسم أحد)</label><textarea id="cbody" required minlength="5" maxlength="2000"></textarea></div>
+      <div class="f"><label for="csug">اقتراحك للتحسين (اختياري)</label><textarea id="csug" maxlength="1000"></textarea></div>
+      <div class="f"><label class="chk"><input type="checkbox" id="cack" required><span>ألتزم بمبادئ نظام Stop Card: ملاحظة لا حكم، وفعلٌ لا شخص، دون ذكر أسماء.</span></label></div>
+      <button class="btn" id="csend" type="submit">إرسال البطاقة</button>
+    </form>
+    <div id="cdone" class="ok" hidden></div>
+  </div>
+</section>
+
 <section id="track" hidden>
   <h2 style="margin-top:0">طلباتي</h2>
   <div id="mine"></div>
+  <h2>بطاقاتي (Stop Card)</h2>
+  <div id="mycards"></div>
   <h2>ابحث برقم الطلب</h2>
   <div class="row"><input id="q" placeholder="TWZ-2026-AB12" aria-label="رقم الطلب" dir="ltr"><button class="btn" id="qbtn">عرض الحالة</button></div>
   <div id="qres" style="margin-top:12px"></div>
 </section>
 
 <section id="admin" hidden></section>
+<div id="pres" hidden></div>
 </main>
 <footer><img src="logo.gif" alt="" height="56"><div>مدرسة تاونزة العلمية - المنصة الرقمية للخدمات</div><div class="flinks" id="flinks"></div>
 <div style="margin-top:6px"><a href="#admin" style="color:var(--mute)">دخول المسؤولين</a></div></footer>
@@ -227,21 +296,21 @@ const ST = {
 const DOCS = ["شهادة العمل","كشف الأجرة","كشف كل أجور فترة التصريح (RELEVE DES EMOLUMENTS)","كشف العمل والأجرة (ATS)","طلب منح عائلية","طلب تفعيل/استخراج بطاقة الشفاء","تصريح بإستئناف أو عدم إستئناف العمل","نموذج طلب تكوين","شهادة حسن السيرة","وصل خدمات طبية - تعاضدية البنائين","وصل استفادة - الفرابي للنظارات الطبية","سند التكفل بالعلاج - مصحة القصور","نموذج طلب استقالة"];
 /* الإدارات: لإضافة إدارة جديدة أضف عنصراً هنا وخدماتها في SV، ثم أضف رمزها في قيود dept بملف SQL */
 const DEPTS = {
-  md: {n:"الإعلام والتسويق", s:"الإعلام والتسويق", i:"📣", col:"#7e22ce", deep:"#4c1d95", soft:"#f3e8ff", c:"rust", d:"طباعة الأوراق والتصاميم الجرافيكية وتغطية الأحداث بالصور والفيديو.", svc:["print","design","cover"],
+  md: {n:"الإعلام والتسويق", s:"الإعلام والتسويق", i:"📣", col:"#c93b08", deep:"#8f2a05", soft:"#ffece4", glow:"rgba(1,156,226,.5)", c:"rust", d:"طباعة الأوراق والتصاميم الجرافيكية وتغطية الأحداث بالصور والفيديو.", svc:["print","design","cover"],
     h1:"بوابة خدمات الإعلام والتسويق",
     p:"اطلب طباعة الأوراق، أو تصميم الملصقات والمطويات والشهادات، أو تغطية فعالية بالصور والفيديو، وتابع حالة طلبك حتى الجاهزية.",
     aside:`<span class="open" id="openNow">...</span><b>مكتب الاستقبال</b>
       <p>يستقبل الفريق طلبات الطباعة والتصميم والتغطية الإعلامية.</p>
       <div style="color:#d3e0fa;font-size:15px">أوقات العمل: السبت إلى الخميس، 08:00 - 13:00</div>
       <div style="color:#d3e0fa;font-size:15px;margin-top:4px">استقبال المكتب يومياً: 09:30 - 10:00 و11:20 - 11:40</div>`},
-  it: {n:"تقنية المعلومات", s:"تقنية المعلومات", i:"💻", col:"#0e7490", deep:"#164e63", soft:"#e0f7fa", c:"", d:"الأعطال التقنية وطلبات التكوين وشراء العتاد التقني.", svc:["fix","train","gear"],
+  it: {n:"تقنية المعلومات", s:"تقنية المعلومات", i:"💻", col:"#0071bb", deep:"#014baa", soft:"#e3f1fb", c:"", d:"الأعطال التقنية وطلبات التكوين وشراء العتاد التقني.", svc:["fix","train","gear"],
     h1:"بوابة خدمات تقنية المعلومات",
     p:"أبلغ عن خلل تقني، أو اطلب تكويناً، أو شراء عتاد تقني، وتابع حالة طلبك حتى الجاهزية.",
     aside:`<span class="open" id="openNow">...</span><b>مكتب الاستجابة السريعة</b>
       <p>فريق القسم جاهز لاستقبال طلبات الأعطال التقنية والتكوين وشراء العتاد.</p>
       <div style="color:#d3e0fa;font-size:15px">أوقات العمل: السبت إلى الخميس، 08:00 - 13:00</div>
       <div style="color:#d3e0fa;font-size:15px;margin-top:4px">استقبال المكتب يومياً: 09:30 - 10:00 و11:20 - 11:40</div>`},
-  hr: {n:"الموارد البشرية", s:"الموارد البشرية", i:"👥", col:"#047857", deep:"#064e3b", soft:"#dcfce7", c:"rust", d:"طلب الوثائق الإدارية: شهادة العمل، كشف الأجرة، كشف ATS، بطاقة الشفاء وغيرها.", svc:["doc"],
+  hr: {n:"الموارد البشرية", s:"الموارد البشرية", i:"👥", col:"#2b2e73", deep:"#1a1c4a", soft:"#e8e9f7", c:"rust", d:"طلب الوثائق الإدارية: شهادة العمل، كشف الأجرة، كشف ATS، بطاقة الشفاء وغيرها.", svc:["doc"],
     h1:"بوابة خدمات الموارد البشرية",
     p:"آلية رقمية موحدة ورسمية لطلب الوثائق الإدارية، تضمن التنظيم والشفافية وسرعة الاستجابة وحفظ الحقوق.",
     aside:`<b>خطوات طلب الوثيقة</b><ol class="steps">
@@ -250,7 +319,7 @@ const DEPTS = {
       <li>إشعار الجاهزية: ستبلغك الموارد البشرية عند جاهزية الوثيقة (يظهر الإشعار في «طلباتي»)، وتوجّهك إلى مكتب الاستقبال لاستلامها.</li>
       <li>أكّد الاستلام: وقّع في سجل الاستلام بمكتب الاستقبال.</li></ol>
       <p style="font-size:14px;color:#d3e0fa">قد تتطلب بعض الطلبات تواصلاً معك أو حضورك إلى مكتب الموارد البشرية لاستكمال الإجراءات أو التوضيح. وإن طلبت الإدارة معلومات إضافية فستجد طلبها في «طلباتي» وتردّ عليه من هناك.</p>`},
-  mt: {n:"الصيانة", s:"الصيانة", i:"🔧", col:"#c2410c", deep:"#7c2d12", soft:"#ffedd5", c:"", d:"طلبات صيانة القاعات والمرافق والتجهيزات، مع تتبع الحالة حتى التنفيذ.", svc:["maint"],
+  mt: {n:"الصيانة", s:"الصيانة", i:"🔧", col:"#a8531a", deep:"#7a3510", soft:"#fdeedd", glow:"rgba(1,156,226,.45)", c:"", d:"طلبات صيانة القاعات والمرافق والتجهيزات، مع تتبع الحالة حتى التنفيذ.", svc:["maint"],
     h1:"بوابة طلبات الصيانة 2026/2027",
     p:"قدّم طلب الصيانة الخاص بقسمك أو قاعتك أو المكان المعني، وتابع حالته حتى التنفيذ.",
     aside:`<b>معلومات مهمة عن الآجال</b><ol class="steps">
@@ -316,23 +385,25 @@ const isDept = h => Object.prototype.hasOwnProperty.call(DEPTS, h);
 /* التنقل */
 $("#nav").innerHTML = `<a href="#home" data-v="home">الرئيسية</a>` +
   Object.entries(DEPTS).map(([k,D]) => `<a class="dp" href="#${k}" data-v="${k}" style="--c:${D.col};--cs:${D.soft}">${D.i} ${D.s}</a>`).join("") +
+  `<a class="dp" href="#card" data-v="card" style="--c:#c93b08;--cs:#ffece4">🛑 بطاقة فليغيره</a>` +
   `<a href="#track" data-v="track">طلباتي</a>`;
 $("#nav").addEventListener("click", e => {   // الضغط على زر الإدارة نفسها يفتح نموذجاً جديداً بعد الإرسال
   const a = e.target.closest("a");
   if (a && a.getAttribute("href") === location.hash) { if (!$("#done").hidden) CUR = null; route(); }
 });
+const CARD_THEME = {col:"#c93b08", deep:"#014baa", soft:"#ffece4", glow:"rgba(0,0,0,0)"};
 function route(){
   let h = location.hash.slice(1) || "home"; if (h === "new") h = "home";
   const d = isDept(h);
   document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== (d ? "new" : h));
   document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.v === h));
-  const R = document.documentElement.style, D = d ? DEPTS[h] : null;
-  if (D) { R.setProperty("--navy", D.col); R.setProperty("--deep", D.deep); R.setProperty("--soft", D.soft); }
-  else ["--navy","--deep","--soft"].forEach(v => R.removeProperty(v));
-  const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = D ? D.col : "#0e3a82";
+  const R = document.documentElement.style, D = d ? DEPTS[h] : (h === "card" ? CARD_THEME : null);
+  if (D) { R.setProperty("--navy", D.col); R.setProperty("--deep", D.deep); R.setProperty("--soft", D.soft); R.setProperty("--glow", D.glow || "rgba(244,76,16,.55)"); }
+  else ["--navy","--deep","--soft","--glow"].forEach(v => R.removeProperty(v));
+  const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = D ? D.col : "#014baa";
   if (!d && !$("#done").hidden) CUR = null;
   if (d) renderDept(h);
-  if (h === "track") renderMine();
+  if (h === "track") { renderMine(); renderMyCards(); }
   if (h === "admin") renderAdmin();
   window.scrollTo(0, 0);
 }
@@ -341,6 +412,7 @@ addEventListener("hashchange", route);
 /* الرئيسية: بطاقات الإدارات */
 $("#deptCards").innerHTML = Object.entries(DEPTS).map(([k,D]) =>
   `<a class="dept" href="#${k}" style="--c:${D.col};--cs:${D.soft}"><span class="big" style="font-size:30px" aria-hidden="true">${D.i}</span><h3>${D.n}</h3><p>${D.d}</p><span class="go">الدخول إلى الإدارة</span></a>`).join("");
+$("#deptCards").insertAdjacentHTML("beforeend", `<a class="dept" href="#card" style="--c:#c93b08;--cs:#ffece4"><span class="big" style="font-size:30px" aria-hidden="true">🛑</span><h3>بطاقة فليغيره</h3><p>نظام Stop Card: ملاحظة بنّاءة تصل إلى أعضاء المجلس التنفيذي ويُجاب عنها.</p><span class="go">اكتب بطاقة</span></a>`);
 
 /* صفحة الإدارة = نموذجها مباشرة */
 let CUR = null;
@@ -367,7 +439,6 @@ const LINKS = [
     {t:"منصة الأستاذ البيداغوجية", d:"نسخة الويب", i:"👨‍🏫", u:"https://ichraf-education.com/prof/"},
     {t:"منصة الإشراف الأبوي", d:"نسخة الويب", i:"👪", u:"https://ichraf-education.com/parent/"}]},
   {g:"أدوات المؤسسة", items:[
-    {t:"بطاقة فليغيره - نظام Stop Card", i:"🛑", u:"https://forms.gle/DtDvcaykjkXepsSk8"},
     {t:"رزنامة المواعيد لمختلف الفعاليات", d:"جدول Google", i:"📅", u:"https://docs.google.com/spreadsheets/d/1O3Q2BVWYulZOXzO_cXd6XdDINTWPFXpsMHa5s0UZIuw/edit?gid=1821854798#gid=1821854798"}]}
 ];
 $("#linkGroups").innerHTML = LINKS.map(g => `<div class="lkh">${g.g}</div><div class="links">${g.items.map(l =>
@@ -376,14 +447,21 @@ $("#flinks").innerHTML = LINKS.flatMap(g => g.items).map(l => `<a href="${l.u}" 
 
 /* قائمة الموظفين (من استبيان الموارد البشرية): عدّلها لإضافة اسم أو حذفه */
 const STAFF = ["أبانو عائشة بنت محمد", "أوجانه بابا بن علي", "إبن صالح إبراهيم بن محمد", "احماني ياسين بن باله", "احماني يونس بن باله", "الحاج عشور عيسى بن الحاج", "الحاج مسعود نور الدين بن يوسف", "الحاج موسى لقمان بن حمو", "الشيخ دحمان رمضان بن إبراهيم", "باباعمي صالح بن عيسى", "بابكر مختار بن إبراهيم", "باحريز عيسى البشير بن عمر", "باسعيد والحاج خضير بن بكير", "بافلح عيسى بن باحمد", "باكلي احمد ياسين بن ابراهيم", "باموسى موسى بن ابراهيم", "بكوش آدم أبو بكر بن سعيد", "بليدي بوكامل أمين بن كمال", "بن سعدون نسيمة بنت محمد", "بن عبد الله لخضر بن إبراهيم", "بوسريح فاتح بن موسى", "بوشلاغم داود بن يوسف", "تفارت ياسين بن يحي", "ثمينة يحي بن عبد العزيز", "حراث سارة بنت حمو", "حمادة حسن بن بشير", "خرازي أبي بكر الصديق بن أحمد", "دادة الحاج عمر بن عبد الله", "دادي حمو سليمان بن محمّد", "دودو بشير بن إبراهيم بن داود", "دودو عمر بن باحمد", "رويجي صبرينة بنت محمد", "سليمان بوعصبانة ياسين بن قاسم", "شرع الله عمر بن علي", "شعلان أسامة بن بالحاج", "صدقي عبد الله بن بكير", "طلاي يحي بن مصطفى", "عاقب نسرين بنت عمر", "عباس بالحاج بن عيسى", "عباس محمد بن داود", "عبد الجبار الحاج امحمد بن مختار", "عشو رستم بن عيسى", "فرطاس محمد صالح بن حمو", "قريشي أحلام بنت قريشي", "كعبوش عقيلة بنت باحمد", "كوزي عائشة بنت بنت أحمد", "كوزي حسان بن مصطفى", "كومني محمد بن صالح", "بامون لمين بن مصطفى", "مرابط عزيزة بنت فريد محمد", "مسن يمينة بنت محمد", "بوراس منير بن داود", "منصوري لحسن بن بكير", "نجار زكرياء بن مصطفى", "نعلوفي سعيد بن عيسى", "هرادة نانة بنت أمحمد", "عشو أسمهان بنت بكير", "بن الناصر عائشة بنت صالح", "داودي بكير بن قاسم", "قارة عبد الله طه ياسين بن صالح", "يعقوب موسى بن محمد"];
-(function(){
-  const sel = $("#name"), oth = $("#name_o");
+function initNameSelect(selId, othId, formSel){
+  const sel = $(selId), oth = $(othId);
   sel.innerHTML = `<option value="">اختر اسمك من القائمة...</option>` + [...STAFF].sort((a,b) => a.localeCompare(b, "ar")).map(n => `<option>${esc(n)}</option>`).join("") + `<option value="__other">اسمي غير مدرج في القائمة</option>`;
   const sync = () => { const on = sel.value === "__other"; oth.hidden = !on; oth.required = on; };
   sel.addEventListener("change", sync);
-  $("#form").addEventListener("reset", () => setTimeout(sync));
-})();
+  $(formSel).addEventListener("reset", () => setTimeout(sync));
+}
+initNameSelect("#name", "#name_o", "#form"); initNameSelect("#cname", "#cname_o", "#cform");
+const cardName = () => $("#cname").value === "__other" ? $("#cname_o").value.trim() : $("#cname").value;
 const nameVal = () => $("#name").value === "__other" ? $("#name_o").value.trim() : $("#name").value;
+
+/* أعضاء المجلس التنفيذي */
+const ROLES = [["gm","المدير العام"],["fin","المدير المالي"],["it","مدير التقنية"],["md","مدير الإعلام"],["kg","مديرة التحضيري"],["mt","مدير الصيانة"],["adm","المدير الإداري"],["ped","المدير البيداغوجي"],["qa","مدير الجودة والأمانة"],["hr","مدير الموارد البشرية"]];
+const roleName = c => (ROLES.find(r => r[0] === c) || [c, "عضو المجلس"])[1];
+$("#croles").innerHTML = ROLES.map(([k,n]) => `<label class="rc"><input type="checkbox" name="to" value="${k}">${n}</label>`).join("");
 
 /* النموذج */
 function renderExtra(){
@@ -460,6 +538,44 @@ $("#form").addEventListener("submit", async e => {
   } finally { btn.disabled = false; btn.textContent = "إرسال الطلب"; }
 });
 
+/* بطاقة فليغيره: كتابة بطاقة */
+const newCardId = () => "SC-" + new Date().getFullYear() + "-" + Math.random().toString(36).slice(2,8).toUpperCase().padEnd(6, "0");
+$("#cform").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, err = $("#cerr"); err.hidden = true;
+  if (!CONFIGURED) { err.hidden = false; err.textContent = "لم يُضبط الربط بقاعدة البيانات بعد."; return; }
+  if (!f.reportValidity()) return;
+  const to = [...f.querySelectorAll("input[name=to]:checked")].map(x => x.value);
+  if (!to.length) { err.hidden = false; err.textContent = "اختر عضواً واحداً على الأقل ليستلم البطاقة."; err.scrollIntoView({block:"center"}); return; }
+  const btn = $("#csend"); btn.disabled = true; btn.textContent = "جارٍ الإرسال...";
+  try {
+    let code = "", ok = false, last = null;
+    for (let i = 0; i < 3 && !ok; i++) {
+      code = newCardId();
+      try { await sb("/rest/v1/cards", {method:"POST", headers:{Prefer:"return=minimal"}, body:JSON.stringify({code, author:cardName(), body:$("#cbody").value.trim(), suggestion:$("#csug").value.trim() || null, to_roles:to})}); ok = true; }
+      catch (x) { last = x; if (x.status !== 409) break; }
+    }
+    if (!ok) throw last;
+    const mine = load("twz_cards", []); mine.unshift({code, roles:to, text:$("#cbody").value.trim().slice(0, 80), at:new Date().toISOString()}); save("twz_cards", mine);
+    f.hidden = true; const d = $("#cdone"); d.hidden = false;
+    d.innerHTML = `<h2 style="margin:0 0 6px">وصلت بطاقتك</h2><p>رقم البطاقة: <b dir="ltr" style="font-size:20px">${code}</b></p>
+      <p class="mute">أُرسلت إلى: ${esc(to.map(roleName).join("، "))}. ستجد ردودهم في «طلباتي» تحت «بطاقاتي».</p>
+      <button class="btn" id="cagain">بطاقة أخرى</button> <a class="btn alt" style="text-decoration:none;display:inline-block" href="#track">بطاقاتي</a>`;
+    $("#cagain").onclick = () => { f.reset(); f.hidden = false; d.hidden = true; };
+  } catch (x) { err.hidden = false; err.textContent = "تعذّر إرسال البطاقة (" + x.message + "). أعد المحاولة. لم يُحفظ شيء."; err.scrollIntoView({block:"center"}); }
+  finally { btn.disabled = false; btn.textContent = "إرسال البطاقة"; }
+});
+async function renderMyCards(){
+  const mine = load("twz_cards", []), box = $("#mycards");
+  if (!mine.length) { box.innerHTML = `<div class="card mute">لم تكتب بطاقات من هذا الجهاز. <a href="#card">اكتب بطاقة</a></div>`; return; }
+  let st = null;
+  try { const a = await sb("/rest/v1/rpc/card_status", {method:"POST", body:JSON.stringify({codes:mine.map(c => c.code)})}); st = {}; (a || []).forEach(x => st[x.code] = x.replies || []); } catch {}
+  box.innerHTML = (st === null ? `<p class="mute">تعذّر جلب الردود الآن.</p>` : "") + mine.map(c => { const rs = (st && st[c.code]) || [];
+    return `<div class="card" style="margin-bottom:10px"><div class="req"><div><b dir="ltr">${esc(c.code)}</b><div>${esc(c.text)}</div><div class="mute">إلى: ${esc(c.roles.map(roleName).join("، "))}</div></div>
+      <span class="badge" style="color:${rs.length ? "#047857" : "#b45309"};border-color:${rs.length ? "#047857" : "#b45309"}">${rs.length ? "أُجيب عنها (" + rs.length + ")" : "بانتظار الرد"}</span></div>
+      ${rs.map(r => `<div class="note" style="background:#e7f6ee"><b>${esc(roleName(r.role))}:</b> ${esc(r.body)}<br><small class="mute">${esc(fdate(r.at))}</small></div>`).join("")}</div>`; }).join("");
+}
+
 /* الحالات */
 async function getStatuses(ids){
   if (!CONFIGURED) return null;
@@ -531,7 +647,7 @@ $("#qbtn").onclick = async () => {
 
 /* لوحة المسؤولين: الرابط #admin */
 const tok = () => sessionStorage.getItem("twz_tok");
-const clearSess = () => ["twz_tok","twz_rt","twz_who"].forEach(k => sessionStorage.removeItem(k));
+const clearSess = () => ["twz_tok","twz_rt","twz_who","twz_role"].forEach(k => sessionStorage.removeItem(k));
 const logout = () => { clearSess(); renderAdmin(); };
 async function refreshTok(){
   const j = await sb("/auth/v1/token?grant_type=refresh_token", {method:"POST", body:JSON.stringify({refresh_token:sessionStorage.getItem("twz_rt")})});
@@ -558,14 +674,24 @@ function renderAdmin(){
       const e2 = $("#lgerr"); e2.hidden = true;
       try {
         const j = await sb("/auth/v1/token?grant_type=password", {method:"POST", body:JSON.stringify({email:$("#lm").value.trim(), password:$("#lp").value})});
-        const m = await sb("/rest/v1/managers?select=dept", {token:j.access_token});
+        const m = await sb("/rest/v1/managers?select=dept,role", {token:j.access_token});
         if (!m || !m.length) throw new Error("not-manager");
-        sessionStorage.setItem("twz_tok", j.access_token); sessionStorage.setItem("twz_rt", j.refresh_token || ""); sessionStorage.setItem("twz_who", m[0].dept);
+        sessionStorage.setItem("twz_tok", j.access_token); sessionStorage.setItem("twz_rt", j.refresh_token || ""); sessionStorage.setItem("twz_who", m[0].dept); sessionStorage.setItem("twz_role", m[0].role || "");
         renderAdmin();
       } catch (x) { e2.hidden = false; e2.textContent = x.message === "not-manager" ? "هذا الحساب غير مخوّل بإدارة الطلبات." : "تعذّر الدخول. تحقق من البريد وكلمة المرور."; }
     };
     return;
   }
+  const dept = sessionStorage.getItem("twz_who"), role = sessionStorage.getItem("twz_role") || "", seeAll = dept === "all" || role === "gm";
+  box.innerHTML = `<div class="tabs" id="atabs"><button data-t="req" class="on">الطلبات</button><button data-t="cards">بطاقات فليغيره</button>${seeAll ? `<button data-t="meet">عرض الاجتماع الشهري</button>` : ""}</div>
+    <div id="tabReq"></div><div id="tabCards" hidden></div><div id="tabMeet" hidden></div>`;
+  $("#atabs").onclick = e => {
+    const b = e.target.closest("button[data-t]"); if (!b) return;
+    document.querySelectorAll("#atabs button").forEach(x => x.classList.toggle("on", x === b));
+    ["req","cards","meet"].forEach(t => { const el = $("#tab" + t[0].toUpperCase() + t.slice(1)); if (el) el.hidden = t !== b.dataset.t; });
+    if (b.dataset.t === "cards") loadCards();
+    if (b.dataset.t === "meet") renderMeet();
+  };
   loadAdmin();
 }
 let ADM = [], AF = "", AQ = "", AD = "", OPEN = null, LAST = null, REP = {};
@@ -592,7 +718,7 @@ const fdate = d => new Date(d).toLocaleString("ar-DZ-u-nu-latn", {dateStyle:"med
 const parseDet = t => String(t || "").split("\n").map(l => { const i = l.indexOf(":"); return i > 0 ? [l.slice(0,i).trim(), l.slice(i+1).trim()] : ["", l.trim()]; }).filter(x => x[1]);
 const QA = {prog:"بدء التنفيذ", info:"طلب تفاصيل", buy:"بانتظار الاقتناء", ready:"جاهز للاستلام", done:"تم التسليم", off:"إلغاء الطلب"};
 async function loadAdmin(){
-  const box = $("#admin");
+  const box = $("#tabReq");
   box.innerHTML = `<p class="mute">جارٍ التحميل...</p>`;
   try {
     ADM = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=500");
@@ -644,6 +770,151 @@ function drawAdmin(){
     .sort((a,b) => (needsAction(a) ? 0 : 1) - (needsAction(b) ? 0 : 1) || new Date(b.created_at) - new Date(a.created_at));
   $("#al").innerHTML = rows.length ? rows.map(rowHtml).join("") : `<div class="card">لا توجد طلبات مطابقة.</div>`;
 }
+/* ===== تبويب بطاقات فليغيره ===== */
+let CARDS = [], CREP = {};
+const myRole = () => sessionStorage.getItem("twz_role") || "";
+const canReply = c => myRole() === "gm" || c.to_roles.includes(myRole());
+async function fetchCards(){
+  const cards = await authed("/rest/v1/cards?select=*&order=created_at.desc&limit=1000");
+  const rs = await authed("/rest/v1/card_replies?select=id,card_id,role,body,created_at&order=created_at.asc&limit=3000");
+  const rep = {}; rs.forEach(x => (rep[x.card_id] = rep[x.card_id] || []).push(x));
+  return {cards, rep};
+}
+async function loadCards(){
+  const box = $("#tabCards"); box.innerHTML = `<p class="mute">جارٍ التحميل...</p>`;
+  try { const d = await fetchCards(); CARDS = d.cards; CREP = d.rep; }
+  catch (x) { if (x.status === 401 || x.status === 403) return logout(); box.innerHTML = `<div class="err">تعذّر تحميل البطاقات. هل شغّلتَ ملف supabase_cards.sql؟</div>`; return; }
+  box.innerHTML = `<div class="adh"><div><h2 style="margin:0">بطاقات فليغيره</h2><div class="mute">${CARDS.length} بطاقة موجّهة إليك${myRole() ? " (" + esc(roleName(myRole())) + ")" : ""}</div></div>
+    <button class="btn alt" id="cr">تحديث</button></div><div id="cl"></div>`;
+  $("#cr").onclick = loadCards; $("#cl").onclick = onCardClick; drawCards();
+}
+function drawCards(){
+  const el = $("#cl"); if (!el) return;
+  el.innerHTML = CARDS.length ? CARDS.map(c => { const rs = CREP[c.id] || [];
+    return `<details class="rq ${rs.length ? "" : "isnew"}" data-id="${esc(c.id)}"><summary class="rqh">
+      <span class="c1"><b dir="ltr">${esc(c.code)}</b><small title="${esc(fdate(c.created_at))}">${esc(ago(c.created_at))}</small></span>
+      <span class="c2"><b>${esc(c.body.slice(0, 90))}${c.body.length > 90 ? "…" : ""}</b><small>${c.to_roles.map(r => `<span class="rtag">${esc(roleName(r))}</span>`).join("")}</small></span>
+      <span class="c3">${esc(c.author)}</span>
+      <span class="badge" style="color:${rs.length ? "#047857" : "#b91c1c"};border-color:${rs.length ? "#047857" : "#b91c1c"}">${rs.length ? "أُجيب عنها (" + rs.length + ")" : "بلا ردّ"}</span></summary>
+      <div class="rqb"><div><h3>الملاحظة</h3><p style="white-space:pre-wrap">${esc(c.body)}</p>
+        ${c.suggestion ? `<h3>الاقتراح</h3><p style="white-space:pre-wrap">${esc(c.suggestion)}</p>` : ""}
+        <p class="mute">من: ${esc(c.author)} - ${esc(fdate(c.created_at))}</p></div>
+        <div><h3>الردود</h3>${rs.length ? rs.map(r => `<div class="note" style="background:#e7f6ee"><b>${esc(roleName(r.role))}:</b> ${esc(r.body)}<br><small class="mute">${esc(fdate(r.created_at))}</small></div>`).join("") : `<p class="mute">لم يُرسل أي رد بعد.</p>`}
+          ${canReply(c) ? `<div class="f" style="margin-top:10px"><label>ردّك على صاحب البطاقة</label><textarea data-cr maxlength="2000"></textarea></div><button class="btn" data-csend type="button">إرسال الرد</button> <span class="mute" data-cmsg></span>` : `<p class="mute">الرد متاح لمن وُجّهت إليهم البطاقة.</p>`}</div></div></details>`; }).join("")
+    : `<div class="card">لا توجد بطاقات موجّهة إليك.</div>`;
+}
+async function onCardClick(e){
+  const b = e.target.closest("[data-csend]"); if (!b) return;
+  const d = b.closest("details.rq"), t = d.querySelector("[data-cr]"), m = d.querySelector("[data-cmsg]");
+  if (!t.value.trim()) { m.textContent = "اكتب الرد أولاً."; return; }
+  b.disabled = true; m.textContent = "جارٍ الإرسال...";
+  try {
+    const r = await authed("/rest/v1/card_replies", {method:"POST", headers:{Prefer:"return=representation"}, body:JSON.stringify({card_id:d.dataset.id, body:t.value.trim()})});
+    (CREP[d.dataset.id] = CREP[d.dataset.id] || []).push(r[0]); drawCards();
+    const again = $("#cl").querySelector(`details[data-id="${d.dataset.id}"]`); if (again) again.open = true;
+  } catch (x) { m.textContent = "تعذّر الإرسال: " + x.message; b.disabled = false; }
+}
+
+/* ===== تبويب الاجتماع الشهري: عرض تلقائي + PowerPoint ===== */
+const LIBS = {pptx:"https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js"};
+const loadLib = (src, test) => test() ? Promise.resolve() : new Promise((ok, no) => { const t = document.createElement("script"); t.src = src; t.onload = ok; t.onerror = () => no(new Error("load")); document.head.appendChild(t); });
+function renderMeet(){
+  const box = $("#tabMeet"), now = new Date(), ym = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+  box.innerHTML = `<div class="card"><h2 style="margin-top:0">عرض الاجتماع الشهري للمجلس التنفيذي</h2>
+    <p class="mute">تُعدّ المنصة تلقائياً عرضاً بكل طلبات الشهر وما تم فيها، وبطاقات فليغيره وردودها. اختر الشهر ثم اعرضه مباشرة في الاجتماع أو نزّله كملف PowerPoint.</p>
+    <div class="row"><input id="mm" type="month" value="${ym}" style="max-width:220px" aria-label="الشهر"><button class="btn" id="mshow">عرض الاجتماع</button><button class="btn alt" id="mppt">تنزيل PowerPoint</button></div>
+    <p id="mmsg" class="mute" style="margin-top:10px"></p></div>`;
+  const go = async mode => {
+    const msg = $("#mmsg"); msg.textContent = "جارٍ إعداد العرض...";
+    try {
+      const reqs = await authed("/rest/v1/requests?select=*&order=created_at.asc&limit=2000");
+      let d = {cards:[], rep:{}}; try { d = await fetchCards(); } catch {}
+      const sl = buildSlides($("#mm").value, reqs, d.cards, d.rep);
+      msg.textContent = sl.length + " شريحة جاهزة.";
+      if (mode === "show") openPres(sl); else await exportPptx(sl, $("#mm").value);
+    } catch (x) { msg.textContent = x.message === "load" ? "تعذّر تحميل أداة PowerPoint (تحتاج اتصالاً بالإنترنت). يمكنك استعمال «عرض الاجتماع»." : "تعذّر الإعداد: " + x.message; }
+  };
+  $("#mshow").onclick = () => go("show"); $("#mppt").onclick = () => go("ppt");
+}
+function buildSlides(ym, reqs, cards, creps){
+  const [Y, M] = ym.split("-").map(Number), from = new Date(Y, M - 1, 1), to = new Date(Y, M, 1);
+  const inM = d => { const t = new Date(d); return t >= from && t < to; };
+  const R = reqs.filter(r => inM(r.created_at)), C = cards.filter(c => inM(c.created_at));
+  const label = from.toLocaleDateString("ar-DZ-u-nu-latn", {month:"long", year:"numeric"});
+  const G = {done:["ready","done"], prog:["new","prog","replied"], wait:["info","buy"], off:["off"]}, cnt = (a, g) => a.filter(r => G[g].includes(r.status)).length;
+  const lbl = r => (ST[r.status] || ST.new)[0], cut = (t, n) => { t = String(t || ""); return t.length > n ? t.slice(0, n) + "…" : t; };
+  const older = reqs.filter(r => !inM(r.created_at) && new Date(r.created_at) < from && (G.prog.includes(r.status) || G.wait.includes(r.status))).length;
+  const answered = C.filter(c => (creps[c.id] || []).length).length;
+  const out = [{k:"title", t:"اجتماع المجلس التنفيذي", sub:label + " - مدرسة تاونزة العلمية"}];
+  out.push({t:"ملخص الشهر", lines:[
+    "الطلبات الواردة: " + R.length,
+    "منجزة (جاهزة أو سُلّمت): " + cnt(R, "done"),
+    "قيد المعالجة: " + cnt(R, "prog"),
+    "بانتظار تفاصيل أو اقتناء: " + cnt(R, "wait"),
+    "ملغاة: " + cnt(R, "off"),
+    "طلبات مفتوحة من أشهر سابقة: " + older,
+    "بطاقات فليغيره: " + C.length + " (أُجيب عنها: " + answered + "، بلا ردّ: " + (C.length - answered) + ")"]});
+  const rows = Object.entries(DEPTS).map(([k, D]) => { const a = R.filter(r => r.dept === k); return [D.n, a.length, cnt(a, "done"), cnt(a, "prog"), cnt(a, "wait"), cnt(a, "off")]; });
+  out.push({t:"الطلبات حسب الإدارة", table:{head:["الإدارة","الواردة","منجزة","قيد المعالجة","بانتظار","ملغاة"], rows}});
+  Object.entries(DEPTS).forEach(([k, D]) => { const a = R.filter(r => r.dept === k); if (!a.length) return;
+    const top = a.slice(0, 10).map(r => [r.code, cut(r.title, 40), lbl(r), cut(r.note, 40)]);
+    out.push({t:"طلبات " + D.n, sub:a.length + " طلب" + (a.length > 10 ? " (أول 10)" : ""), table:{head:["الرقم","الطلب","الحالة","إجراء الإدارة"], rows:top}}); });
+  out.push({t:"بطاقات فليغيره", lines:["عدد البطاقات هذا الشهر: " + C.length, "أُجيب عنها: " + answered, "بلا ردّ بعد: " + (C.length - answered), "تُعرض البطاقات في الشرائح التالية بالنص والردود."]});
+  C.forEach(c => { const rs = creps[c.id] || [];
+    out.push({t:"بطاقة " + c.code, sub:"من: " + c.author + " - إلى: " + c.to_roles.map(roleName).join("، "), lines:[
+      "الملاحظة: " + cut(c.body, 600), ...(c.suggestion ? ["الاقتراح: " + cut(c.suggestion, 300)] : []),
+      ...(rs.length ? rs.map(r => roleName(r.role) + ": " + cut(r.body, 300)) : ["لم يصل أي رد بعد."])]}); });
+  const open = C.filter(c => !(creps[c.id] || []).length);
+  if (open.length) out.push({t:"بطاقات بلا ردّ", lines:open.map(c => c.code + " - إلى: " + c.to_roles.map(roleName).join("، "))});
+  out.push({t:"قرارات الاجتماع والمتابعة", lines:["........................................","........................................","........................................"]});
+  return out;
+}
+let PS = [], PI = 0;
+function slideHtml(sl){
+  if (sl.k === "title") return `<div class="sl" style="text-align:center"><img src="logo.gif" alt="" style="height:18vh;margin:0 auto 3vh;display:block"><h1>${esc(sl.t)}</h1><div class="sub">${esc(sl.sub)}</div></div>`;
+  return `<div class="sl"><h1>${esc(sl.t)}</h1>${sl.sub ? `<div class="sub">${esc(sl.sub)}</div>` : ""}
+    ${sl.table ? `<table><tr>${sl.table.head.map(h => `<th>${esc(h)}</th>`).join("")}</tr>${sl.table.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table>` : ""}
+    ${sl.lines ? `<ul>${sl.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}</div>`;
+}
+function openPres(slides){
+  PS = slides; PI = 0; const p = $("#pres"); p.hidden = false;
+  p.innerHTML = `<div id="psl"></div><div class="ct"><button id="pn">التالي</button><span id="pc"></span><button id="pp">السابق</button><button id="px">إغلاق</button></div>`;
+  p.style.display = "flex"; $("#psl").style.cssText = "flex:1;display:flex;flex-direction:column;min-height:0";
+  const draw = () => { $("#psl").innerHTML = slideHtml(PS[PI]); $("#pc").textContent = (PI + 1) + " / " + PS.length; };
+  window.pgo = d => { PI = Math.max(0, Math.min(PS.length - 1, PI + d)); draw(); };
+  $("#pn").onclick = () => pgo(1); $("#pp").onclick = () => pgo(-1); $("#px").onclick = closePres; draw();
+  document.addEventListener("keydown", presKey);
+}
+function presKey(e){
+  if ($("#pres").hidden) { document.removeEventListener("keydown", presKey); return; }
+  if (e.key === "ArrowLeft" || e.key === " " || e.key === "PageDown") { e.preventDefault(); pgo(1); }
+  else if (e.key === "ArrowRight" || e.key === "PageUp") { e.preventDefault(); pgo(-1); }
+  else if (e.key === "Escape") closePres();
+}
+function closePres(){ $("#pres").hidden = true; document.removeEventListener("keydown", presKey); }
+async function exportPptx(slides, ym){
+  await loadLib(LIBS.pptx, () => window.PptxGenJS);
+  const p = new PptxGenJS(), BLUE = "014BAA", F = "Tahoma"; p.layout = "LAYOUT_WIDE"; p.rtlMode = true;
+  slides.forEach(sl => {
+    const s = p.addSlide();
+    if (sl.k === "title") {
+      s.background = {color:BLUE}; s.addShape(p.ShapeType.rect, {x:0, y:6.9, w:13.33, h:0.6, fill:{color:"F44C10"}});
+      s.addText(sl.t, {x:0.6, y:2.3, w:12.1, h:1.3, fontSize:44, bold:true, color:"FFFFFF", align:"center", rtlMode:true, fontFace:F});
+      s.addText(sl.sub, {x:0.6, y:3.7, w:12.1, h:0.8, fontSize:24, color:"CFDCF7", align:"center", rtlMode:true, fontFace:F}); return;
+    }
+    s.addShape(p.ShapeType.rect, {x:0, y:0, w:13.33, h:1.1, fill:{color:BLUE}}); s.addShape(p.ShapeType.rect, {x:0, y:1.1, w:13.33, h:0.08, fill:{color:"F44C10"}});
+    s.addText(sl.t, {x:0.5, y:0.15, w:12.3, h:0.8, fontSize:28, bold:true, color:"FFFFFF", align:"right", rtlMode:true, fontFace:F});
+    let y = 1.35;
+    if (sl.sub) { s.addText(sl.sub, {x:0.5, y, w:12.3, h:0.5, fontSize:16, color:"555555", align:"right", rtlMode:true, fontFace:F}); y += 0.6; }
+    if (sl.table) {
+      const rows = [sl.table.head.map(h => ({text:h, options:{bold:true, color:"FFFFFF", fill:{color:BLUE}, align:"center"}})), ...sl.table.rows.map(r => r.map(c => ({text:String(c), options:{align:"center"}})))];
+      s.addTable(rows, {x:0.5, y, w:12.3, fontSize:14, fontFace:F, border:{type:"solid", color:"BBBBBB", pt:1}, rtlMode:true, valign:"middle"});
+    }
+    if (sl.lines) s.addText(sl.lines.map(l => ({text:l, options:{bullet:true, breakLine:true}})), {x:0.5, y, w:12.3, h:7.2 - y, fontSize:20, color:"222222", align:"right", valign:"top", rtlMode:true, fontFace:F});
+  });
+  await p.writeFile({fileName:"اجتماع-المجلس-" + ym + ".pptx"});
+}
+
 /* تحديث تلقائي كل دقيقة أثناء فتح اللوحة، مع عدّاد في عنوان التبويب للطلبات الجديدة */
 const BASE_TITLE = document.title; let POLL = null, NEWN = 0;
 function startPoll(){ clearInterval(POLL); POLL = setInterval(pollAdmin, 60000); }
