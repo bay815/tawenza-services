@@ -154,6 +154,31 @@ a.lk small{color:var(--mute);font-size:13px}
 #pres th{background:rgba(255,255,255,.2)}
 #pres .ct{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:rgba(0,0,0,.25)}
 #pres .ct button{background:#fff;color:#0e3a82;border:0;border-radius:8px;padding:8px 18px;font:inherit;font-weight:700;cursor:pointer}
+.about{background:#fff;border:2px solid var(--line);border-radius:14px;margin-bottom:22px;overflow:hidden}
+.about[open]{border-color:var(--orange)}
+.about>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 20px;font-weight:700;font-size:18px;color:var(--deep)}
+.about>summary::-webkit-details-marker{display:none}
+.about>summary::after{content:"▾";margin-inline-start:auto;font-size:22px;color:var(--orange);transition:transform .2s}
+.about[open]>summary::after{transform:rotate(180deg)}
+.about summary small{display:block;font-weight:400;color:var(--mute);font-size:14px}
+.ab-ic{font-size:30px;width:52px;height:52px;border-radius:12px;background:var(--soft);display:grid;place-items:center;flex:none}
+#aboutBody{padding:4px 20px 20px}
+#aboutBody h3{margin:20px 0 8px;color:var(--deep);font-size:19px}
+.ab-lead{font-size:17px;margin:8px 0}
+.ab-steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;counter-reset:s}
+.ab-steps li{counter-increment:s;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:block}
+.ab-steps li::before{content:counter(s);display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;font-weight:700;margin-inline-end:8px}
+.ab-steps b{display:inline}.ab-steps span{display:block;color:var(--mute);font-size:15px;margin-top:4px}
+.ab-dept{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:12px;margin-bottom:12px;background:#fff}
+.ab-dh{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cs)}
+.ab-dh b{font-size:17px;color:var(--ink)}.ab-dh a{margin-inline-start:auto;color:var(--c);font-weight:700;text-decoration:none}
+.ab-svc{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-top:1px solid var(--line)}
+.ab-svc .ai{font-size:24px;flex:none}.ab-svc div{flex:1}.ab-svc b{display:block}.ab-svc p{margin:2px 0 0;color:var(--mute);font-size:15px}
+.ab-svc .qa{flex:none;align-self:center;border-color:var(--c);color:var(--c);margin:0}
+.ab-st{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px}
+.ab-st li{display:flex;gap:8px;align-items:flex-start;font-size:15px}
+.ab-st i{width:10px;height:10px;border-radius:50%;flex:none;margin-top:8px}
+@media (max-width:640px){.ab-svc{flex-wrap:wrap}.ab-svc .qa{width:100%}}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -174,6 +199,10 @@ a.lk small{color:var(--mute);font-size:13px}
       <div class="row"><a class="btn ghost" href="#track">متابعة حالة طلباتي</a></div>
     </div>
   </div>
+  <details class="about" id="about">
+    <summary><span class="ab-ic" aria-hidden="true">💡</span><span>ما فكرة المنصة؟ تعرّف على خدماتها وطريقة استعمالها<small>اضغط هنا لعرض الشرح المبسّط</small></span></summary>
+    <div id="aboutBody"></div>
+  </details>
   <h2>الإدارات والخدمات</h2>
   <div class="dept-grid" id="deptCards"></div>
   <h2>روابط المدرسة ومنصاتها</h2>
@@ -457,6 +486,47 @@ function initNameSelect(selId, othId, formSel){
 initNameSelect("#name", "#name_o", "#form"); initNameSelect("#cname", "#cname_o", "#cform");
 const cardName = () => $("#cname").value === "__other" ? $("#cname_o").value.trim() : $("#cname").value;
 const nameVal = () => $("#name").value === "__other" ? $("#name_o").value.trim() : $("#name").value;
+
+/* شرح المنصة في الرئيسية */
+const EXPLAIN = {
+  print:"تحتاج نسخًا من اختبار أو ورقة عمل أو شهادة؟ حدّد عدد النسخ والمقاس واللون والتدبيس، وضع رابط الملف.",
+  design:"تريد ملصقًا أو مطوية أو بطاقة أو شهادة تقدير أو عرضًا تقديميًا بهوية المدرسة؟ اشرح المطلوب واكتب النص المراد إدراجه.",
+  cover:"عندك فعالية أو نشاط أو رحلة تريد توثيقها بالصور أو الفيديو؟ حدّد اليوم والوقت والمكان ونوع التغطية.",
+  fix:"جهاز لا يعمل (حاسوب، طابعة، جهاز عرض، سبورة ذكية، إنترنت)؟ صِف العطل والمكان، وحدّد درجة الاستعجال.",
+  train:"تريد أن تتعلم أداة أو برنامجًا رقميًا لك أو لفريقك؟ اذكر موضوع التكوين والفئة المستهدفة والفترة المقترحة.",
+  gear:"تحتاج جهازًا أو ملحقًا تقنيًا؟ حدّد العتاد والكمية وسبب الحاجة، ويبقى الطلب «بانتظار الاقتناء» حتى يُبَتّ فيه.",
+  doc:"شهادة العمل، كشف الأجرة، بطاقة الشفاء وغيرها: اختر الوثيقة والغرض منها. تُعالج الطلبات خلال 24 ساعة عمل، وحين تجهز تتوجّه إلى مكتب الاستقبال وتوقّع في سجل الاستلام.",
+  maint:"إصلاح في قسم أو قاعة (نافذة، مصباح، تجهيزات...)؟ حدّد المكان ونوع الطلب والأولوية A أو B أو C. أجل التنفيذ 5 أيام، و15 يومًا إن لزم اقتناء."
+};
+const STATUS_HELP = {
+  new:"وصل طلبك وينتظر أن تبدأ الإدارة معالجته.",
+  replied:"أرسلتَ المعلومات المطلوبة وهي بانتظار مراجعة الإدارة.",
+  prog:"الإدارة تعمل على طلبك الآن.",
+  info:"طلبت منك الإدارة معلومات إضافية: افتح «طلباتي» واقرأ طلبها وردّ عليه.",
+  buy:"طلبك يحتاج شراءً أو اقتناءً، فينتظر القرار والتنفيذ.",
+  ready:"طلبك جاهز: توجّه إلى مكتب الاستقبال للاستلام.",
+  done:"استلمتَ طلبك وانتهى.",
+  off:"أُلغي الطلب."
+};
+function goSvc(k){
+  const d = SV[k].dept; CUR = null;
+  if (location.hash === "#" + d) route(); else location.hash = d;
+  setTimeout(() => { const r = document.querySelector(`#pick input[value="${k}"]`); if (r) { r.checked = true; renderExtra(); } window.scrollTo(0, 0); }, 80);
+}
+function buildAbout(){
+  const steps = [["اختر الإدارة","من الأزرار في أعلى الصفحة."],["املأ النموذج","واختر اسمك من القائمة. لا حاجة إلى حساب ولا كلمة مرور."],["احتفظ برقم طلبك","يظهر بعد الإرسال ويحفظه جهازك تلقائيًا."],["تابع الحالة","من «طلباتي»، وردّ هناك إن طلبت الإدارة معلومات."]];
+  $("#aboutBody").innerHTML = `<p class="ab-lead">المنصة بوابة واحدة تجمع طلباتك وملاحظاتك إلى إدارات المدرسة في مكان واحد. بدل الورق والمراسلات المتفرقة، تقدّم طلبك إلكترونيًا وتتابع حالته خطوةً بخطوة حتى يُنجَز، وتصلك إجابة الإدارة في المنصة نفسها.</p>
+    <h3>كيف تعمل؟</h3><ol class="ab-steps">${steps.map(([a,b]) => `<li><b>${a}</b><span>${b}</span></li>`).join("")}</ol>
+    <h3>خدمات الإدارات</h3>${Object.entries(DEPTS).map(([k,D]) => `<div class="ab-dept" style="--c:${D.col};--cs:${D.soft}"><div class="ab-dh"><span aria-hidden="true">${D.i}</span><b>${D.n}</b><a href="#${k}">فتح الإدارة</a></div>
+      ${D.svc.map(x => `<div class="ab-svc"><span class="ai" aria-hidden="true">${SV[x].i}</span><div><b>${SV[x].t}</b><p>${EXPLAIN[x] || SV[x].d}</p></div><button type="button" class="qa" data-go="${x}">اطلب الآن</button></div>`).join("")}</div>`).join("")}
+    <div class="ab-dept" style="--c:#c93b08;--cs:#ffece4"><div class="ab-dh"><span aria-hidden="true">🛑</span><b>بطاقة فليغيره (Stop Card)</b><a href="#card">اكتب بطاقة</a></div>
+      <div class="ab-svc"><span class="ai" aria-hidden="true">📝</span><div><b>ملاحظة بنّاءة إلى المجلس التنفيذي</b><p>تصف فيها فعلًا أو موقفًا (لا شخصًا ولا اسمًا) وتوجّهها إلى من تختارهم من أعضاء المجلس التنفيذي. يجيب عنها كل من وصلته، ويمكنه تحويلها إلى عضو آخر إن كانت تخصه. تجد الردود في «طلباتي» تحت «بطاقاتي».</p></div></div></div>
+    <h3>«طلباتي»</h3><p>تجد فيها كل طلباتك وبطاقاتك التي أرسلتها من هذا الجهاز مع حالة كل منها وردود الإدارة. ومن جهاز آخر اكتب رقم الطلب في خانة البحث. <a href="#track">افتح «طلباتي»</a></p>
+    <h3>ماذا تعني حالة الطلب؟</h3><ul class="ab-st">${Object.keys(STATUS_HELP).map(k => `<li><i style="background:${ST[k][1]}"></i><span><b>${ST[k][0]}:</b> ${STATUS_HELP[k]}</span></li>`).join("")}</ul>
+    <h3>روابط المدرسة ومنصاتها</h3><p>تجد في أسفل هذه الصفحة وفي أسفل كل صفحة روابط الموقع الرسمي وقناة المدرسة والمنصات البيداغوجية ورزنامة المواعيد.</p>`;
+  $("#aboutBody").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) goSvc(b.dataset.go); });
+}
+buildAbout();
 
 /* أعضاء المجلس التنفيذي */
 const ROLES = [["gm","المدير العام"],["fin","المدير المالي"],["it","مدير التقنية"],["md","مدير الإعلام"],["kg","مديرة التحضيري"],["mt","مدير الصيانة"],["adm","المدير الإداري"],["ped","المدير البيداغوجي"],["qa","مدير الجودة والأمانة"],["hr","مدير الموارد البشرية"]];
