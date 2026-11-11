@@ -420,9 +420,11 @@ $("#nav").addEventListener("click", e => {   // الضغط على زر الإد�
   const a = e.target.closest("a");
   if (a && a.getAttribute("href") === location.hash) { if (!$("#done").hidden) CUR = null; route(); }
 });
+let WANT_TAB = "";
 const CARD_THEME = {col:"#c93b08", deep:"#014baa", soft:"#ffece4", glow:"rgba(0,0,0,0)"};
 function route(){
   let h = location.hash.slice(1) || "home"; if (h === "new") h = "home";
+  if (h === "admin-cards") { WANT_TAB = "cards"; h = "admin"; }   // رابط الإشعار يفتح تبويب البطاقات
   const d = isDept(h);
   document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== (d ? "new" : h));
   document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.v === h));
@@ -764,6 +766,7 @@ function renderAdmin(){
     if (b.dataset.t === "meet") renderMeet();
   };
   loadAdmin();
+  if (WANT_TAB === "cards") { WANT_TAB = ""; $('#atabs button[data-t="cards"]').click(); }
 }
 let ADM = [], AF = "", AQ = "", AD = "", OPEN = null, LAST = null, REP = {};
 const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "";
@@ -1014,7 +1017,7 @@ async function exportPptx(slides, ym){
 const BASE_TITLE = document.title; let POLL = null, NEWN = 0;
 function startPoll(){ clearInterval(POLL); POLL = setInterval(pollAdmin, 60000); }
 async function pollAdmin(){
-  if (!tok() || location.hash !== "#admin") return;
+  if (!tok() || !location.hash.startsWith("#admin")) return;
   const a = document.activeElement; if (a && a.closest && a.closest("#al")) return;   // لا نقاطع من يكتب رسالة
   try {
     const rows = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=500");
