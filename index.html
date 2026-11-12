@@ -3,8 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="theme-color" content="#014baa">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="logo.gif">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="منصة تاونزة">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>المنصة الرقمية - مدرسة تاونزة العلمية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
@@ -90,7 +96,7 @@ a.dept .big{width:54px;height:54px;border-radius:12px;background:var(--cs);displ
 a.dept h3{margin:8px 0 4px;color:var(--deep);font-size:22px}
 a.dept p{margin:0 0 10px;color:var(--mute);font-size:15px}
 a.dept .go{color:var(--c);font-weight:700}
-.hero.solo{grid-template-columns:1fr;padding-bottom:34px}
+.hero.solo{grid-template-columns:1fr;padding-bottom:34px;margin-bottom:16px}
 .crumb{display:inline-block;margin-bottom:12px;color:var(--navy);text-decoration:none;font-weight:600}
 .steps{margin:8px 0 0;padding-inline-start:20px;font-size:15px;color:#e5edff}
 .steps li{margin-bottom:4px}
@@ -129,7 +135,7 @@ a.lk:hover{border-color:var(--navy)}
 a.lk .ic{width:46px;height:46px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:22px;background:#e8efff}
 a.lk b{display:block;color:var(--deep)}
 a.lk small{color:var(--mute);font-size:13px}
-.flinks{margin-bottom:6px}.flinks a{margin:0 10px;color:var(--navy);text-decoration:none;white-space:nowrap}
+.flinks{margin-bottom:6px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 2px}.flinks a{margin:0 10px;color:var(--navy);text-decoration:none;white-space:nowrap}
 .rf{margin-top:10px}
 #card>.card{display:block}
 #card #cform .f{display:block}
@@ -179,6 +185,29 @@ a.lk small{color:var(--mute);font-size:13px}
 .ab-st li{display:flex;gap:8px;align-items:flex-start;font-size:15px}
 .ab-st i{width:10px;height:10px;border-radius:50%;flex:none;margin-top:8px}
 @media (max-width:640px){.ab-svc{flex-wrap:wrap}.ab-svc .qa{width:100%}}
+html{-webkit-text-size-adjust:100%}
+header{padding-top:env(safe-area-inset-top)}
+footer{padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
+.inst{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px;border:2px solid var(--orange)}
+@media (display-mode:standalone){body{overscroll-behavior-y:none}}
+@media (max-width:720px){
+  .bar{padding:8px 12px;gap:6px}
+  .brand img{height:40px}.brand small{font-size:12px}
+  nav{width:100%;flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  nav::-webkit-scrollbar{display:none}
+  nav a{white-space:nowrap;flex:none;min-height:44px;display:inline-flex;align-items:center;padding:8px 12px}
+  main{padding:14px 12px 60px}
+  .hero,.hero.cmp{padding:20px 16px}.hero.solo{padding:20px 16px}
+  .hero h1,.hero.cmp h1{font-size:22px}
+  input:not([type=checkbox]):not([type=radio]),select,textarea,.btn{min-height:46px}
+  .btn{padding:12px 20px}
+  h2{font-size:20px}
+  .about>summary{font-size:16px;padding:14px}
+  .tabs button{flex:1}
+  .rcs{grid-template-columns:1fr 1fr}
+  .req{flex-direction:column}
+}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -199,6 +228,7 @@ a.lk small{color:var(--mute);font-size:13px}
       <div class="row"><a class="btn ghost" href="#track">متابعة حالة طلباتي</a></div>
     </div>
   </div>
+  <div id="install" class="card inst" hidden><div><b>📲 ثبّت المنصة على هاتفك</b><div class="mute" id="instTxt">تُفتح كتطبيق من الشاشة الرئيسية، بسرعة ودون كتابة الرابط.</div></div><button class="btn" id="instBtn" type="button">تثبيت</button></div>
   <details class="about" id="about">
     <summary><span class="ab-ic" aria-hidden="true">💡</span><span>ما فكرة المنصة؟ تعرّف على خدماتها وطريقة استعمالها<small>اضغط هنا لعرض الشرح المبسّط</small></span></summary>
     <div id="aboutBody"></div>
@@ -428,6 +458,7 @@ function route(){
   const d = isDept(h);
   document.querySelectorAll("main>section").forEach(s => s.hidden = s.id !== (d ? "new" : h));
   document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.v === h));
+  const act = document.querySelector("#nav a.on"); if (act && act.scrollIntoView) act.scrollIntoView({inline:"center", block:"nearest"});
   const R = document.documentElement.style, D = d ? DEPTS[h] : (h === "card" ? CARD_THEME : null);
   if (D) { R.setProperty("--navy", D.col); R.setProperty("--deep", D.deep); R.setProperty("--soft", D.soft); R.setProperty("--glow", D.glow || "rgba(244,76,16,.55)"); }
   else ["--navy","--deep","--soft","--glow"].forEach(v => R.removeProperty(v));
@@ -525,6 +556,7 @@ function buildAbout(){
       <div class="ab-svc"><span class="ai" aria-hidden="true">📝</span><div><b>ملاحظة بنّاءة إلى المجلس التنفيذي</b><p>تصف فيها فعلًا أو موقفًا (لا شخصًا ولا اسمًا) وتوجّهها إلى من تختارهم من أعضاء المجلس التنفيذي. يجيب عنها كل من وصلته، ويمكنه تحويلها إلى عضو آخر إن كانت تخصه. تجد الردود في «طلباتي» تحت «بطاقاتي».</p></div></div></div>
     <h3>«طلباتي»</h3><p>تجد فيها كل طلباتك وبطاقاتك التي أرسلتها من هذا الجهاز مع حالة كل منها وردود الإدارة. ومن جهاز آخر اكتب رقم الطلب في خانة البحث. <a href="#track">افتح «طلباتي»</a></p>
     <h3>ماذا تعني حالة الطلب؟</h3><ul class="ab-st">${Object.keys(STATUS_HELP).map(k => `<li><i style="background:${ST[k][1]}"></i><span><b>${ST[k][0]}:</b> ${STATUS_HELP[k]}</span></li>`).join("")}</ul>
+    <h3>ثبّت المنصة على هاتفك</h3><p>على <b>أندرويد</b> (Chrome): من القائمة ⋮ اختر «تثبيت التطبيق». وعلى <b>آيفون</b> (Safari): اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية». فيظهر رمز المنصة بين تطبيقاتك وتُفتح بملء الشاشة.</p>
     <h3>روابط المدرسة ومنصاتها</h3><p>تجد في أسفل هذه الصفحة وفي أسفل كل صفحة روابط الموقع الرسمي وقناة المدرسة والمنصات البيداغوجية ورزنامة المواعيد.</p>`;
   $("#aboutBody").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) goSvc(b.dataset.go); });
 }
@@ -1084,6 +1116,19 @@ function onAdminClick(e){
   if (e.target.closest("[data-save]")) saveReq(c.dataset.id, c.querySelector("[data-s]").value, note);
 }
 if (!CONFIGURED) document.querySelector("main").insertAdjacentHTML("afterbegin", '<div class="err">لم يُضبط الربط بقاعدة البيانات بعد: ضع SB_URL وSB_KEY في أعلى كود الصفحة.</div>');
+/* التطبيق: عامل الخدمة وزر التثبيت */
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+let DEFERRED = null;
+const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const IOS = /iphone|ipad|ipod/i.test(navigator.userAgent), PHONE = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+const showInstall = () => { if (!standalone()) $("#install").hidden = false; };
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); DEFERRED = e; showInstall(); });
+addEventListener("appinstalled", () => { $("#install").hidden = true; DEFERRED = null; });
+if (PHONE) showInstall();
+$("#instBtn").onclick = async () => {
+  if (DEFERRED) { DEFERRED.prompt(); await DEFERRED.userChoice.catch(() => {}); DEFERRED = null; $("#install").hidden = true; return; }
+  $("#instTxt").textContent = IOS ? "في Safari: اضغط زر المشاركة (المربع والسهم) ثم «إضافة إلى الشاشة الرئيسية»." : "من قائمة المتصفح (⋮) اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».";
+};
 route();
 </script>
 </body>
