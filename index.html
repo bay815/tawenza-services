@@ -678,7 +678,7 @@ async function renderMyCards(){
     return `<div class="card" style="margin-bottom:10px"><div class="req"><div><b dir="ltr">${esc(c.code)}</b><div>${esc(c.text)}</div><div class="mute">إلى: ${esc(c.roles.map(roleName).join("، "))}</div></div>
       <span class="badge" style="color:${rs.length ? "#047857" : "#b45309"};border-color:${rs.length ? "#047857" : "#b45309"}">${rs.length ? "أُجيب عنها (" + rs.length + ")" : "بانتظار الرد"}</span></div>
       ${trs.map(t => `<div class="mute">↪ حُوّلت من ${esc(roleName(t.from))} إلى ${esc(t.to.map(roleName).join("، "))}</div>`).join("")}
-      ${rs.map(r => `<div class="note" style="background:#e7f6ee"><b>${esc(roleName(r.role))}:</b> ${esc(r.body)}<br><small class="mute">${esc(fdate(r.at))}</small></div>`).join("")}</div>`; }).join("");
+      ${rs.map(r => `<div class="note" style="background:#e7f6ee"><b>${esc(roleName(r.role))}:</b> ${esc(r.body)}<br><small class="mute">${esc(fdate(r.at))}</small></div>`).join("")}<div style="margin-top:8px"><button type="button" class="qa" data-rmc="${esc(c.code)}">إزالة من قائمتي</button></div></div>`; }).join("");
 }
 
 /* الحالات */
@@ -701,7 +701,7 @@ const readyNotice = who => {
   const t = who ? (/\sبنت\s/.test(" " + who + " ") ? "سيدتي " : "سيدي ") + esc(who) + " " : "";
   return `<div class="note" style="background:#e7f6ee;line-height:2"><b>السلام عليكم، تحية طيبة وبعد؛</b><br>نُعلمكم ${t}بأن وثيقتكم المطلوبة أصبحت جاهزة.<br>يرجى التوجّه إلى مكتب الاستقبال لاستلامها والتوقيع بالاستلام.<br>تسعدنا خدمتكم وراحتكم. 🌹<br><small class="mute">#مدير_الموارد_البشرية</small></div>`;
 };
-const reqCard = (id, title, svc, s, who) => {
+const reqCard = (id, title, svc, s, who, rm) => {
   const st = s && s.s; let extra = "";
   if (st === "info") extra = `<div class="note"><b>طلبت الإدارة منك:</b> ${esc(s.n || "تفاصيل إضافية")}</div>` + replyForm(id, who);
   else if (st === "replied") extra = (s.n ? `<div class="note">${esc(s.n)}</div>` : "") + (s.r ? `<div class="note" style="background:#e7f6ee">ردّك المرسل: ${esc(s.r)}</div>` : "") +
@@ -709,8 +709,14 @@ const reqCard = (id, title, svc, s, who) => {
   else if (st === "ready" && s.d === "hr") extra = readyNotice(who) + (s.n ? `<div class="note">${esc(s.n)}</div>` : "");
   else if (s && s.n) extra = `<div class="note">${esc(s.n)}</div>`;
   return `<div class="card" style="margin-bottom:10px"><div class="req">
-    <div><b dir="ltr">${esc(id)}</b><div>${esc(title||"")}</div><div class="mute">${esc(svc||"")}</div></div>${badge(st)}</div>${extra}</div>`;
+    <div><b dir="ltr">${esc(id)}</b><div>${esc(title||"")}</div><div class="mute">${esc(svc||"")}</div></div>${badge(st)}</div>${extra}${rm ? `<div style="margin-top:8px"><button type="button" class="qa" data-rm="${esc(id)}">إزالة من قائمتي</button></div>` : ""}</div>`;
 };
+document.addEventListener("click", e => {
+  const a = e.target.closest ? e.target.closest("[data-rm],[data-rmc]") : null; if (!a) return;
+  if (!confirm("ستُزال من قائمة هذا الجهاز فقط، ويبقى لدى الإدارة. احتفظ برقمه إن أردتَ متابعته لاحقًا من خانة البحث. متابعة؟")) return;
+  if (a.dataset.rm) { save("twz_mine", load("twz_mine", []).filter(m => m.id !== a.dataset.rm)); renderMine(); }
+  else { save("twz_cards", load("twz_cards", []).filter(x => x.code !== a.dataset.rmc)); renderMyCards(); }
+});
 document.addEventListener("change", e => {
   const t = e.target;
   if (t.matches && t.matches("form.rf select[name=who]")) { const o = t.form.who_o; o.hidden = t.value !== "__other"; o.required = t.value === "__other"; }
@@ -737,7 +743,7 @@ async function renderMine(){
   box.innerHTML = `<p class="mute">جارٍ جلب الحالات...</p>`;
   const st = await getStatuses(mine.map(m => m.id));
   box.innerHTML = (st === null ? `<p class="mute">تعذّر جلب الحالات الآن. الحالة المعروضة هي «تم الاستلام» حتى تتحدّث الصفحة.</p>` : "") +
-    mine.map(m => reqCard(m.id, m.title, (DEPTS[m.dept || "it"].n) + " - " + m.svc, st && st[m.id], m.who)).join("");
+    mine.map(m => reqCard(m.id, m.title, (DEPTS[m.dept || "it"].n) + " - " + m.svc, st && st[m.id], m.who, true)).join("");
 }
 $("#qbtn").onclick = async () => {
   const id = $("#q").value.trim().toUpperCase(), out = $("#qres");
@@ -863,7 +869,8 @@ function rowHtml(r){
       <div class="qa">${Object.entries(QA).filter(([k]) => k !== r.status && (k !== "buy" || r.dept === "mt" || r.service === "شراء عتاد تقني")).map(([k,l]) => `<button data-q="${k}">${l}</button>`).join("")}</div>
       <div class="f"><label>رسالة للموظف (تظهر له مع الحالة)</label><input data-n value="${esc(r.note)}" maxlength="500" placeholder="مثال: جاهز في مكتب الاستقبال"></div>
       <div class="f"><label>الحالة</label><select data-s>${Object.entries(ST).map(([k,v]) => `<option value="${k}" ${k === r.status ? "selected" : ""}>${v[0]}</option>`).join("")}</select></div>
-      <button class="btn" data-save>حفظ</button> <span class="mute">${esc(msg)}</span></div></div></div>`;
+      <button class="btn" data-save>حفظ</button> <span class="mute">${esc(msg)}</span>
+      <div style="margin-top:16px;border-top:1px dashed var(--line);padding-top:12px"><button class="btn alt" data-del type="button" style="color:#b91c1c;border-color:#b91c1c">🗑 حذف الطلب نهائيًا</button></div></div></div></div>`;
 }
 function drawAdmin(){
   const q = AQ.trim().toLowerCase();
@@ -879,6 +886,7 @@ function drawAdmin(){
 /* ===== تبويب بطاقات فليغيره ===== */
 let CARDS = [], CREP = {}, CTR = {}, OPENC = null;
 const myRole = () => sessionStorage.getItem("twz_role") || "";
+const canDelCards = () => sessionStorage.getItem("twz_who") === "all" || myRole() === "gm";
 const canReply = c => myRole() === "gm" || c.to_roles.includes(myRole());
 async function fetchCards(){
   const cards = await authed("/rest/v1/cards?select=*&order=created_at.desc&limit=1000");
@@ -917,11 +925,22 @@ function drawCards(){
             ${avail.length ? `<details style="margin-top:14px"><summary class="mute" style="cursor:pointer">تحويل البطاقة إلى عضو آخر ليجيب عنها</summary>
               <div class="rcs" style="margin:8px 0">${avail.map(([k,n]) => `<label class="rc"><input type="checkbox" name="fw" value="${k}">${n}</label>`).join("")}</div>
               <div class="f"><label>ملاحظة للمحوَّل إليه (اختياري)</label><input data-fn maxlength="500"></div>
-              <button class="btn alt" data-fwd type="button">تحويل البطاقة</button> <span class="mute" data-fmsg></span></details>` : ""}` : `<p class="mute">الرد متاح لمن وُجّهت إليهم البطاقة.</p>`}</div></div></details>`; }).join("")
+              <button class="btn alt" data-fwd type="button">تحويل البطاقة</button> <span class="mute" data-fmsg></span></details>` : ""}` : `<p class="mute">الرد متاح لمن وُجّهت إليهم البطاقة.</p>`}
+          ${canDelCards() ? `<div style="margin-top:16px;border-top:1px dashed var(--line);padding-top:12px"><button class="btn alt" data-cdel type="button" style="color:#b91c1c;border-color:#b91c1c">🗑 حذف البطاقة نهائيًا</button> <span class="mute" data-cdmsg></span></div>` : ""}</div></div></details>`; }).join("")
     : `<div class="card">لا توجد بطاقات موجّهة إليك.</div>`;
 }
 async function onCardClick(e){
   const d = e.target.closest("details.rq"); if (!d) return;
+  if (e.target.closest("[data-cdel]")) {
+    const c = CARDS.find(x => x.id === d.dataset.id), m = d.querySelector("[data-cdmsg]"); if (!c) return;
+    if (!confirm("حذف البطاقة " + c.code + " وكل ردودها نهائيًا؟ لا يمكن التراجع.")) return;
+    try {
+      const res = await authed("/rest/v1/cards?id=eq." + encodeURIComponent(c.id), {method:"DELETE", headers:{Prefer:"return=representation"}});
+      if (!res || !res.length) throw new Error("لا صلاحية (المدير العام فقط، أو لم تشغّل supabase_delete.sql)");
+      CARDS = CARDS.filter(x => x.id !== c.id); delete CREP[c.id]; delete CTR[c.id]; OPENC = null; drawCards();
+    } catch (x) { m.textContent = "تعذّر الحذف: " + x.message; }
+    return;
+  }
   if (e.target.closest("[data-fwd]")) {
     const m = d.querySelector("[data-fmsg]"), to = [...d.querySelectorAll("input[name=fw]:checked")].map(x => x.value);
     if (!to.length) { m.textContent = "اختر عضوًا واحدًا على الأقل."; return; }
@@ -1106,10 +1125,21 @@ async function saveReq(id, status, note){
   } catch (x) { LAST = {id, text:"تعذّر الحفظ: " + x.message}; }
   drawAdmin();
 }
+async function delReq(id){
+  const r = ADM.find(x => x.id === id); if (!r) return;
+  if (!confirm("حذف الطلب " + r.code + " نهائيًا؟ لا يمكن التراجع، وسيختفي من الإحصاءات ومن عرض الاجتماع.")) return;
+  try {
+    const res = await authed("/rest/v1/requests?id=eq." + encodeURIComponent(id), {method:"DELETE", headers:{Prefer:"return=representation"}});
+    if (!res || !res.length) throw new Error("لا صلاحية لحذف هذا الطلب (أو لم تشغّل supabase_delete.sql)");
+    ADM = ADM.filter(x => x.id !== id); OPEN = null; LAST = null;
+  } catch (x) { LAST = {id, text:"تعذّر الحذف: " + x.message}; }
+  drawAdmin();
+}
 function onAdminClick(e){
   const t = e.target.closest("[data-t]");
   if (t) { OPEN = OPEN === t.dataset.t ? null : t.dataset.t; LAST = null; drawAdmin(); return; }
   const c = e.target.closest(".rq[data-id]"); if (!c) return;
+  if (e.target.closest("[data-del]")) return delReq(c.dataset.id);
   const note = c.querySelector("[data-n]").value.trim();
   const q = e.target.closest("[data-q]");
   if (q) return saveReq(c.dataset.id, q.dataset.q, note);
