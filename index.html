@@ -269,7 +269,7 @@ button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
     <div class="two">
       <div class="f" id="fw_due"><label for="due">تاريخ التسليم المطلوب</label><input id="due" name="due" type="date" required></div>
       <div class="f" id="fw_link"><label for="link">رابط الملفات (Google Drive أو غيره)</label><input id="link" name="link" type="url" placeholder="https://..."></div>
-      <div class="f" id="fw_file" hidden><label for="pfile">أو أرفق الملف نفسه (PDF أو Word أو صورة، حتى 10 ميغابايت)</label><input id="pfile" type="file" accept=".pdf,.doc,.docx,image/jpeg,image/png,image/webp"><div class="mute" style="margin-top:4px">أرسل الرابط أو الملف (واحدًا منهما على الأقل).</div></div>
+      <div class="f" id="fw_file" hidden><label for="pfile" id="pfileLbl">أو أرفق الملف نفسه (PDF أو Word أو صورة، حتى 10 ميغابايت)</label><input id="pfile" type="file" accept=".pdf,.doc,.docx,image/jpeg,image/png,image/webp"><div class="mute" id="pfileHint" style="margin-top:4px">أرسل الرابط أو الملف (واحدًا منهما على الأقل).</div></div>
     </div>
     <div class="f"><label for="notes">ملاحظات إضافية (اختياري)</label><textarea id="notes" name="notes"></textarea></div>
     <button class="btn" id="send" type="submit">إرسال الطلب</button>
@@ -442,7 +442,7 @@ const SV = {
     ["purpose","الغرض من الوثيقة المطلوبة","selo",["غرض إداري/سكن","غرض طبي","غرض بنكي","غرض اجتماعي (CNAS / تعويضات)","غرض تأشيرة/سفر","غرض مهني داخلي","غرض توظيف خارجي"],1]]},
   maint: {dept:"mt", t:"طلب صيانة", i:"🔧", tag:"صيانة المرافق", c:"", d:"اطلب إصلاح أو صيانة في قسمك أو قاعتك أو أي مكان في المؤسسة، وحدّد أولوية الطلب.",
     ch:["القاعات والأقسام","التجهيزات","الأولوية A / B / C","متابعة حتى التنفيذ"],
-    hideTitle:true, hideDept:true, noDue:true, titleFrom:"kind", f:[
+    hideTitle:true, hideDept:true, noDue:true, file:1, photo:1, titleFrom:"kind", f:[
     ["place","القسم أو القاعة أو المكان","text",null,1],
     ["kind","نوع الطلب","text",null,1],
     ["prio","الأولوية","select",["A","B","C"],1],
@@ -590,6 +590,10 @@ function renderExtra(){
   $("#fw_dept").hidden = !!s.hideDept; $("#sect").required = !s.hideDept;
   $("#fw_due").hidden = $("#fw_link").hidden = !!s.noDue; $("#due").required = !s.noDue;
   $("#fw_file").hidden = !s.file;
+  { const ph = !!s.photo, pf = $("#pfile"); pf.value = "";
+    pf.accept = ph ? "image/jpeg,image/png,image/webp" : ".pdf,.doc,.docx,image/jpeg,image/png,image/webp";
+    $("#pfileLbl").textContent = ph ? "📷 صوّر العطب أو الشيء المكسور (اختياري)" : "أو أرفق الملف نفسه (PDF أو Word أو صورة، حتى 10 ميغابايت)";
+    $("#pfileHint").textContent = ph ? "التقط صورة واضحة أو اختر صورة من هاتفك، لتصل إلى مسؤول الصيانة." : "أرسل الرابط أو الملف (واحدًا منهما على الأقل)."; }
   $("#extra").innerHTML = s.f.map(([n,l,t,o,r]) => {
     const id = "x_" + n, rq = r ? " required" : "", lab = l + (r ? " *" : "");
     let inp;
@@ -618,6 +622,17 @@ const fileProblem = f => {
   return "";
 };
 const uuid4 = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); });
+async function shrinkImage(f){
+  if (!/^image\/(jpeg|png|webp)$/.test(f.type || "")) return f;
+  try {
+    const bmp = await createImageBitmap(f), k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.82));
+    if (!blob || blob.size >= f.size) return f;
+    return new File([blob], String(f.name || "photo").replace(/\.\w+$/, "") + ".jpg", {type:"image/jpeg"});
+  } catch { return f; }
+}
 async function uploadPrintFile(file, prefix, withAuth){
   const ext = fileExt(file), path = prefix + "/" + uuid4() + "/file." + ext;
   const go = () => fetch(SB_URL + "/storage/v1/object/print-files/" + path, {method:"POST", body:file,
@@ -654,8 +669,9 @@ $("#form").addEventListener("submit", async e => {
   });
   const nt = (fd.get("notes") || "").trim(); if (nt) det.push("ملاحظات: " + nt);
   const lk = (fd.get("link") || "").trim(); if (lk && !S.noDue) det.push("رابط الملفات: " + lk);
-  const file = S.file ? ($("#pfile").files[0] || null) : null;
-  if (S.file && !lk && !file) { err.hidden = false; err.textContent = "أرفق ملف الطباعة، أو ضع رابطه (Google Drive أو غيره)."; err.scrollIntoView({block:"center"}); return; }
+  let file = S.file ? ($("#pfile").files[0] || null) : null;
+  if (file && S.photo) { if (!/^(jpe?g|png|webp)$/.test(fileExt(file))) { err.hidden = false; err.textContent = "أرفق صورة فقط (jpg أو png أو webp)."; err.scrollIntoView({block:"center"}); return; } file = await shrinkImage(file); }
+  if (S.file && !S.photo && !lk && !file) { err.hidden = false; err.textContent = "أرفق ملف الطباعة، أو ضع رابطه (Google Drive أو غيره)."; err.scrollIntoView({block:"center"}); return; }
   if (file) { const bad = fileProblem(file); if (bad) { err.hidden = false; err.textContent = bad; err.scrollIntoView({block:"center"}); return; } }
   if (!S.noDue && fd.get("due")) det.push("التسليم المطلوب: " + fd.get("due"));
   const title = S.hideTitle ? (fd.get(S.titleFrom) || svc) : f.title.value;
@@ -850,7 +866,7 @@ function renderAdmin(){
   }
   const dept = sessionStorage.getItem("twz_who"), role = sessionStorage.getItem("twz_role") || "", seeAll = dept === "all" || role === "gm";
   box.innerHTML = `<div class="tabs" id="atabs"><button data-t="req" class="on">الطلبات</button><button data-t="cards">بطاقات فليغيره</button>${seeAll ? `<button data-t="meet">عرض الاجتماع الشهري</button>` : ""}</div>
-    <div id="tabReq"></div><div id="tabCards" hidden></div><div id="tabMeet" hidden></div>`;
+    <div id="mgrLinks"></div><div id="tabReq"></div><div id="tabCards" hidden></div><div id="tabMeet" hidden></div>`;
   $("#atabs").onclick = e => {
     const b = e.target.closest("button[data-t]"); if (!b) return;
     document.querySelectorAll("#atabs button").forEach(x => x.classList.toggle("on", x === b));
@@ -858,14 +874,23 @@ function renderAdmin(){
     if (b.dataset.t === "cards") loadCards();
     if (b.dataset.t === "meet") renderMeet();
   };
-  loadAdmin();
+  loadMgrLinks(); loadAdmin();
   if (WANT_TAB === "cards") { WANT_TAB = ""; $('#atabs button[data-t="cards"]').click(); }
+}
+async function loadMgrLinks(){
+  const el = $("#mgrLinks"); if (!el) return;
+  try {
+    const ls = (await authed("/rest/v1/manager_links?select=icon,title,label,url&order=sort.asc,id.asc")).filter(l => safeUrl(l.url));
+    el.innerHTML = ls.length ? `<div class="card" style="margin-bottom:12px"><h3 style="margin:0 0 6px">🏫 روابط المجلس</h3>` +
+      ls.map(l => `<div style="padding:5px 0">${esc(l.icon || "🔗")} <b>${esc(l.title)}:</b> <a href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener noreferrer">${esc(l.label || l.url)} ↗</a></div>`).join("") + `</div>` : "";
+  } catch { el.innerHTML = ""; }
 }
 let ADM = [], AF = "", AQ = "", AD = "", OPEN = null, LAST = null, REP = {};
 const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "";
 const linkify = v => /^https?:\/\/\S+$/i.test(v) ? `<a href="${esc(v)}" target="_blank" rel="noopener noreferrer" dir="ltr">${esc(v)} ↗</a>` : esc(v);
-const fileBlock = r => (r.file_path ? `<div class="att">📎 <b>ملف صاحب الطلب:</b> ${esc(r.file_name || "ملف")} <button type="button" class="qa" data-openf="${esc(r.file_path)}">فتح / تنزيل</button></div>` : "") +
-  (r.ped_file_path ? `<div class="att">✏️ <b>النسخة المعدّلة من المدير البيداغوجي:</b> ${esc(r.ped_file_name || "ملف")} <button type="button" class="qa" data-openf="${esc(r.ped_file_path)}">فتح / تنزيل</button></div>` : "");
+const fileBlock = r => (r.file_path ? `<div class="att">${r.route === "print" ? "📎 <b>ملف صاحب الطلب:</b>" : "📷 <b>صورة من صاحب الطلب:</b>"} ${esc(r.file_name || "ملف")} <button type="button" class="qa" data-openf="${esc(r.file_path)}">فتح / تنزيل</button></div>` : "") +
+  (r.ped_file_path ? `<div class="att">✏️ <b>النسخة المعدّلة من المدير البيداغوجي:</b> ${esc(r.ped_file_name || "ملف")} <button type="button" class="qa" data-openf="${esc(r.ped_file_path)}">فتح / تنزيل</button></div>` : "") +
+  (r.files_purged_at && !r.file_path && !r.ped_file_path ? `<div class="att mute">🗑️ حُذف المرفق تلقائيًا بعد إتمام الطلب (${esc(fdate(r.files_purged_at))})</div>` : "");
 async function loadReplies(){
   try {
     const rs = await authed("/rest/v1/request_replies?select=request_id,body,link,created_at&order=created_at.asc&limit=1000");
