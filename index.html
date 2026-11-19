@@ -219,6 +219,7 @@ button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
 .pstep li.done{background:#e7f6ee;border-color:#9bd5b4;color:#065f46}
 .pstep li.cur{background:var(--soft);border-color:var(--orange);color:var(--deep);font-weight:700}
 .ped{background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:10px 12px;margin-bottom:12px}
+.att{background:#f1f4fc;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px}.att .qa{margin-inline-start:8px}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -268,6 +269,7 @@ button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
     <div class="two">
       <div class="f" id="fw_due"><label for="due">تاريخ التسليم المطلوب</label><input id="due" name="due" type="date" required></div>
       <div class="f" id="fw_link"><label for="link">رابط الملفات (Google Drive أو غيره)</label><input id="link" name="link" type="url" placeholder="https://..."></div>
+      <div class="f" id="fw_file" hidden><label for="pfile">أو أرفق الملف نفسه (PDF أو Word أو صورة، حتى 10 ميغابايت)</label><input id="pfile" type="file" accept=".pdf,.doc,.docx,image/jpeg,image/png,image/webp"><div class="mute" style="margin-top:4px">أرسل الرابط أو الملف (واحدًا منهما على الأقل).</div></div>
     </div>
     <div class="f"><label for="notes">ملاحظات إضافية (اختياري)</label><textarea id="notes" name="notes"></textarea></div>
     <button class="btn" id="send" type="submit">إرسال الطلب</button>
@@ -400,7 +402,7 @@ const DEPTS = {
 };
 /* الخدمات: f = الحقول [الاسم، العنوان، النوع، الخيارات، إجباري] ؛ selo = قائمة مع خيار «أخرى» */
 const SV = {
-  print: {dept:"md", t:"طباعة وتصوير", info:"مسار طلب الطباعة: يصل طلبك أولًا إلى المدير البيداغوجي ليراجعه أو يطلب منك تعديله، ثم يحوّله إلى الإعلام للطباعة، وتؤكد استلامه من مكتب الإعلام. وسترى كل خطوة بتاريخها وساعتها في «طلباتي».", i:"🖨️", tag:"طباعة داخلية", c:"", d:"إعداد وسحب الاختبارات والفروض وأوراق العمل وشهادات النتائج، مع خيارات التغليف والتدبيس.",
+  print: {dept:"md", file:1, t:"طباعة وتصوير", info:"مسار طلب الطباعة: يصل طلبك أولًا إلى المدير البيداغوجي ليراجعه أو يطلب منك تعديله، ثم يحوّله إلى الإعلام للطباعة، وتؤكد استلامه من مكتب الإعلام. وسترى كل خطوة بتاريخها وساعتها في «طلباتي».", i:"🖨️", tag:"طباعة داخلية", c:"", d:"إعداد وسحب الاختبارات والفروض وأوراق العمل وشهادات النتائج، مع خيارات التغليف والتدبيس.",
     ch:["الاختبارات والفروض","أوراق العمل والبطاقات","سحب ملوّن","تغليف وتدبيس"], f:[
     ["copies","عدد النسخ","number"],["size","المقاس","select",["A4","A3","A5"]],
     ["color","اللون","select",["أبيض وأسود","ملوّن"]],["sides","الوجه","select",["وجه واحد","وجهان"]],
@@ -587,6 +589,7 @@ function renderExtra(){
   $("#fw_title").hidden = !!s.hideTitle; $("#title").required = !s.hideTitle;
   $("#fw_dept").hidden = !!s.hideDept; $("#sect").required = !s.hideDept;
   $("#fw_due").hidden = $("#fw_link").hidden = !!s.noDue; $("#due").required = !s.noDue;
+  $("#fw_file").hidden = !s.file;
   $("#extra").innerHTML = s.f.map(([n,l,t,o,r]) => {
     const id = "x_" + n, rq = r ? " required" : "", lab = l + (r ? " *" : "");
     let inp;
@@ -604,6 +607,34 @@ $("#extra").addEventListener("change", e => {
 });
 $("#pick").addEventListener("change", renderExtra);
 $("#due").min = new Date().toISOString().slice(0,10);
+
+/* رفع ملفات الطباعة (PDF / Word / صورة) إلى مخزن Supabase الخاص */
+const FILE_TYPES = {pdf:"application/pdf", doc:"application/msword", docx:"application/vnd.openxmlformats-officedocument.wordprocessingml.document", jpg:"image/jpeg", jpeg:"image/jpeg", png:"image/png", webp:"image/webp"};
+const fileExt = f => { const m = /\.([A-Za-z0-9]{1,5})$/.exec((f && f.name) || ""); return m ? m[1].toLowerCase() : ""; };
+const fileProblem = f => {
+  if (!FILE_TYPES[fileExt(f)]) return "نوع الملف غير مدعوم. المسموح: PDF أو Word (doc أو docx) أو صورة (jpg أو png أو webp).";
+  if (!f.size) return "الملف فارغ.";
+  if (f.size > 10 * 1024 * 1024) return "حجم الملف أكبر من 10 ميغابايت. ضع رابطه بدل رفعه.";
+  return "";
+};
+const uuid4 = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); });
+async function uploadPrintFile(file, prefix, withAuth){
+  const ext = fileExt(file), path = prefix + "/" + uuid4() + "/file." + ext;
+  const go = () => fetch(SB_URL + "/storage/v1/object/print-files/" + path, {method:"POST", body:file,
+    headers:Object.assign({apikey:SB_KEY, "Content-Type":FILE_TYPES[ext], "x-upsert":"false"}, withAuth && tok() ? {Authorization:"Bearer " + tok()} : {})});
+  let r = await go();
+  if (r.status === 401 && withAuth && sessionStorage.getItem("twz_rt")) { await refreshTok(); r = await go(); }
+  if (!r.ok) { let m = ""; try { m = (await r.json()).message || ""; } catch {} throw new Error("تعذّر رفع الملف" + (m ? " (" + m + ")" : " (" + r.status + ")")); }
+  return {path, name:String(file.name || "ملف").slice(0, 200)};
+}
+async function openFile(path){
+  const w = window.open("", "_blank");
+  try {
+    const j = await authed("/storage/v1/object/sign/print-files/" + path, {method:"POST", body:JSON.stringify({expiresIn:600})});
+    const u = SB_URL + "/storage/v1" + j.signedURL;
+    if (w) w.location = u; else location.href = u;
+  } catch (x) { if (w) w.close(); alert("تعذّر فتح الملف: " + x.message); }
+}
 
 /* الإرسال إلى Supabase */
 const newId = () => "TWZ-" + new Date().getFullYear() + "-" + Math.random().toString(36).slice(2,6).toUpperCase();
@@ -623,17 +654,23 @@ $("#form").addEventListener("submit", async e => {
   });
   const nt = (fd.get("notes") || "").trim(); if (nt) det.push("ملاحظات: " + nt);
   const lk = (fd.get("link") || "").trim(); if (lk && !S.noDue) det.push("رابط الملفات: " + lk);
+  const file = S.file ? ($("#pfile").files[0] || null) : null;
+  if (S.file && !lk && !file) { err.hidden = false; err.textContent = "أرفق ملف الطباعة، أو ضع رابطه (Google Drive أو غيره)."; err.scrollIntoView({block:"center"}); return; }
+  if (file) { const bad = fileProblem(file); if (bad) { err.hidden = false; err.textContent = bad; err.scrollIntoView({block:"center"}); return; } }
   if (!S.noDue && fd.get("due")) det.push("التسليم المطلوب: " + fd.get("due"));
   const title = S.hideTitle ? (fd.get(S.titleFrom) || svc) : f.title.value;
   const btn = $("#send"); btn.disabled = true; btn.textContent = "جارٍ الإرسال...";
   try {
+    let up = null;
+    if (file) { btn.textContent = "جارٍ رفع الملف..."; up = await uploadPrintFile(file, "req", false); btn.textContent = "جارٍ الإرسال..."; }
     let id = "", ok = false, last = null;
     for (let i = 0; i < 3 && !ok; i++) {
       id = newId();
       try {
         await sb("/rest/v1/requests", {method:"POST", headers:{Prefer:"return=minimal"},
           body:JSON.stringify({code:id, dept:dp, name:nameVal(), section:f.dept.value.trim(),
-            service:svc, title:String(title).slice(0,300), details:det.join("\n")})});
+            service:svc, title:String(title).slice(0,300), details:det.join("\n"),
+            file_path:up ? up.path : null, file_name:up ? up.name : null})});
         ok = true;
       } catch (x) { last = x; if (x.status !== 409) break; }
     }
@@ -826,6 +863,9 @@ function renderAdmin(){
 }
 let ADM = [], AF = "", AQ = "", AD = "", OPEN = null, LAST = null, REP = {};
 const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "";
+const linkify = v => /^https?:\/\/\S+$/i.test(v) ? `<a href="${esc(v)}" target="_blank" rel="noopener noreferrer" dir="ltr">${esc(v)} ↗</a>` : esc(v);
+const fileBlock = r => (r.file_path ? `<div class="att">📎 <b>ملف صاحب الطلب:</b> ${esc(r.file_name || "ملف")} <button type="button" class="qa" data-openf="${esc(r.file_path)}">فتح / تنزيل</button></div>` : "") +
+  (r.ped_file_path ? `<div class="att">✏️ <b>النسخة المعدّلة من المدير البيداغوجي:</b> ${esc(r.ped_file_name || "ملف")} <button type="button" class="qa" data-openf="${esc(r.ped_file_path)}">فتح / تنزيل</button></div>` : "");
 async function loadReplies(){
   try {
     const rs = await authed("/rest/v1/request_replies?select=request_id,body,link,created_at&order=created_at.asc&limit=1000");
@@ -882,7 +922,9 @@ function rowHtml(r){
   const qlabel = k => isPrint ? ({info:"طلب تعديل من صاحب الطلب", ready:"الطباعة جاهزة للاستلام", done:"تأكيد الاستلام من مكتب الإعلام"}[k] || QA[k]) : QA[k];
   const qkeys = Object.keys(QA).filter(k => k !== r.status && (k !== "buy" || r.dept === "mt" || r.service === "شراء عتاد تقني") && (!atPed || ["info","off"].includes(k)));
   const pedPanel = atPed ? `<div class="ped"><b>مسار الطباعة: الطلب عندك للمراجعة</b><p class="mute" style="margin:4px 0 8px">عدّل بيانات الطباعة بنفسك، أو اطلب من صاحب الطلب تعديلها (اكتب ما تريد في «الرسالة» ثم اضغط «طلب تعديل»)، ثم حوّله إلى الإعلام لإكمال الطباعة.</p>
+    ${safeUrl(m["رابط الملفات"]) ? `<div class="att">🔗 <b>رابط الملفات:</b> <a class="btn alt" style="text-decoration:none;display:inline-block;padding:4px 14px" href="${esc(safeUrl(m["رابط الملفات"]))}" target="_blank" rel="noopener noreferrer">افتح الرابط ↗</a></div>` : ""}
     <div class="f"><label>بيانات الطباعة (يمكنك تعديلها)</label><textarea data-pd rows="6" maxlength="3000">${esc(r.details || "")}</textarea></div>
+    <div class="f"><label>إن عدّلتَ الملف بنفسك: ارفع النسخة المعدّلة هنا (PDF أو Word أو صورة) لتُطبع بدل الأصل</label><input type="file" data-pfile accept=".pdf,.doc,.docx,image/jpeg,image/png,image/webp"></div>
     <button class="btn alt" data-pedit type="button">حفظ تعديلي</button> <button class="btn" data-pfwd type="button">تحويل إلى الإعلام للطباعة ←</button></div>` : "";
   const head = `<button class="rqh" data-t="${esc(r.id)}" aria-expanded="${open}">
     <span><b dir="ltr">${esc(r.code)}</b><small>${esc(fdate(r.created_at))}</small><small>${esc(ago(r.created_at))}</small></span>
@@ -893,7 +935,7 @@ function rowHtml(r){
   const msg = LAST && LAST.id === r.id ? LAST.text : "";
   return `<div class="rq ${needsAction(r) ? "isnew" : ""}" data-id="${esc(r.id)}">${head}
     <div class="rqb"><div><h3>تفاصيل الطلب</h3>
-      ${isPrint ? printSteps({s:r.status, step:r.step}) : ""}<dl class="kv">${det.length ? det.map(([k,v]) => `<dt>${esc(k || "ملاحظة")}</dt><dd>${esc(v)}</dd>`).join("") : "<dt>التفاصيل</dt><dd>لا توجد</dd>"}</dl>
+      ${isPrint ? printSteps({s:r.status, step:r.step}) : ""}<dl class="kv">${det.length ? det.map(([k,v]) => `<dt>${esc(k || "ملاحظة")}</dt><dd>${linkify(v)}</dd>`).join("") : "<dt>التفاصيل</dt><dd>لا توجد</dd>"}</dl>${fileBlock(r)}
       <p class="mute" style="margin:0">مقدّم الطلب: <b>${esc(r.name)}</b>${r.email ? ` - <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}<br>وصل الطلب: ${esc(fdate(r.created_at))}</p>${repHtml(r)}${tlHtml(EV[r.id], true)}</div>
     <div><h3>الإجراء</h3>${pedPanel}
       <div class="qa">${qkeys.map(k => `<button data-q="${k}">${qlabel(k)}</button>`).join("")}</div>
@@ -1156,12 +1198,25 @@ async function saveReq(id, status, note){
   drawAdmin();
 }
 async function pedAct(c, kind){
-  const id = c.dataset.id, note = c.querySelector("[data-n]").value.trim();
+  const id = c.dataset.id, note = c.querySelector("[data-n]").value.trim(), fin = c.querySelector("[data-pfile]"), file = (fin && fin.files[0]) || null;
+  const rq = ADM.find(x => x.id === id), nd = c.querySelector("[data-pd]").value, changed = !!rq && nd !== (rq.details || "");
+  if (kind === "fwd" && !confirm("تحويل الطلب إلى الإعلام لإكمال الطباعة؟")) return;
+  const fail = {denied:"ليس لك صلاحية", empty:"بيانات الطباعة فارغة", not_found:"الطلب غير موجود", bad_file:"تعذّر اعتماد الملف المرفوع"};
   try {
-    let r;
-    if (kind === "edit") r = await authed("/rest/v1/rpc/ped_edit_print", {method:"POST", body:JSON.stringify({p_request:id, p_details:c.querySelector("[data-pd]").value, p_note:note || null})});
-    else { if (!confirm("تحويل الطلب إلى الإعلام لإكمال الطباعة؟")) return; r = await authed("/rest/v1/rpc/forward_print", {method:"POST", body:JSON.stringify({p_request:id, p_note:note || null})}); }
-    if (r !== "ok") throw new Error({denied:"ليس لك صلاحية", empty:"بيانات الطباعة فارغة", not_found:"الطلب غير موجود"}[r] || r);
+    if (file) {
+      const bad = fileProblem(file); if (bad) throw new Error(bad);
+      const up = await uploadPrintFile(file, "ped", true);
+      const a = await authed("/rest/v1/rpc/ped_attach_file", {method:"POST", body:JSON.stringify({p_request:id, p_path:up.path, p_name:up.name, p_note:note || null})});
+      if (a !== "ok") throw new Error(fail[a] || a);
+    }
+    if (changed || (kind === "edit" && !file)) {   // حفظ تعديل النص (وعند التحويل لا يضيع تعديل لم يُحفظ بعد)
+      const e = await authed("/rest/v1/rpc/ped_edit_print", {method:"POST", body:JSON.stringify({p_request:id, p_details:nd, p_note:note || null})});
+      if (e !== "ok") throw new Error(fail[e] || e);
+    }
+    if (kind === "fwd") {
+      const r = await authed("/rest/v1/rpc/forward_print", {method:"POST", body:JSON.stringify({p_request:id, p_note:note || null})});
+      if (r !== "ok") throw new Error(fail[r] || r);
+    }
     LAST = {id, text: kind === "edit" ? "تم حفظ التعديل" : "حُوّل الطلب إلى الإعلام"}; await loadAdmin();
   } catch (x) { LAST = {id, text:"تعذّر الإجراء: " + x.message}; drawAdmin(); }
 }
@@ -1178,6 +1233,7 @@ async function delReq(id){
 function onAdminClick(e){
   const t = e.target.closest("[data-t]");
   if (t) { OPEN = OPEN === t.dataset.t ? null : t.dataset.t; LAST = null; drawAdmin(); return; }
+  const of = e.target.closest("[data-openf]"); if (of) return openFile(of.dataset.openf);
   const c = e.target.closest(".rq[data-id]"); if (!c) return;
   if (e.target.closest("[data-del]")) return delReq(c.dataset.id);
   if (e.target.closest("[data-pedit]")) return pedAct(c, "edit");
