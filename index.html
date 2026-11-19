@@ -88,7 +88,8 @@ table{width:100%;border-collapse:collapse;background:#fff}
 td,th{border-bottom:1px solid var(--line);padding:8px;text-align:start;font-size:15px}
 footer{text-align:center;color:var(--mute);font-size:14px;padding:20px;border-top:1px solid var(--line);background:#fff}footer img{display:block;margin:0 auto 6px}
 [hidden]{display:none!important}
-@media (prefers-reduced-motion:no-preference){.card,.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
 a.dept{display:block;background:#fff;border:1px solid var(--line);border-top:5px solid var(--c);border-radius:14px;padding:22px;text-decoration:none;color:inherit}
 a.dept.rust{border-top-color:#c2410c}
 a.dept:hover{border-color:var(--c)}
@@ -208,6 +209,16 @@ button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
   .rcs{grid-template-columns:1fr 1fr}
   .req{flex-direction:column}
 }
+.rmb{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer;color:var(--mute)}
+.rmb:hover{border-color:var(--navy);color:var(--navy)}
+.tl{margin-top:10px}.tl summary{cursor:pointer;color:var(--mute);font-size:15px}
+.tl ul{list-style:none;margin:8px 0 0;padding:0;border-inline-start:3px solid var(--line)}
+.tl li{padding:4px 12px;font-size:14.5px}.tl li b{display:block;color:var(--deep);font-size:13.5px;font-weight:600}
+.pstep{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.pstep li{flex:1;min-width:130px;text-align:center;font-size:13.5px;padding:8px 6px;border-radius:10px;background:var(--bg);border:1px solid var(--line);color:var(--mute)}
+.pstep li.done{background:#e7f6ee;border-color:#9bd5b4;color:#065f46}
+.pstep li.cur{background:var(--soft);border-color:var(--orange);color:var(--deep);font-weight:700}
+.ped{background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:10px 12px;margin-bottom:12px}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
 </style>
@@ -252,6 +263,7 @@ button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
       <div class="f" id="fw_title"><label for="title">عنوان الطلب</label><input id="title" name="title" required placeholder="مثال: اختبار الفصل الأول، 120 نسخة"></div>
     </div>
     <div class="f"><label style="color:var(--navy)" id="extraTitle">التفاصيل</label></div>
+    <div id="svcInfo" class="note" hidden style="margin-bottom:12px"></div>
     <div class="two" id="extra"></div>
     <div class="two">
       <div class="f" id="fw_due"><label for="due">تاريخ التسليم المطلوب</label><input id="due" name="due" type="date" required></div>
@@ -388,7 +400,7 @@ const DEPTS = {
 };
 /* الخدمات: f = الحقول [الاسم، العنوان، النوع، الخيارات، إجباري] ؛ selo = قائمة مع خيار «أخرى» */
 const SV = {
-  print: {dept:"md", t:"طباعة وتصوير", i:"🖨️", tag:"طباعة داخلية", c:"", d:"إعداد وسحب الاختبارات والفروض وأوراق العمل وشهادات النتائج، مع خيارات التغليف والتدبيس.",
+  print: {dept:"md", t:"طباعة وتصوير", info:"مسار طلب الطباعة: يصل طلبك أولًا إلى المدير البيداغوجي ليراجعه أو يطلب منك تعديله، ثم يحوّله إلى الإعلام للطباعة، وتؤكد استلامه من مكتب الإعلام. وسترى كل خطوة بتاريخها وساعتها في «طلباتي».", i:"🖨️", tag:"طباعة داخلية", c:"", d:"إعداد وسحب الاختبارات والفروض وأوراق العمل وشهادات النتائج، مع خيارات التغليف والتدبيس.",
     ch:["الاختبارات والفروض","أوراق العمل والبطاقات","سحب ملوّن","تغليف وتدبيس"], f:[
     ["copies","عدد النسخ","number"],["size","المقاس","select",["A4","A3","A5"]],
     ["color","اللون","select",["أبيض وأسود","ملوّن"]],["sides","الوجه","select",["وجه واحد","وجهان"]],
@@ -522,7 +534,7 @@ const nameVal = () => $("#name").value === "__other" ? $("#name_o").value.trim()
 
 /* شرح المنصة في الرئيسية */
 const EXPLAIN = {
-  print:"تحتاج نسخًا من اختبار أو ورقة عمل أو شهادة؟ حدّد عدد النسخ والمقاس واللون والتدبيس، وضع رابط الملف.",
+  print:"تحتاج نسخًا من اختبار أو ورقة عمل أو شهادة؟ حدّد عدد النسخ والمقاس واللون والتدبيس. يمرّ الطلب أولًا على المدير البيداغوجي ليعدّله أو يطلب منك تعديله، ثم يطبعه الإعلام وتؤكد استلامه من مكتب الإعلام.",
   design:"تريد ملصقًا أو مطوية أو بطاقة أو شهادة تقدير أو عرضًا تقديميًا بهوية المدرسة؟ اشرح المطلوب واكتب النص المراد إدراجه.",
   cover:"عندك فعالية أو نشاط أو رحلة تريد توثيقها بالصور أو الفيديو؟ حدّد اليوم والوقت والمكان ونوع التغطية.",
   fix:"جهاز لا يعمل (حاسوب، طابعة، جهاز عرض، سبورة ذكية، إنترنت)؟ صِف العطل والمكان، وحدّد درجة الاستعجال.",
@@ -571,6 +583,7 @@ $("#croles").innerHTML = ROLES.map(([k,n]) => `<label class="rc"><input type="ch
 function renderExtra(){
   const k = document.querySelector("#pick input:checked").value, s = SV[k];
   $("#extraTitle").textContent = "تفاصيل: " + s.t;
+  const si = $("#svcInfo"); si.hidden = !s.info; si.textContent = s.info || "";
   $("#fw_title").hidden = !!s.hideTitle; $("#title").required = !s.hideTitle;
   $("#fw_dept").hidden = !!s.hideDept; $("#sect").required = !s.hideDept;
   $("#fw_due").hidden = $("#fw_link").hidden = !!s.noDue; $("#due").required = !s.noDue;
@@ -675,10 +688,10 @@ async function renderMyCards(){
   let st = null;
   try { const a = await sb("/rest/v1/rpc/card_status", {method:"POST", body:JSON.stringify({codes:mine.map(c => c.code)})}); st = {}; (a || []).forEach(x => st[x.code] = {rs:x.replies || [], tr:x.transfers || []}); } catch {}
   box.innerHTML = (st === null ? `<p class="mute">تعذّر جلب الردود الآن.</p>` : "") + mine.map(c => { const rs = (st && st[c.code] && st[c.code].rs) || [], trs = (st && st[c.code] && st[c.code].tr) || [];
-    return `<div class="card" style="margin-bottom:10px"><div class="req"><div><b dir="ltr">${esc(c.code)}</b><div>${esc(c.text)}</div><div class="mute">إلى: ${esc(c.roles.map(roleName).join("، "))}</div></div>
+    return `<div class="card" style="margin-bottom:10px"><div class="req"><div><b dir="ltr">${esc(c.code)}</b><div>${esc(c.text)}</div><div class="mute">إلى: ${esc(c.roles.map(roleName).join("، "))}</div><div class="mute">أُرسلت في: ${esc(fdate(c.at))}</div></div>
       <span class="badge" style="color:${rs.length ? "#047857" : "#b45309"};border-color:${rs.length ? "#047857" : "#b45309"}">${rs.length ? "أُجيب عنها (" + rs.length + ")" : "بانتظار الرد"}</span></div>
-      ${trs.map(t => `<div class="mute">↪ حُوّلت من ${esc(roleName(t.from))} إلى ${esc(t.to.map(roleName).join("، "))}</div>`).join("")}
-      ${rs.map(r => `<div class="note" style="background:#e7f6ee"><b>${esc(roleName(r.role))}:</b> ${esc(r.body)}<br><small class="mute">${esc(fdate(r.at))}</small></div>`).join("")}<div style="margin-top:8px"><button type="button" class="qa" data-rmc="${esc(c.code)}">إزالة من قائمتي</button></div></div>`; }).join("");
+      ${trs.map(t => `<div class="mute">↪ حُوّلت من ${esc(roleName(t.from))} إلى ${esc(t.to.map(roleName).join("، "))} - ${esc(fdate(t.at))}</div>`).join("")}
+      ${rs.map(r => `<div class="note" style="background:#e7f6ee"><b>${esc(roleName(r.role))}:</b> ${esc(r.body)}<br><small class="mute">${esc(fdate(r.at))}</small></div>`).join("")}<div style="margin-top:8px"><button type="button" class="rmb" data-rmc="${esc(c.code)}">إزالة من قائمتي</button></div></div>`; }).join("");
 }
 
 /* الحالات */
@@ -686,7 +699,7 @@ async function getStatuses(ids){
   if (!CONFIGURED) return null;
   try {
     const a = await sb("/rest/v1/rpc/request_status", {method:"POST", body:JSON.stringify({ids:ids || []})}), m = {};
-    (a || []).forEach(r => m[r.code] = {s:r.status, n:r.note, r:r.reply, d:r.dept});
+    (a || []).forEach(r => m[r.code] = {s:r.status, n:r.note, r:r.reply, d:r.dept, ev:r.events || [], route:r.route, step:r.step});
     return m;
   } catch { return null; }
 }
@@ -701,15 +714,20 @@ const readyNotice = who => {
   const t = who ? (/\sبنت\s/.test(" " + who + " ") ? "سيدتي " : "سيدي ") + esc(who) + " " : "";
   return `<div class="note" style="background:#e7f6ee;line-height:2"><b>السلام عليكم، تحية طيبة وبعد؛</b><br>نُعلمكم ${t}بأن وثيقتكم المطلوبة أصبحت جاهزة.<br>يرجى التوجّه إلى مكتب الاستقبال لاستلامها والتوقيع بالاستلام.<br>تسعدنا خدمتكم وراحتكم. 🌹<br><small class="mute">#مدير_الموارد_البشرية</small></div>`;
 };
+const evLabel = e => ({submitted:"أُرسل الطلب", edited:"عدّل بيانات الطلب", forwarded:"حُوّل إلى الإعلام لإكمال الطباعة", reply:"ردّ صاحب الطلب"}[e.kind]) || (ST[e.status] ? ST[e.status][0] : e.status);
+const tlHtml = (evs, open) => evs && evs.length ? `<details class="tl" ${open ? "open" : ""}><summary>سجل الطلب بالتاريخ والساعة (${evs.length})</summary><ul>${evs.map(e => `<li><b>${esc(fdate(e.at || e.created_at))}</b>${esc(evLabel(e))}${e.actor ? ` <span class="mute">- ${esc(e.actor)}</span>` : ""}${e.note ? `<div class="mute">${esc(e.note)}</div>` : ""}</li>`).join("")}</ul></details>` : "";
+const printSteps = s => { const cur = s.step === "ped" ? 1 : (s.s === "done" ? 4 : (s.s === "ready" ? 3 : 2));
+  const names = ["إرسال الطلب","مراجعة المدير البيداغوجي","الطباعة في الإعلام","الاستلام من مكتب الإعلام"];
+  return `<ol class="pstep">${names.map((n,i) => `<li class="${i < cur ? "done" : i === cur ? "cur" : ""}">${i < cur ? "✔ " : ""}${n}</li>`).join("")}</ol>`; };
 const reqCard = (id, title, svc, s, who, rm) => {
   const st = s && s.s; let extra = "";
-  if (st === "info") extra = `<div class="note"><b>طلبت الإدارة منك:</b> ${esc(s.n || "تفاصيل إضافية")}</div>` + replyForm(id, who);
+  if (st === "info") extra = `<div class="note"><b>${s.route === "print" && s.step === "ped" ? "طلب المدير البيداغوجي منك" : "طلبت الإدارة منك"}:</b> ${esc(s.n || "تفاصيل إضافية")}</div>` + replyForm(id, who);
   else if (st === "replied") extra = (s.n ? `<div class="note">${esc(s.n)}</div>` : "") + (s.r ? `<div class="note" style="background:#e7f6ee">ردّك المرسل: ${esc(s.r)}</div>` : "") +
     `<p class="mute" style="margin:6px 0">أُرسل ردّك وهو بانتظار مراجعة الإدارة.</p><details><summary class="mute" style="cursor:pointer">إضافة معلومات أخرى</summary>${replyForm(id, who)}</details>`;
   else if (st === "ready" && s.d === "hr") extra = readyNotice(who) + (s.n ? `<div class="note">${esc(s.n)}</div>` : "");
   else if (s && s.n) extra = `<div class="note">${esc(s.n)}</div>`;
   return `<div class="card" style="margin-bottom:10px"><div class="req">
-    <div><b dir="ltr">${esc(id)}</b><div>${esc(title||"")}</div><div class="mute">${esc(svc||"")}</div></div>${badge(st)}</div>${extra}${rm ? `<div style="margin-top:8px"><button type="button" class="qa" data-rm="${esc(id)}">إزالة من قائمتي</button></div>` : ""}</div>`;
+    <div><b dir="ltr">${esc(id)}</b><div>${esc(title||"")}</div><div class="mute">${esc(svc||"")}</div>${(() => { const e0 = s && s.ev && s.ev.find(e => e.kind === "submitted"); return e0 ? `<div class="mute">أُرسل في: ${esc(fdate(e0.at))}</div>` : ""; })()}</div>${badge(st)}</div>${s && s.route === "print" ? printSteps(s) : ""}${extra}${tlHtml(s && s.ev)}${rm ? `<div style="margin-top:8px"><button type="button" class="rmb" data-rm="${esc(id)}">إزالة من قائمتي</button></div>` : ""}</div>`;
 };
 document.addEventListener("click", e => {
   const a = e.target.closest ? e.target.closest("[data-rm],[data-rmc]") : null; if (!a) return;
@@ -828,6 +846,12 @@ const ago = d => {
 };
 const fdate = d => new Date(d).toLocaleString("ar-DZ-u-nu-latn", {dateStyle:"medium", timeStyle:"short"});
 const parseDet = t => String(t || "").split("\n").map(l => { const i = l.indexOf(":"); return i > 0 ? [l.slice(0,i).trim(), l.slice(i+1).trim()] : ["", l.trim()]; }).filter(x => x[1]);
+let EV = {};
+async function loadEvents(){
+  try { const rs = await authed("/rest/v1/request_events?select=request_id,kind,status,note,actor,created_at&order=created_at.asc&limit=5000");
+    EV = {}; rs.forEach(x => (EV[x.request_id] = EV[x.request_id] || []).push(x)); } catch { EV = {}; }
+}
+const adminTitle = who => who === "all" ? "طلبات كل الإدارات" : (DEPTS[who] ? "طلبات " + DEPTS[who].n : (myRole() === "ped" ? "طلبات الطباعة للمراجعة" : "الطلبات"));
 const QA = {prog:"بدء التنفيذ", info:"طلب تفاصيل", buy:"بانتظار الاقتناء", ready:"جاهز للاستلام", done:"تم التسليم", off:"إلغاء الطلب"};
 async function loadAdmin(){
   const box = $("#tabReq");
@@ -835,9 +859,9 @@ async function loadAdmin(){
   try {
     ADM = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=500");
   } catch (x) { if (x.status === 401 || x.status === 403) return logout(); box.innerHTML = `<div class="err">تعذّر تحميل الطلبات: ${esc(x.message)}</div>`; return; }
-  await loadReplies();
+  await loadReplies(); await loadEvents();
   const who = sessionStorage.getItem("twz_who");
-  box.innerHTML = `<div class="req"><h2 style="margin:0">طلبات ${who === "all" ? "كل الإدارات" : esc(DEPTS[who] ? DEPTS[who].n : "")}</h2>
+  box.innerHTML = `<div class="req"><h2 style="margin:0">${esc(adminTitle(who))}</h2>
     <div class="row"><button class="btn alt" id="ax">تصدير Excel</button><button class="btn alt" id="ar">تحديث</button><button class="btn alt" id="ao">خروج</button></div></div>
     <div class="kpis" id="ak"></div>
     <div class="row" style="margin-bottom:12px"><input id="aq" type="search" placeholder="ابحث بالرقم أو الاسم أو عنوان الطلب" aria-label="بحث" style="flex:2;min-width:220px" value="${esc(AQ)}">
@@ -854,22 +878,28 @@ function rowHtml(r){
   const det = parseDet(r.details), m = Object.fromEntries(det), open = OPEN === r.id;
   const urgent = ["عاجل", "الجهاز متوقف عن العمل"].includes(m["الاستعجال"]) || m["الأولوية"] === "A";
   const dn = (DEPTS[r.dept] || {}).n || r.dept;
+  const isPrint = r.route === "print", atPed = isPrint && r.step === "ped";
+  const qlabel = k => isPrint ? ({info:"طلب تعديل من صاحب الطلب", ready:"الطباعة جاهزة للاستلام", done:"تأكيد الاستلام من مكتب الإعلام"}[k] || QA[k]) : QA[k];
+  const qkeys = Object.keys(QA).filter(k => k !== r.status && (k !== "buy" || r.dept === "mt" || r.service === "شراء عتاد تقني") && (!atPed || ["info","off"].includes(k)));
+  const pedPanel = atPed ? `<div class="ped"><b>مسار الطباعة: الطلب عندك للمراجعة</b><p class="mute" style="margin:4px 0 8px">عدّل بيانات الطباعة بنفسك، أو اطلب من صاحب الطلب تعديلها (اكتب ما تريد في «الرسالة» ثم اضغط «طلب تعديل»)، ثم حوّله إلى الإعلام لإكمال الطباعة.</p>
+    <div class="f"><label>بيانات الطباعة (يمكنك تعديلها)</label><textarea data-pd rows="6" maxlength="3000">${esc(r.details || "")}</textarea></div>
+    <button class="btn alt" data-pedit type="button">حفظ تعديلي</button> <button class="btn" data-pfwd type="button">تحويل إلى الإعلام للطباعة ←</button></div>` : "";
   const head = `<button class="rqh" data-t="${esc(r.id)}" aria-expanded="${open}">
-    <span><b dir="ltr">${esc(r.code)}</b><small>${esc(ago(r.created_at))}</small></span>
+    <span><b dir="ltr">${esc(r.code)}</b><small>${esc(fdate(r.created_at))}</small><small>${esc(ago(r.created_at))}</small></span>
     <span><b>${esc(r.name)}</b><small>${esc(r.section || dn)}</small></span>
     <span>${esc(r.title)}<small>${esc(dn)} - ${esc(r.service)}</small></span>
-    <span>${urgent ? '<span class="urg">عاجل</span> ' : ""}${badge(r.status)}</span></button>`;
+    <span>${urgent ? '<span class="urg">عاجل</span> ' : ""}${r.route === "print" && r.step === "ped" ? '<span class="urg" style="background:#fff7ed;color:#9a3412;border-color:#fdba74">للمراجعة</span> ' : ""}${badge(r.status)}</span></button>`;
   if (!open) return `<div class="rq ${needsAction(r) ? "isnew" : ""}">${head}</div>`;
   const msg = LAST && LAST.id === r.id ? LAST.text : "";
   return `<div class="rq ${needsAction(r) ? "isnew" : ""}" data-id="${esc(r.id)}">${head}
     <div class="rqb"><div><h3>تفاصيل الطلب</h3>
-      <dl class="kv">${det.length ? det.map(([k,v]) => `<dt>${esc(k || "ملاحظة")}</dt><dd>${esc(v)}</dd>`).join("") : "<dt>التفاصيل</dt><dd>لا توجد</dd>"}</dl>
-      <p class="mute" style="margin:0">مقدّم الطلب: <b>${esc(r.name)}</b>${r.email ? ` - <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}<br>وصل الطلب: ${esc(fdate(r.created_at))}</p>${repHtml(r)}</div>
-    <div><h3>الإجراء</h3>
-      <div class="qa">${Object.entries(QA).filter(([k]) => k !== r.status && (k !== "buy" || r.dept === "mt" || r.service === "شراء عتاد تقني")).map(([k,l]) => `<button data-q="${k}">${l}</button>`).join("")}</div>
-      <div class="f"><label>رسالة للموظف (تظهر له مع الحالة)</label><input data-n value="${esc(r.note)}" maxlength="500" placeholder="مثال: جاهز في مكتب الاستقبال"></div>
-      <div class="f"><label>الحالة</label><select data-s>${Object.entries(ST).map(([k,v]) => `<option value="${k}" ${k === r.status ? "selected" : ""}>${v[0]}</option>`).join("")}</select></div>
-      <button class="btn" data-save>حفظ</button> <span class="mute">${esc(msg)}</span>
+      ${isPrint ? printSteps({s:r.status, step:r.step}) : ""}<dl class="kv">${det.length ? det.map(([k,v]) => `<dt>${esc(k || "ملاحظة")}</dt><dd>${esc(v)}</dd>`).join("") : "<dt>التفاصيل</dt><dd>لا توجد</dd>"}</dl>
+      <p class="mute" style="margin:0">مقدّم الطلب: <b>${esc(r.name)}</b>${r.email ? ` - <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}<br>وصل الطلب: ${esc(fdate(r.created_at))}</p>${repHtml(r)}${tlHtml(EV[r.id], true)}</div>
+    <div><h3>الإجراء</h3>${pedPanel}
+      <div class="qa">${qkeys.map(k => `<button data-q="${k}">${qlabel(k)}</button>`).join("")}</div>
+      <div class="f"><label>${atPed ? "رسالة (لصاحب الطلب عند طلب التعديل، وللإعلام عند التحويل)" : "رسالة للموظف (تظهر له مع الحالة)"}</label><input data-n value="${esc(r.note)}" maxlength="500" placeholder="مثال: جاهز في مكتب الاستقبال"></div>
+      ${atPed ? "" : `<div class="f"><label>الحالة</label><select data-s>${Object.entries(ST).map(([k,v]) => `<option value="${k}" ${k === r.status ? "selected" : ""}>${v[0]}</option>`).join("")}</select></div>
+      <button class="btn" data-save>حفظ</button>`} <span class="mute">${esc(msg)}</span>
       <div style="margin-top:16px;border-top:1px dashed var(--line);padding-top:12px"><button class="btn alt" data-del type="button" style="color:#b91c1c;border-color:#b91c1c">🗑 حذف الطلب نهائيًا</button></div></div></div></div>`;
 }
 function drawAdmin(){
@@ -911,7 +941,7 @@ function drawCards(){
     const who = mine ? (others.length ? "أُرسلت أيضًا إلى: " + tags(others) : "موجَّهة إليك وحدك") : "إلى: " + tags(c.to_roles);
     const avail = ROLES.filter(r => !c.to_roles.includes(r[0]));
     return `<details class="rq ${rs.length ? "" : "isnew"}" data-id="${esc(c.id)}" ${OPENC === c.id ? "open" : ""}><summary class="rqh">
-      <span class="c1"><b dir="ltr">${esc(c.code)}</b><small title="${esc(fdate(c.created_at))}">${esc(ago(c.created_at))}</small></span>
+      <span class="c1"><b dir="ltr">${esc(c.code)}</b><small>${esc(fdate(c.created_at))}</small><small>${esc(ago(c.created_at))}</small></span>
       <span class="c2"><b>${esc(c.body.slice(0, 90))}${c.body.length > 90 ? "…" : ""}</b><small>${who}</small></span>
       <span class="c3">من: ${esc(c.author)}</span>
       <span class="badge" style="color:${rs.length ? "#047857" : "#b91c1c"};border-color:${rs.length ? "#047857" : "#b91c1c"}">${rs.length ? "أُجيب عنها (" + rs.length + ")" : "بلا ردّ"}</span></summary>
@@ -1005,14 +1035,14 @@ function buildSlides(ym, reqs, cards, creps, ctr){
   const rows = Object.entries(DEPTS).map(([k, D]) => { const a = R.filter(r => r.dept === k); return [D.n, a.length, cnt(a, "done"), cnt(a, "prog"), cnt(a, "wait"), cnt(a, "off")]; });
   out.push({t:"الطلبات حسب الإدارة", table:{head:["الإدارة","الواردة","منجزة","قيد المعالجة","بانتظار","ملغاة"], rows}});
   Object.entries(DEPTS).forEach(([k, D]) => { const a = R.filter(r => r.dept === k); if (!a.length) return;
-    const top = a.slice(0, 10).map(r => [r.code, cut(r.title, 40), lbl(r), cut(r.note, 40)]);
-    out.push({t:"طلبات " + D.n, sub:a.length + " طلب" + (a.length > 10 ? " (أول 10)" : ""), table:{head:["الرقم","الطلب","الحالة","إجراء الإدارة"], rows:top}}); });
+    const top = a.slice(0, 10).map(r => [r.code, fdate(r.created_at), cut(r.title, 40), lbl(r), cut(r.note, 40)]);
+    out.push({t:"طلبات " + D.n, sub:a.length + " طلب" + (a.length > 10 ? " (أول 10)" : ""), table:{head:["الرقم","أُرسل في","الطلب","الحالة","إجراء الإدارة"], rows:top}}); });
   out.push({t:"بطاقات فليغيره", lines:["عدد البطاقات هذا الشهر: " + C.length, "أُجيب عنها: " + answered, "بلا ردّ بعد: " + (C.length - answered), "تُعرض البطاقات في الشرائح التالية بالنص والردود."]});
   C.forEach(c => { const rs = creps[c.id] || [];
     out.push({t:"بطاقة " + c.code, sub:"من: " + c.author + " - إلى: " + c.to_roles.map(roleName).join("، "), lines:[
-      "الملاحظة: " + cut(c.body, 600), ...(c.suggestion ? ["الاقتراح: " + cut(c.suggestion, 300)] : []),
-      ...(ctr[c.id] || []).map(t => "حُوّلت من " + roleName(t.from_role) + " إلى " + t.to_roles.map(roleName).join("، ")),
-      ...(rs.length ? rs.map(r => roleName(r.role) + ": " + cut(r.body, 300)) : ["لم يصل أي رد بعد."])]}); });
+      "أُرسلت في: " + fdate(c.created_at), "الملاحظة: " + cut(c.body, 600), ...(c.suggestion ? ["الاقتراح: " + cut(c.suggestion, 300)] : []),
+      ...(ctr[c.id] || []).map(t => "حُوّلت من " + roleName(t.from_role) + " إلى " + t.to_roles.map(roleName).join("، ") + " (" + fdate(t.created_at) + ")"),
+      ...(rs.length ? rs.map(r => roleName(r.role) + " (" + fdate(r.created_at) + "): " + cut(r.body, 300)) : ["لم يصل أي رد بعد."])]}); });
   const open = C.filter(c => !(creps[c.id] || []).length);
   if (open.length) out.push({t:"بطاقات بلا ردّ", lines:open.map(c => c.code + " - إلى: " + c.to_roles.map(roleName).join("، "))});
   out.push({t:"قرارات الاجتماع والمتابعة", lines:["........................................","........................................","........................................"]});
@@ -1073,7 +1103,7 @@ async function pollAdmin(){
   try {
     const rows = await authed("/rest/v1/requests?select=*&order=created_at.desc&limit=500");
     const old = new Map(ADM.map(r => [r.id, r.status])), fresh = rows.filter(r => !old.has(r.id) || (r.status === "replied" && old.get(r.id) !== "replied"));
-    ADM = rows; if (fresh.length) await loadReplies();
+    ADM = rows; if (fresh.length) { await loadReplies(); await loadEvents(); }
     if (fresh.length) { NEWN += fresh.length; if (document.hidden) document.title = "(" + NEWN + ") طلب جديد - " + BASE_TITLE; drawAdmin(); }
   } catch {}
 }
@@ -1092,12 +1122,12 @@ async function exportXlsx(){
     const q = AQ.trim().toLowerCase();
     const rows = ADM.filter(r => (!AD || r.dept === AD) && (!AF || r.status === AF) &&
       (!q || [r.code, r.name, r.title, r.service, r.section, r.email].join(" ").toLowerCase().includes(q)));
-    const head = ["الرقم","التاريخ","الإدارة","الاسم","القسم أو المادة","الخدمة","العنوان","الحالة","رسالة للموظف","التفاصيل"];
+    const head = ["الرقم","التاريخ","الإدارة","الاسم","القسم أو المادة","الخدمة","العنوان","الحالة","آخر إجراء","رسالة للموظف","التفاصيل"];
     const data = [head, ...rows.map(r => [r.code, new Date(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.section || "",
-      r.service, r.title, (ST[r.status] || ST.new)[0], r.note || "", String(r.details || "").replace(/\n/g, "\n")])];
+      r.service, r.title, (ST[r.status] || ST.new)[0], new Date(r.updated_at || r.created_at), r.note || "", String(r.details || "").replace(/\n/g, "\n")])];
     const ws = XLSX.utils.aoa_to_sheet(data, {cellDates:true});
-    ws["!cols"] = [16,18,24,20,18,22,32,20,30,60].map(w => ({wch:w}));
-    for (let i = 1; i < data.length; i++) { const c = ws["B" + (i + 1)]; if (c) c.z = "yyyy-mm-dd hh:mm"; }
+    ws["!cols"] = [16,18,24,20,18,22,32,20,18,30,60].map(w => ({wch:w}));
+    for (let i = 1; i < data.length; i++) { const c = ws["B" + (i + 1)]; if (c) c.z = "yyyy-mm-dd hh:mm"; const c2 = ws["I" + (i + 1)]; if (c2) c2.z = "yyyy-mm-dd hh:mm"; }
     const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "الطلبات");
     wb.Workbook = {Views:[{RTL:true}]};
     XLSX.writeFile(wb, "طلبات-" + new Date().toISOString().slice(0,10) + ".xlsx");
@@ -1110,8 +1140,8 @@ function exportCsv(){
   const rows = ADM.filter(r => (!AD || r.dept === AD) && (!AF || r.status === AF) &&
     (!q || [r.code, r.name, r.title, r.service, r.section, r.email].join(" ").toLowerCase().includes(q)));
   const cell = v => '"' + String(v ?? "").replace(/"/g, '""').replace(/\n/g, " | ") + '"';
-  const head = ["الرقم","التاريخ","الإدارة","الاسم","الخدمة","العنوان","الحالة","رسالة للموظف","التفاصيل"];
-  const lines = [head, ...rows.map(r => [r.code, fdate(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.service, r.title, (ST[r.status] || ST.new)[0], r.note, r.details])];
+  const head = ["الرقم","التاريخ","الإدارة","الاسم","الخدمة","العنوان","الحالة","آخر إجراء","رسالة للموظف","التفاصيل"];
+  const lines = [head, ...rows.map(r => [r.code, fdate(r.created_at), (DEPTS[r.dept] || {}).n || r.dept, r.name, r.service, r.title, (ST[r.status] || ST.new)[0], fdate(r.updated_at || r.created_at), r.note, r.details])];
   const blob = new Blob(["\ufeff" + lines.map(l => l.map(cell).join(",")).join("\r\n")], {type:"text/csv;charset=utf-8"});
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "طلبات-" + new Date().toISOString().slice(0,10) + ".csv"; a.click();
 }
@@ -1124,6 +1154,16 @@ async function saveReq(id, status, note){
     LAST = {id, text:"تم الحفظ"};
   } catch (x) { LAST = {id, text:"تعذّر الحفظ: " + x.message}; }
   drawAdmin();
+}
+async function pedAct(c, kind){
+  const id = c.dataset.id, note = c.querySelector("[data-n]").value.trim();
+  try {
+    let r;
+    if (kind === "edit") r = await authed("/rest/v1/rpc/ped_edit_print", {method:"POST", body:JSON.stringify({p_request:id, p_details:c.querySelector("[data-pd]").value, p_note:note || null})});
+    else { if (!confirm("تحويل الطلب إلى الإعلام لإكمال الطباعة؟")) return; r = await authed("/rest/v1/rpc/forward_print", {method:"POST", body:JSON.stringify({p_request:id, p_note:note || null})}); }
+    if (r !== "ok") throw new Error({denied:"ليس لك صلاحية", empty:"بيانات الطباعة فارغة", not_found:"الطلب غير موجود"}[r] || r);
+    LAST = {id, text: kind === "edit" ? "تم حفظ التعديل" : "حُوّل الطلب إلى الإعلام"}; await loadAdmin();
+  } catch (x) { LAST = {id, text:"تعذّر الإجراء: " + x.message}; drawAdmin(); }
 }
 async function delReq(id){
   const r = ADM.find(x => x.id === id); if (!r) return;
@@ -1140,9 +1180,14 @@ function onAdminClick(e){
   if (t) { OPEN = OPEN === t.dataset.t ? null : t.dataset.t; LAST = null; drawAdmin(); return; }
   const c = e.target.closest(".rq[data-id]"); if (!c) return;
   if (e.target.closest("[data-del]")) return delReq(c.dataset.id);
+  if (e.target.closest("[data-pedit]")) return pedAct(c, "edit");
+  if (e.target.closest("[data-pfwd]")) return pedAct(c, "fwd");
   const note = c.querySelector("[data-n]").value.trim();
   const q = e.target.closest("[data-q]");
-  if (q) return saveReq(c.dataset.id, q.dataset.q, note);
+  if (q) {
+    if (q.dataset.q === "info" && !note) { LAST = {id:c.dataset.id, text:"اكتب في خانة الرسالة ما تريد تعديله أو توضيحه."}; return drawAdmin(); }
+    return saveReq(c.dataset.id, q.dataset.q, note);
+  }
   if (e.target.closest("[data-save]")) saveReq(c.dataset.id, c.querySelector("[data-s]").value, note);
 }
 if (!CONFIGURED) document.querySelector("main").insertAdjacentHTML("afterbegin", '<div class="err">لم يُضبط الربط بقاعدة البيانات بعد: ضع SB_URL وSB_KEY في أعلى كود الصفحة.</div>');
