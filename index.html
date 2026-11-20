@@ -219,17 +219,20 @@ button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
 .pstep li.done{background:#e7f6ee;border-color:#9bd5b4;color:#065f46}
 .pstep li.cur{background:var(--soft);border-color:var(--orange);color:var(--deep);font-weight:700}
 .ped{background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:10px 12px;margin-bottom:12px}
-.council{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:linear-gradient(120deg,var(--deep),var(--navy));color:#fff;border-radius:14px;padding:16px 20px;margin-bottom:14px;box-shadow:0 4px 14px rgba(1,75,170,.18)}
+.councils{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:14px;margin-bottom:14px}
+.council{display:flex;flex-direction:column;gap:14px;background:linear-gradient(120deg,var(--deep),var(--navy));color:#fff;border-radius:14px;padding:18px 20px;box-shadow:0 4px 14px rgba(1,75,170,.18)}
+.council.b{background:linear-gradient(120deg,#0a4fa0,var(--sky))}
+.council-top{display:flex;align-items:center;gap:14px}
 .council-ico{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
-.council-tx{flex:1;min-width:210px}.council-k{font-size:12px;opacity:.78;letter-spacing:.2px}.council h3{margin:2px 0 0;font-size:19px;line-height:1.4;color:#fff}
-.council-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.council-tx{flex:1;min-width:0}.council-k{font-size:12px;opacity:.78;letter-spacing:.2px}.council h3{margin:2px 0 0;font-size:19px;line-height:1.4;color:#fff}
+.council-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:auto}
 .cbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.55);color:#fff;background:rgba(255,255,255,.1);border-radius:9px;padding:9px 16px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;list-style:none}
 .cbtn.solid{max-width:380px;text-align:center;line-height:1.45;white-space:normal}.nw{white-space:nowrap}.cbtn::-webkit-details-marker{display:none}.cbtn:hover{background:rgba(255,255,255,.2)}.cbtn.solid{background:#fff;color:var(--navy);border-color:#fff}.cbtn.solid:hover{background:var(--soft)}
 .cdd{position:relative}.cdd[open] summary b{display:inline-block;transform:rotate(180deg)}
 .cdd-m{position:absolute;inset-inline-end:0;top:calc(100% + 6px);min-width:210px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 26px rgba(19,27,46,.2);padding:6px;z-index:20}
 .cdd-m a{white-space:nowrap;display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:8px;color:var(--ink);text-decoration:none;font-weight:600}
 .cdd-m a:hover{background:var(--soft);color:var(--navy)}.cdd-m a em{margin-inline-start:auto;font-style:normal;color:var(--mute)}
-@media(max-width:600px){.council{padding:14px}.council-act{width:100%}.council-act .cbtn{flex:1 1 100%;max-width:none;justify-content:center}.cdd{flex:1 1 100%}.cdd summary{justify-content:center;display:flex}.cdd-m{min-width:230px}}
+@media(max-width:600px){.council{padding:14px}.council-act .cbtn{flex:1 1 100%;max-width:none;justify-content:center}.cdd{flex:1 1 100%}.cdd summary{justify-content:center;display:flex}.cdd-m{min-width:230px}}
 .hrc{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-inline-start:5px solid var(--orange);border-radius:12px;padding:14px 18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(14,58,130,.06)}
 .hrc-ico{width:46px;height:46px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:23px;flex:none}
 .hrc-tx{flex:1;min-width:210px;line-height:1.55}.hrc-tx b{display:block;color:var(--deep);font-size:17px}.hrc-tx small{color:var(--mute);font-size:13.5px}
@@ -903,13 +906,18 @@ async function loadHrLink(){
 async function loadMgrLinks(){
   const el = $("#mgrLinks"); if (!el) return;
   try {
-    const ls = (await authed("/rest/v1/manager_links?select=icon,title,label,url,kind&order=sort.asc,id.asc")).filter(l => safeUrl(l.url));
-    const mains = ls.filter(l => l.kind === "main"), menu = ls.filter(l => l.kind !== "main");
+    const ls = (await authed("/rest/v1/manager_links?select=icon,title,label,url,kind,grp,heading&order=sort.asc,id.asc")).filter(l => safeUrl(l.url));
+    const groups = []; ls.forEach(l => { const k = l.grp || "program"; let g = groups.find(x => x.id === k); if (!g) { g = {id:k, items:[]}; groups.push(g); } g.items.push(l); });
+    const nw = t => esc(t).replace(/(\d{4})\s*-\s*(\d{4})/, "<bdi class=\"nw\">$1-$2</bdi>");
+    const btn = l => `<a class="cbtn solid" href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener noreferrer">${esc(l.label || l.title)} <span aria-hidden="true">↗</span></a>`;
     const item = l => `<a href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener noreferrer" role="menuitem"><span>${esc(l.icon || "🔗")}</span>${esc(l.label || l.title)}<em>↗</em></a>`;
-    el.innerHTML = ls.length ? `<div class="council"><div class="council-ico" aria-hidden="true">🏛️</div>
-      <div class="council-tx"><div class="council-k">للمدراء فقط</div><h3>برنامج إدارة وتحليل إشكالات المجلس</h3></div>
-      <div class="council-act">${mains.map(m => `<a class="cbtn solid" href="${esc(safeUrl(m.url))}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">${esc(m.icon || "🔗")}</span>${esc(m.label || m.title).replace(/(\d{4})\s*-\s*(\d{4})/, "<bdi class=\"nw\">$1-$2</bdi>")}</a>`).join("")}
-      ${menu.length ? `<details class="cdd"><summary class="cbtn">الإشكالات <b>▾</b></summary><div class="cdd-m" role="menu">${menu.map(item).join("")}</div></details>` : ""}</div></div>` : "";
+    const card = (g, i) => {
+      const mains = g.items.filter(l => l.kind === "main"), menu = g.items.filter(l => l.kind !== "main"), head = mains[0] || g.items[0];
+      return `<div class="council${i % 2 ? " b" : ""}"><div class="council-top"><div class="council-ico" aria-hidden="true">${esc(head.icon || "🔗")}</div>
+        <div class="council-tx"><div class="council-k">للمدراء فقط</div><h3>${nw(head.heading || head.title || head.label)}</h3></div></div>
+        <div class="council-act">${mains.map(btn).join("")}${menu.length ? `<details class="cdd"><summary class="cbtn">الإشكالات <b>▾</b></summary><div class="cdd-m" role="menu">${menu.map(item).join("")}</div></details>` : ""}</div></div>`;
+    };
+    el.innerHTML = groups.length ? `<div class="councils">${groups.map(card).join("")}</div>` : "";
     if (!window.__ddClose) { window.__ddClose = 1; document.addEventListener("click", e => document.querySelectorAll("details.cdd[open]").forEach(d => { if (!d.contains(e.target)) d.removeAttribute("open"); })); }
   } catch { el.innerHTML = ""; }
 }
