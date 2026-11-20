@@ -219,6 +219,17 @@ button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
 .pstep li.done{background:#e7f6ee;border-color:#9bd5b4;color:#065f46}
 .pstep li.cur{background:var(--soft);border-color:var(--orange);color:var(--deep);font-weight:700}
 .ped{background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:10px 12px;margin-bottom:12px}
+.council{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:linear-gradient(120deg,var(--deep),var(--navy));color:#fff;border-radius:14px;padding:16px 20px;margin-bottom:14px;box-shadow:0 4px 14px rgba(1,75,170,.18)}
+.council-ico{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+.council-tx{flex:1;min-width:210px}.council-k{font-size:12px;opacity:.78;letter-spacing:.2px}.council h3{margin:2px 0 0;font-size:19px;line-height:1.4;color:#fff}
+.council-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.55);color:#fff;background:rgba(255,255,255,.1);border-radius:9px;padding:9px 16px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;list-style:none}
+.cbtn::-webkit-details-marker{display:none}.cbtn:hover{background:rgba(255,255,255,.2)}.cbtn.solid{background:#fff;color:var(--navy);border-color:#fff}.cbtn.solid:hover{background:var(--soft)}
+.cdd{position:relative}.cdd[open] summary b{display:inline-block;transform:rotate(180deg)}
+.cdd-m{position:absolute;inset-inline-end:0;top:calc(100% + 6px);min-width:210px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 26px rgba(19,27,46,.2);padding:6px;z-index:20}
+.cdd-m a{white-space:nowrap;display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:8px;color:var(--ink);text-decoration:none;font-weight:600}
+.cdd-m a:hover{background:var(--soft);color:var(--navy)}.cdd-m a em{margin-inline-start:auto;font-style:normal;color:var(--mute)}
+@media(max-width:600px){.council{padding:14px}.council-act{width:100%}.council-act .cbtn{flex:1;justify-content:center}.cdd{flex:1}.cdd summary{justify-content:center}.cdd-m{min-width:230px}}
 .att{background:#f1f4fc;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px}.att .qa{margin-inline-start:8px}
 .pick label small{display:block;font-weight:400;color:var(--mute);font-size:13px}
 
@@ -887,9 +898,14 @@ async function loadHrLink(){
 async function loadMgrLinks(){
   const el = $("#mgrLinks"); if (!el) return;
   try {
-    const ls = (await authed("/rest/v1/manager_links?select=icon,title,label,url&order=sort.asc,id.asc")).filter(l => safeUrl(l.url));
-    el.innerHTML = ls.length ? `<div class="card" style="margin-bottom:12px"><h3 style="margin:0 0 6px">🏫 روابط المجلس</h3>` +
-      ls.map(l => `<div style="padding:5px 0">${esc(l.icon || "🔗")} <b>${esc(l.title)}:</b> <a href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener noreferrer">${esc(l.label || l.url)} ↗</a></div>`).join("") + `</div>` : "";
+    const ls = (await authed("/rest/v1/manager_links?select=icon,title,label,url,kind&order=sort.asc,id.asc")).filter(l => safeUrl(l.url));
+    const main = ls.find(l => l.kind === "main"), menu = ls.filter(l => l !== main);
+    const item = l => `<a href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener noreferrer" role="menuitem"><span>${esc(l.icon || "🔗")}</span>${esc(l.label || l.title)}<em>↗</em></a>`;
+    el.innerHTML = ls.length ? `<div class="council"><div class="council-ico" aria-hidden="true">🏛️</div>
+      <div class="council-tx"><div class="council-k">للمدراء فقط</div><h3>برنامج إدارة وتحليل إشكالات المجلس</h3></div>
+      <div class="council-act">${main ? `<a class="cbtn solid" href="${esc(safeUrl(main.url))}" target="_blank" rel="noopener noreferrer">${esc(main.icon || "📊")} ${esc(main.label || "فتح البرنامج")}</a>` : ""}
+      ${menu.length ? `<details class="cdd"><summary class="cbtn">الإشكالات <b>▾</b></summary><div class="cdd-m" role="menu">${menu.map(item).join("")}</div></details>` : ""}</div></div>` : "";
+    if (!window.__ddClose) { window.__ddClose = 1; document.addEventListener("click", e => document.querySelectorAll("details.cdd[open]").forEach(d => { if (!d.contains(e.target)) d.removeAttribute("open"); })); }
   } catch { el.innerHTML = ""; }
 }
 let ADM = [], AF = "", AQ = "", AD = "", OPEN = null, LAST = null, REP = {};
