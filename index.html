@@ -866,7 +866,7 @@ function renderAdmin(){
   }
   const dept = sessionStorage.getItem("twz_who"), role = sessionStorage.getItem("twz_role") || "", seeAll = dept === "all" || role === "gm";
   box.innerHTML = `<div class="tabs" id="atabs"><button data-t="req" class="on">الطلبات</button><button data-t="cards">بطاقات فليغيره</button>${seeAll ? `<button data-t="meet">عرض الاجتماع الشهري</button>` : ""}</div>
-    <div id="mgrLinks"></div><div id="tabReq"></div><div id="tabCards" hidden></div><div id="tabMeet" hidden></div>`;
+    <div id="mgrLinks"></div><div id="hrLink"></div><div id="tabReq"></div><div id="tabCards" hidden></div><div id="tabMeet" hidden></div>`;
   $("#atabs").onclick = e => {
     const b = e.target.closest("button[data-t]"); if (!b) return;
     document.querySelectorAll("#atabs button").forEach(x => x.classList.toggle("on", x === b));
@@ -874,8 +874,15 @@ function renderAdmin(){
     if (b.dataset.t === "cards") loadCards();
     if (b.dataset.t === "meet") renderMeet();
   };
-  loadMgrLinks(); loadAdmin();
+  loadMgrLinks(); loadHrLink(); loadAdmin();
   if (WANT_TAB === "cards") { WANT_TAB = ""; $('#atabs button[data-t="cards"]').click(); }
+}
+async function loadHrLink(){
+  const el = $("#hrLink"); if (!el) return;
+  try {
+    const lv = await authed("/rest/v1/rpc/hr_level", {method:"POST", body:"{}"});
+    el.innerHTML = lv ? `<div class="card" style="margin-bottom:12px"><a class="btn" href="hr-vouchers.html">🧾 سندات الاستفادة من الجهات المتعاقدة</a></div>` : "";
+  } catch { el.innerHTML = ""; }
 }
 async function loadMgrLinks(){
   const el = $("#mgrLinks"); if (!el) return;
