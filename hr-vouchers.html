@@ -100,7 +100,8 @@ dialog .db{padding:16px 20px;overflow:auto;max-height:62vh}dialog .df{padding:12
 .rw{display:flex;gap:4mm;justify-content:space-between;align-items:center;flex-wrap:wrap}.sh p{margin:0}
 .c{display:inline-flex;gap:1.5mm;align-items:center}.bx{width:3.4mm;height:3.4mm;border:1.2px solid #000;display:inline-block;flex:none}.bx.on{background:#000;box-shadow:inset 0 0 0 .7px #fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .stamp{border:1px dashed #777;padding:7mm 9mm 1mm;font-size:.85em;color:#444}.cut{text-align:center;font-size:.9em;color:#555;margin:.5mm 0}
-.dt{border-bottom:1px dotted #555;height:5mm}.nt{font-size:.85em;border-top:1.5px solid #888;padding-top:1.2mm}
+.dt{border-bottom:1px dotted #555;height:5mm}
+.sg{display:flex;justify-content:flex-end;padding-top:.5mm}.sg.end{margin-top:auto}.ft{margin-top:auto;display:flex;flex-direction:column;gap:1.4mm}.nt{font-size:.85em;border-top:1.5px solid #888;padding-top:1.2mm}
 #pr{display:none}
 @page{size:A5;margin:0}
 @media print{html,body{margin:0;padding:0;background:#fff}body>*:not(#pr){display:none!important}#pr{display:block!important}.sh{break-after:avoid;page-break-after:avoid}}
@@ -261,13 +262,14 @@ function sheet(r){
   return `<div class="sh"><section>${hd}<h2>${esc(CFG.t_title_top)}</h2><div class="rw"><b>رقم السند: ${num}</b><b>التاريخ: ${fd(r.date)}</b></div>
 <p>${f(CFG.t_intro)}</p>
 <div class="rw"><b>كما يلي:</b>${ck(svs, x => x === "أخرى" ? !!ot : sv.includes(x))}</div>${oth ? `<div>أخرى: ${esc(oth)}</div>` : ""}
-<div class="rw"><span>• <b>اسم المستفيد:</b> ${esc(r.beneficiary)}</span><span class="stamp">ختم المؤسسة</span></div>
-<div class="rw"><b>• صلته بالموظف:</b>${ck(rels, x => x === r.relation)}</div></section>
+<div class="rw"><span>• <b>اسم المستفيد:</b> ${esc(r.beneficiary)}</span></div>
+<div class="rw"><b>• صلته بالموظف:</b>${ck(rels, x => x === r.relation)}</div>
+<div class="sg end"><span class="stamp">ختم المؤسسة</span></div></section>
 <div class="cut">✂ - - - - - - - - - - - يُقصّ من هنا - - - - - - - - - - -</div>
 <section>${hd}<h2>${esc(CFG.t_title_bottom)}</h2><div class="rw"><b>رقم السند: ${num}</b><b>تاريخ الاستفادة: ..................</b></div>
 <p>${f(CFG.t_attest)}</p>
-<div class="rw"><b>• طبيعة الخدمة المقدمة:</b>${ck(svs, () => 0)}<span class="stamp">ختم ${esc(p.name)}</span></div><div class="dt"></div><div class="dt"></div>
-<div class="nt"><b>ملاحظة:</b> ${esc(CFG.t_note)}</div></section></div>`;
+<div class="rw"><b>• طبيعة الخدمة المقدمة:</b>${ck(svs, () => 0)}</div><div class="dt"></div><div class="dt"></div>
+<div class="ft"><div class="nt"><b>ملاحظة:</b> ${esc(CFG.t_note)}</div><div class="sg"><span class="stamp">ختم ${esc(p.name)}</span></div></div></section></div>`;
 }
 function fitSheet(root){
   root.querySelectorAll(".sh").forEach(sh => {
