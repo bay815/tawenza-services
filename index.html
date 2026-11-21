@@ -233,6 +233,14 @@ button,a,.rc,.pick label{-webkit-tap-highlight-color:transparent}
 .cdd-m a{white-space:nowrap;display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:8px;color:var(--ink);text-decoration:none;font-weight:600}
 .cdd-m a:hover{background:var(--soft);color:var(--navy)}.cdd-m a em{margin-inline-start:auto;font-style:normal;color:var(--mute)}
 @media(max-width:600px){.council{padding:14px}.council-act .cbtn{flex:1 1 100%;max-width:none;justify-content:center}.cdd{flex:1 1 100%}.cdd summary{justify-content:center;display:flex}.cdd-m{min-width:230px}}
+.wl{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:2px 0 18px}
+.wl-av{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--deep),var(--navy));display:grid;place-items:center;font-size:28px;flex:none;box-shadow:0 4px 12px rgba(1,75,170,.28)}
+.wl-tx{flex:1;min-width:220px}.wl-k{color:var(--rust);font-weight:700;font-size:15px;line-height:1.4}
+.wl-h{margin:0;font-size:25px;line-height:1.45;color:var(--deep)}
+.wl-s{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:3px;color:var(--mute);font-size:15px}
+.wl-r{background:var(--soft);color:var(--navy);font-weight:700;border-radius:99px;padding:1px 14px;font-size:14px}
+.wl-d{margin-inline-start:auto;background:#fff;border:1px solid var(--line);border-radius:99px;padding:4px 16px;color:var(--mute);font-size:14px}
+@media(max-width:600px){.wl-av{width:50px;height:50px;font-size:24px}.wl-h{font-size:21px}.wl-d{margin-inline-start:0}}
 .hrc{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-inline-start:5px solid var(--orange);border-radius:12px;padding:14px 18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(14,58,130,.06)}
 .hrc-ico{width:46px;height:46px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:23px;flex:none}
 .hrc-tx{flex:1;min-width:210px;line-height:1.55}.hrc-tx b{display:block;color:var(--deep);font-size:17px}.hrc-tx small{color:var(--mute);font-size:13.5px}
@@ -848,7 +856,7 @@ $("#qbtn").onclick = async () => {
 
 /* لوحة المسؤولين: الرابط #admin */
 const tok = () => sessionStorage.getItem("twz_tok");
-const clearSess = () => ["twz_tok","twz_rt","twz_who","twz_role"].forEach(k => sessionStorage.removeItem(k));
+const clearSess = () => ["twz_tok","twz_rt","twz_who","twz_role","twz_nm"].forEach(k => sessionStorage.removeItem(k));
 const logout = () => { clearSess(); renderAdmin(); };
 async function refreshTok(){
   const j = await sb("/auth/v1/token?grant_type=refresh_token", {method:"POST", body:JSON.stringify({refresh_token:sessionStorage.getItem("twz_rt")})});
@@ -877,14 +885,14 @@ function renderAdmin(){
         const j = await sb("/auth/v1/token?grant_type=password", {method:"POST", body:JSON.stringify({email:$("#lm").value.trim(), password:$("#lp").value})});
         const m = await sb("/rest/v1/managers?select=dept,role", {token:j.access_token});
         if (!m || !m.length) throw new Error("not-manager");
-        sessionStorage.setItem("twz_tok", j.access_token); sessionStorage.setItem("twz_rt", j.refresh_token || ""); sessionStorage.setItem("twz_who", m[0].dept); sessionStorage.setItem("twz_role", m[0].role || (["it","md","hr","mt"].includes(m[0].dept) ? m[0].dept : ""));
+        sessionStorage.setItem("twz_tok", j.access_token); sessionStorage.setItem("twz_rt", j.refresh_token || ""); sessionStorage.removeItem("twz_nm"); sessionStorage.setItem("twz_who", m[0].dept); sessionStorage.setItem("twz_role", m[0].role || (["it","md","hr","mt"].includes(m[0].dept) ? m[0].dept : ""));
         renderAdmin();
       } catch (x) { e2.hidden = false; e2.textContent = x.message === "not-manager" ? "هذا الحساب غير مخوّل بإدارة الطلبات." : "تعذّر الدخول. تحقق من البريد وكلمة المرور."; }
     };
     return;
   }
   const dept = sessionStorage.getItem("twz_who"), role = sessionStorage.getItem("twz_role") || "", seeAll = dept === "all" || role === "gm";
-  box.innerHTML = `<div class="tabs" id="atabs"><button data-t="req" class="on">الطلبات</button><button data-t="cards">بطاقات فليغيره</button>${seeAll ? `<button data-t="meet">عرض الاجتماع الشهري</button>` : ""}</div>
+  box.innerHTML = `<div id="welcome"></div><div class="tabs" id="atabs"><button data-t="req" class="on">الطلبات</button><button data-t="cards">بطاقات فليغيره</button>${seeAll ? `<button data-t="meet">عرض الاجتماع الشهري</button>` : ""}</div>
     <div id="mgrLinks"></div><div id="hrLink"></div><div id="tabReq"></div><div id="tabCards" hidden></div><div id="tabMeet" hidden></div>`;
   $("#atabs").onclick = e => {
     const b = e.target.closest("button[data-t]"); if (!b) return;
@@ -893,8 +901,26 @@ function renderAdmin(){
     if (b.dataset.t === "cards") loadCards();
     if (b.dataset.t === "meet") renderMeet();
   };
-  loadMgrLinks(); loadHrLink(); loadAdmin();
+  loadWelcome(); loadMgrLinks(); loadHrLink(); loadAdmin();
   if (WANT_TAB === "cards") { WANT_TAB = ""; $('#atabs button[data-t="cards"]').click(); }
+}
+const ROLE_ICON = {gm:"🏛️", fin:"💰", it:"💻", md:"📣", kg:"🧸", mt:"🔧", adm:"🗂️", ped:"🎓", qa:"✅", hr:"👥"};
+const ROLE_UNIT = {gm:"جميع الإدارات", fin:"الإدارة المالية", kg:"قسم التحضيري", adm:"الإدارة الإدارية", ped:"الإدارة البيداغوجية", qa:"إدارة الجودة والأمانة"};
+function welcomeHtml(name){
+  const role = myRole(), dept = sessionStorage.getItem("twz_who") || "", title = (ROLES.find(r => r[0] === role) || [])[1] || "",
+    unit = ROLE_UNIT[role] || (DEPTS[dept] ? "إدارة " + DEPTS[dept].n : ""), now = new Date(), greet = now.getHours() < 12 ? "صباح الخير" : "مساء الخير";
+  let dt = ""; try { dt = now.toLocaleDateString("ar-DZ-u-nu-latn", {weekday:"long", day:"numeric", month:"long", year:"numeric"}); } catch {}
+  return `<div class="wl"><div class="wl-av" aria-hidden="true">${ROLE_ICON[role] || "👤"}</div>
+    <div class="wl-tx"><div class="wl-k">${greet}</div><h2 class="wl-h">${name ? "مرحبًا، " + esc(name) : "مرحبًا بك"}</h2>
+    <div class="wl-s">${title ? `<span class="wl-r">${esc(title)}</span>` : ""}${unit ? `<span>${esc(unit)}</span>` : ""}</div></div>
+    ${dt ? `<div class="wl-d">${esc(dt)}</div>` : ""}</div>`;
+}
+async function loadWelcome(){
+  const el = $("#welcome"); if (!el) return;
+  let nm = sessionStorage.getItem("twz_nm"); el.innerHTML = welcomeHtml(nm || "");
+  if (nm === null) {
+    try { const m = await authed("/rest/v1/managers?select=full_name&limit=1"); nm = (m && m[0] && m[0].full_name) || ""; sessionStorage.setItem("twz_nm", nm); el.innerHTML = welcomeHtml(nm); } catch {}
+  }
 }
 async function loadHrLink(){
   const el = $("#hrLink"); if (!el) return;

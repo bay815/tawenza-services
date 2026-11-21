@@ -604,7 +604,7 @@ async function go(k){
   ({i:() => fI(), r:fR, s:fS, a:fA})[k](); window.scrollTo({top:0});
 }
 const showLogin = m => { G("app").hidden = true; G("login").hidden = false; const e = G("lerr"); e.hidden = !m; e.textContent = m || ""; };
-function logout(m){ ["twz_tok", "twz_rt", "twz_who", "twz_role"].forEach(k => sessionStorage.removeItem(k)); LV = null; showLogin(m); }
+function logout(m){ ["twz_tok", "twz_rt", "twz_who", "twz_role", "twz_nm"].forEach(k => sessionStorage.removeItem(k)); LV = null; showLogin(m); }
 async function boot(){
   if (!tk()) return showLogin();
   G("login").hidden = true; G("app").hidden = false; G("v").innerHTML = skeleton();
@@ -621,7 +621,7 @@ G("lgf").onsubmit = async ev => {
   ev.preventDefault(); const b = G("lbtn"); G("lerr").hidden = true; busy(b, true, "جارٍ الدخول...");
   try {
     const j = await raw("/auth/v1/token?grant_type=password", {method:"POST", body:JSON.stringify({email:G("lm").value.trim(), password:G("lp").value})});
-    sessionStorage.setItem("twz_tok", j.access_token); sessionStorage.setItem("twz_rt", j.refresh_token || "");
+    sessionStorage.removeItem("twz_nm"); sessionStorage.setItem("twz_tok", j.access_token); sessionStorage.setItem("twz_rt", j.refresh_token || "");
     try { const m = await raw("/rest/v1/managers?select=dept,role", {}, j.access_token);
       if (m && m.length) { sessionStorage.setItem("twz_who", m[0].dept); sessionStorage.setItem("twz_role", m[0].role || (["it", "md", "hr", "mt"].includes(m[0].dept) ? m[0].dept : "")); } } catch {}
     G("lp").value = ""; busy(b, false); boot();
