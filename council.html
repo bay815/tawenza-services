@@ -85,6 +85,12 @@ const L={
  ss:{draft:'مسودة',held:'منعقدة',closed:'مغلقة'}
 };
 let me=null,cfg=null,members=[];
+const MG=()=>!!me&&['ped','gm'].includes(me.role);
+function modal(title,body,btns,onPick){
+ const d=document.createElement('dialog');d.style.cssText='border:0;border-radius:12px;padding:0;width:min(520px,94vw)';
+ d.innerHTML=`<form method="dialog" style="padding:18px"><h3 style="margin:0 0 8px;color:var(--bd)">${title}</h3>${body}<p class="row" style="margin:14px 0 0">${btns.map(b=>`<button class="btn ${b.c||'o'}" value="${b.v}">${b.t}</button>`).join('')}<button class="btn g" value="">تراجع</button></p></form>`;
+ document.body.appendChild(d);d.onclose=()=>{if(d.returnValue)onPick(d.returnValue,d);d.remove()};d.showModal();
+}
 const call=async(n,a)=>{const{data,error}=await sb.rpc(n,a||{});if(error)throw error;return data};
 const msg=e=>/denied/.test(e.message)?'هذا الإجراء غير متاح لحسابك.':/draft_has_tasks/.test(e.message)?'المسودة الحالية مرتبطة بتكليفات، فلا يمكن استبدالها.':e.message;
 function toast(t,bad){const x=$('#toast');x.textContent=t;x.className='show'+(bad?' bad':'');clearTimeout(toast.t);toast.t=setTimeout(()=>x.className='',3500)}
@@ -101,7 +107,7 @@ async function boot(){
 function shell(){
  app.innerHTML=`<header><div><b>المجلس التنفيذي</b><small>مدرسة تاونزة العلمية</small></div>
  <div class="who">${esc(me.name)} — ${esc(me.position)}<a class="link" href="index.html#admin">العودة للمنصة</a></div></header>
- <nav>${[['issues','الإشكالات'],['new','تدوين إشكال'],['agenda','جدول الأعمال'],['tasks','التكليفات']].concat(me.role==='ped'?[['settings','الإعدادات']]:[]).map(([k,t])=>`<a data-k="${k}" href="#/${k==='issues'?'':k}">${t}</a>`).join('')}</nav>
+ <nav>${[['issues','الإشكالات'],['new','تدوين إشكال'],['agenda','جدول الأعمال'],['tasks','التكليفات']].concat(MG()?[['settings','الإعدادات']]:[]).map(([k,t])=>`<a data-k="${k}" href="#/${k==='issues'?'':k}">${t}</a>`).join('')}</nav>
  <main>${me.window_open?'':`<p class="warn">نافذة التدوين والتقييم مغلقة حاليًا. تُفتح من اليوم ${me.win_start} من كل شهر إلى اليوم ${me.win_end} من الشهر الموالي.</p>`}<div id="view"></div></main>`;
 }
 const route=()=>{const[p,a]=location.hash.replace(/^#\/?/,'').split('/');return[p||'issues',decodeURIComponent(a||'')]};
@@ -124,7 +130,16 @@ async function vIssues(v){
   <p>${esc(i.issue)}</p><div class="meta"><span>${esc(i.domain)}</span><span>الأطراف: ${i.parties_count}</span><span>المقيّمون: ${i.eval_count} من ${cfg.quorum}</span></div>
   ${i.score!=null?`<div class="score">${i.score}<small> / 100</small> <small>${i.decision?L.dec[i.decision]:'بانتظار اكتمال النصاب'}</small></div>`:''}
   ${i.quality_flag?`<div class="flag">${esc(i.quality_flag)}</div>`:''}
-  ${open(i.status)?`<p><a class="btn ${todo?'o':'g'}" href="#/eval/${esc(i.code)}">${done.has(i.id)?'عدّل تقييمي':'قيّم الآن'}</a></p>`:''}</article>`}).join(''):'<p class="mu">لا إشكالات مدوَّنة بعد. ابدأ بتدوين الإشكال الأول.</p>');
+  ${i.decision_locked?`<div class="flag" style="background:var(--bl);color:var(--b)">قرار مُلزَم من المجلس${i.decision_note?': '+esc(i.decision_note):''}</div>`:''}
+  ${open(i.status)?`<p><a class="btn ${todo?'o':'g'}" href="#/eval/${esc(i.code)}">${done.has(i.id)?'عدّل تقييمي':'قيّم الآن'}</a></p>`:''}
+  ${MG()?`<div class="row" style="margin-top:6px">${(i.quality_flag||i.decision_locked)&&i.eval_count>=cfg.quorum&&!['returned','done','closed'].includes(i.status)?`<button class="btn g" data-ov="${esc(i.code)}">اعتماد قرار المجلس</button>`:''}<button class="btn g" style="color:var(--rdt)" data-del="${esc(i.code)}">حذف الإشكال</button></div>`:''}</article>`}).join(''):'<p class="mu">لا إشكالات مدوَّنة بعد. ابدأ بتدوين الإشكال الأول.</p>');
+ const byCode=Object.fromEntries(is.map(x=>[x.code,x]));
+ v.querySelectorAll('[data-ov]').forEach(b=>b.onclick=()=>{const i=byCode[b.dataset.ov];
+  modal('قرار المجلس للإشكال '+esc(i.code),`<p class="mu">القرار الآلي لا يتغير بعد الاعتماد، حتى لو تغيّرت التقييمات.</p><label>القرار المتفق عليه<select id="ovd">${Object.entries({collective:L.dec.collective,pair:L.dec.pair,postpone:L.dec.postpone,keep:L.dec.keep}).map(([k,t])=>`<option value="${k}" ${k===i.decision?'selected':''}>${t}</option>`).join('')}</select></label><label>ما اتُّفق عليه (اختياري)<textarea id="ovn">${esc(i.decision_note||'')}</textarea></label>`,
+   [{t:'اعتماد القرار',v:'ok'}].concat(i.decision_locked?[{t:'إعادة للحساب الآلي',v:'auto',c:'g'}]:[]),
+   (val,d)=>{const dec=val==='auto'?null:d.querySelector('#ovd').value,note=d.querySelector('#ovn').value.trim()||null;
+    act(()=>call('cn_override_decision',{p_code:i.code,p_decision:dec,p_note:note}),val==='auto'?'أُعيد القرار إلى الحساب الآلي':'تم اعتماد قرار المجلس')})});
+ v.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>modal('حذف الإشكال '+esc(b.dataset.del)+'؟','<p>يُحذف الإشكال مع تقييماته نهائيًا، ويُسجَّل الحذف في سجل التدقيق. للتصحيح بعد الخطأ فقط.</p>',[{t:'حذف نهائي',v:'ok',c:'g'}],()=>act(()=>call('cn_delete_issue',{p_code:b.dataset.del}),'حُذف الإشكال')));
 }
 
 async function vEval(v,code){
@@ -161,12 +176,12 @@ async function vNew(v){
 
 async function vAgenda(v){
  const{data:ss,error}=await sb.from('cn_sessions').select('*').order('id',{ascending:false});if(error)throw error;
- let h='<h2>جدول أعمال المجلس</h2>'+(me.admin?'<p><button class="btn o" id="gen">توليد جدول أعمال جديد</button></p>':'');
+ let h='<h2>جدول أعمال المجلس</h2>'+(me.admin?'<p><button class="btn o" id="gen">توليد / إعادة توليد جدول الأعمال</button></p>':'');
  for(const s of ss){
   const{data:it}=await sb.from('cn_session_items').select('position,minutes,cn_issues(code,issue,score,decision)').eq('session_id',s.id).order('position');
   h+=`<article class="card"><div class="top"><b>الدورة ${esc(s.code)}</b><span class="chip ${s.status}">${L.ss[s.status]}</span><span class="mu">السعة ${s.capacity} إشكالات × ${s.minutes} د${s.meeting_date?' — الاجتماع '+s.meeting_date:''}</span></div>
   <div class="sc"><table><tr><th>#</th><th>الإشكال</th><th>العلامة</th><th>القرار</th><th>د</th></tr>${(it||[]).map(x=>`<tr><td>${x.position}</td><td><b>${esc(x.cn_issues.code)}</b> ${esc(x.cn_issues.issue)}</td><td>${x.cn_issues.score??''}</td><td>${L.dec[x.cn_issues.decision]||''}</td><td>${x.minutes}</td></tr>`).join('')||'<tr><td colspan="5" class="mu">لا إشكالات في هذه الدورة.</td></tr>'}</table></div>
-  ${me.admin&&s.status==='draft'?`<div class="row" style="margin-top:10px"><input type="date" id="d${s.id}" style="width:auto" value="${s.meeting_date||''}"><button class="btn" data-pub="${esc(s.code)}" data-id="${s.id}">${s.published_at?'إعادة النشر':'نشر الجدول'}</button><button class="btn o" data-start="${esc(s.code)}">بدء الاجتماع</button></div>`:''}
+  ${me.admin&&s.status==='draft'?`<div class="row" style="margin-top:10px"><input type="date" id="d${s.id}" style="width:auto" value="${s.meeting_date||''}"><button class="btn" data-pub="${esc(s.code)}" data-id="${s.id}">${s.published_at?'إعادة النشر':'نشر الجدول'}</button><button class="btn o" data-start="${esc(s.code)}">بدء الاجتماع</button>${MG()?`<button class="btn g" style="color:var(--rdt)" data-dsess="${esc(s.code)}">حذف الجدول</button>`:''}</div>`:''}
   ${me.admin&&s.status==='held'?`<p><button class="btn g" data-close="${esc(s.code)}">إغلاق الدورة</button></p>`:''}</article>`;
  }
  if(!ss.length)h+='<p class="mu">لا دورات بعد. يُولَّد الجدول بين اليوم 6 و9 من الشهر من الإشكالات الجاهزة.</p>';
@@ -177,6 +192,7 @@ async function vAgenda(v){
  v.innerHTML=h;
  const g=$('#gen');if(g)g.onclick=()=>act(()=>call('cn_generate_agenda'),'تم توليد الجدول');
  v.querySelectorAll('[data-pub]').forEach(b=>b.onclick=()=>act(()=>call('cn_publish_agenda',{p_code:b.dataset.pub,p_date:$('#d'+b.dataset.id).value||null}),'تم نشر الجدول'));
+ v.querySelectorAll('[data-dsess]').forEach(b=>b.onclick=()=>modal('حذف جدول الدورة '+esc(b.dataset.dsess)+'؟','<p>تعود إشكالاته إلى حالتها قبل الجدولة، ويمكنك توليد جدول جديد بعد ذلك.</p>',[{t:'حذف الجدول',v:'ok',c:'g'}],()=>act(()=>call('cn_delete_session',{p_code:b.dataset.dsess}),'حُذف الجدول')));
  v.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>act(()=>call('cn_start_session',{p_code:b.dataset.start}),'بدأ الاجتماع'));
  v.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>act(()=>call('cn_close_session',{p_code:b.dataset.close}),'أُغلقت الدورة'));
 }
@@ -199,7 +215,7 @@ async function vTasks(v){
  const f=$('#f');if(f)f.onsubmit=e=>{e.preventDefault();act(()=>call('cn_add_task',{p_code:$('#tc').value,p_desc:$('#td').value.trim(),p_solution:$('#so').value.trim()||null,p_role:$('#tr').value,p_deadline:$('#tdl').value,p_kpi:$('#tk').value.trim()||null}),'سُجّل التكليف وأُشعر المسؤول')};
 }
 async function vSettings(v){
- if(me.role!=='ped')throw new Error('الإعدادات متاحة للمدير البيداغوجي فقط.');
+ if(!MG())throw new Error('الإعدادات متاحة للمدير البيداغوجي والمدير العام فقط.');
  const{data:s}=await sb.from('cn_settings').select('data').eq('id',1).single(),d=s.data;
  const F=[['capacity','سعة الدورة (عدد الإشكالات)'],['minutes','المدة المخصصة لكل إشكال (دقيقة)'],['quorum','النصاب (عدد المقيّمين)'],['variance','عتبة تنبيه التباين (نقاط)'],['thr_vh','عتبة أولوية مرتفعة جدًا'],['thr_h','عتبة أولوية مرتفعة'],['thr_m','عتبة أولوية متوسطة'],['dec_hi','علامة المعالجة الجماعية (فأكثر)'],['dec_lo','علامة المعالجة الثنائية أو التأجيل (فأكثر)'],['col_min','أدنى عدد أطراف للمعالجة الجماعية'],['pair_min','أدنى عدد أطراف للمعالجة الثنائية/الثلاثية'],['pair_max','أقصى عدد أطراف للمعالجة الثنائية/الثلاثية'],['win_start','يوم بداية نافذة التدوين والتقييم'],['win_end','يوم نهاية النافذة (من الشهر الموالي)']];
  v.innerHTML=`<h2>إعدادات الإشكالات</h2><p class="mu">يُطبَّق أي تغيير فورًا، وتُعاد معه حسابات كل الإشكالات.</p><form id="f"><div class="grid2">${F.map(([k,t])=>`<label>${t}<input type="number" min="0" step="1" data-k="${k}" value="${d[k]}" required></label>`).join('')}</div>
