@@ -893,7 +893,7 @@ function renderAdmin(){
   }
   const dept = sessionStorage.getItem("twz_who"), role = sessionStorage.getItem("twz_role") || "", seeAll = dept === "all" || role === "gm";
   box.innerHTML = `<div id="welcome"></div><div class="tabs" id="atabs"><button data-t="req" class="on">الطلبات</button><button data-t="cards">بطاقات فليغيره</button>${seeAll ? `<button data-t="meet">عرض الاجتماع الشهري</button>` : ""}</div>
-    <div id="mgrLinks"></div><div id="hrLink"></div><div id="tabReq"></div><div id="tabCards" hidden></div><div id="tabMeet" hidden></div>`;
+    <div id="mgrLinks"></div><div id="hrLink"></div><div id="cnLink"></div><div id="tabReq"></div><div id="tabCards" hidden></div><div id="tabMeet" hidden></div>`;
   $("#atabs").onclick = e => {
     const b = e.target.closest("button[data-t]"); if (!b) return;
     document.querySelectorAll("#atabs button").forEach(x => x.classList.toggle("on", x === b));
@@ -901,7 +901,7 @@ function renderAdmin(){
     if (b.dataset.t === "cards") loadCards();
     if (b.dataset.t === "meet") renderMeet();
   };
-  loadWelcome(); loadMgrLinks(); loadHrLink(); loadAdmin();
+  loadWelcome(); loadMgrLinks(); loadHrLink(); loadCnLink(); loadAdmin();
   if (WANT_TAB === "cards") { WANT_TAB = ""; $('#atabs button[data-t="cards"]').click(); }
 }
 const ROLE_ICON = {gm:"🏛️", fin:"💰", it:"💻", md:"📣", kg:"🧸", mt:"🔧", adm:"🗂️", ped:"🎓", qa:"✅", hr:"👥"};
@@ -927,6 +927,13 @@ async function loadHrLink(){
   try {
     const lv = await authed("/rest/v1/rpc/hr_level", {method:"POST", body:"{}"});
     el.innerHTML = lv ? `<div class="hrc"><div class="hrc-ico" aria-hidden="true">🧾</div><div class="hrc-tx"><b>سندات الاستفادة من الجهات المتعاقدة</b><small>إدارة الموارد البشرية · إصدار السندات وتسجيلها وأرشفتها ومتابعتها</small></div><a class="hrc-btn" href="hr-vouchers.html">فتح الأداة ←</a></div>` : "";
+  } catch { el.innerHTML = ""; }
+}
+async function loadCnLink(){
+  const el = $("#cnLink"); if (!el) return;
+  try {
+    const m = await authed("/rest/v1/rpc/cn_me", {method:"POST", body:"{}"});
+    el.innerHTML = m ? `<div class="hrc"><div class="hrc-ico" aria-hidden="true">📋</div><div class="hrc-tx"><b>إشكالات المجلس التنفيذي</b><small>تدوين الإشكالات وتقييمها · جدول الأعمال · التكليفات</small></div><a class="hrc-btn" href="council.html">الدخول إلى الإشكالات ←</a></div>` : "";
   } catch { el.innerHTML = ""; }
 }
 async function loadMgrLinks(){

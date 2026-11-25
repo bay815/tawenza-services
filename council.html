@@ -37,7 +37,7 @@ h2{margin:8px 0 14px;color:var(--bd);font-weight:800}
 .btn,button{font:inherit;cursor:pointer;border:0;border-radius:8px;padding:8px 18px;background:var(--b);color:#fff;font-weight:600;text-decoration:none;display:inline-block}
 .btn.o{background:var(--o);color:#fff}
 .btn.g{background:var(--gr);color:var(--ink)}
-.link{background:none;color:#fff;text-decoration:underline;padding:0 8px}
+.link{background:none;color:#fff;text-decoration:underline;padding:0 8px;display:inline}
 :focus-visible{outline:3px solid var(--o);outline-offset:2px}
 label{display:block;margin:12px 0 4px;font-weight:600}
 input,select,textarea{font:inherit;width:100%;padding:9px 10px;border:1px solid var(--ln);border-radius:8px;background:#fff}
@@ -67,7 +67,14 @@ summary{cursor:pointer;font-weight:800;color:var(--bd)}
 <div id="app"></div><div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
-const sb=supabase.createClient('https://vzvkpobtsvofizagiraa.supabase.co','sb_publishable_H7POoqOnaMziz9IZFMt0fQ_2f0SzbgJ');
+const SB_URL='https://vzvkpobtsvofizagiraa.supabase.co',SB_KEY='sb_publishable_H7POoqOnaMziz9IZFMt0fQ_2f0SzbgJ';
+const tok=()=>sessionStorage.getItem('twz_tok'),toPlatform=()=>location.replace('index.html#admin');
+async function refresh(){const rt=sessionStorage.getItem('twz_rt');if(!rt)return false;
+ try{const r=await fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
+  if(!r.ok)return false;const j=await r.json();sessionStorage.setItem('twz_tok',j.access_token);sessionStorage.setItem('twz_rt',j.refresh_token||rt);return true}catch{return false}}
+const authFetch=async(url,o={})=>{const go=()=>{const h=new Headers(o.headers);h.set('Authorization','Bearer '+tok());return fetch(url,{...o,headers:h})};
+ let r=await go();if(r.status===401&&await refresh())r=await go();return r};
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},global:{fetch:authFetch}});
 const $=s=>document.querySelector(s),app=$('#app');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const L={
@@ -82,37 +89,27 @@ const call=async(n,a)=>{const{data,error}=await sb.rpc(n,a||{});if(error)throw e
 const msg=e=>/denied/.test(e.message)?'هذا الإجراء غير متاح لحسابك.':/draft_has_tasks/.test(e.message)?'المسودة الحالية مرتبطة بتكليفات، فلا يمكن استبدالها.':e.message;
 function toast(t,bad){const x=$('#toast');x.textContent=t;x.className='show'+(bad?' bad':'');clearTimeout(toast.t);toast.t=setTimeout(()=>x.className='',3500)}
 const act=async(fn,ok)=>{try{await fn();toast(ok);render()}catch(e){toast(msg(e),1)}};
-const out=async()=>{await sb.auth.signOut();location.reload()};
 const mname=r=>(members.find(m=>m.role===r)||{}).name||r;
 
-function login(){
- app.innerHTML=`<div class="login"><h1>المجلس التنفيذي</h1><p class="mu">مدرسة تاونزة العلمية</p>
- <form id="f"><label>البريد الإلكتروني<input id="em" type="email" required autocomplete="username"></label>
- <label>كلمة المرور<input id="pw" type="password" required autocomplete="current-password"></label>
- <p><button class="btn">دخول</button></p><p id="le" class="err"></p></form></div>`;
- $('#f').onsubmit=async e=>{e.preventDefault();const{error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});
-  if(error){$('#le').textContent='البريد أو كلمة المرور غير صحيحة.';return}boot()}
-}
 async function boot(){
- const{data:{session}}=await sb.auth.getSession();if(!session)return login();
- me=await call('cn_me');
- if(!me){app.innerHTML='<div class="login"><h1>لا صلاحية</h1><p>حسابك غير مرتبط بعضوية في المجلس التنفيذي.</p><button class="btn" id="o">خروج</button></div>';$('#o').onclick=out;return}
+ if(!tok())return toPlatform();
+ try{me=await call('cn_me')}catch(e){return toPlatform()}
+ if(!me){app.innerHTML='<div class="login"><h1>لا صلاحية</h1><p>حسابك غير مرتبط بعضوية في المجلس التنفيذي.</p><a class="btn" href="index.html#admin">العودة للمنصة</a></div>';return}
  const[{data:s},{data:m}]=await Promise.all([sb.from('cn_settings').select('data').eq('id',1).single(),sb.from('cn_members').select('role,name,position,party').order('sort')]);
  cfg=s.data;members=m;shell();render();
 }
 function shell(){
  app.innerHTML=`<header><div><b>المجلس التنفيذي</b><small>مدرسة تاونزة العلمية</small></div>
- <div class="who">${esc(me.name)} — ${esc(me.position)}<button class="link" id="out">خروج</button></div></header>
- <nav>${[['issues','الإشكالات'],['new','تدوين إشكال'],['agenda','جدول الأعمال'],['tasks','التكليفات']].map(([k,t])=>`<a data-k="${k}" href="#/${k==='issues'?'':k}">${t}</a>`).join('')}</nav>
+ <div class="who">${esc(me.name)} — ${esc(me.position)}<a class="link" href="index.html#admin">العودة للمنصة</a></div></header>
+ <nav>${[['issues','الإشكالات'],['new','تدوين إشكال'],['agenda','جدول الأعمال'],['tasks','التكليفات']].concat(me.role==='ped'?[['settings','الإعدادات']]:[]).map(([k,t])=>`<a data-k="${k}" href="#/${k==='issues'?'':k}">${t}</a>`).join('')}</nav>
  <main>${me.window_open?'':`<p class="warn">نافذة التدوين والتقييم مغلقة حاليًا. تُفتح من اليوم ${me.win_start} من كل شهر إلى اليوم ${me.win_end} من الشهر الموالي.</p>`}<div id="view"></div></main>`;
- $('#out').onclick=out;
 }
 const route=()=>{const[p,a]=location.hash.replace(/^#\/?/,'').split('/');return[p||'issues',decodeURIComponent(a||'')]};
 async function render(){
  if(!me)return;const[p,a]=route();
  document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.dataset.k===(p==='eval'?'issues':p)));
  const v=$('#view');v.innerHTML='<p class="mu">جارٍ التحميل…</p>';
- try{await({issues:vIssues,new:vNew,eval:vEval,agenda:vAgenda,tasks:vTasks}[p]||vIssues)(v,a)}catch(e){v.innerHTML='<p class="err">'+esc(msg(e))+'</p>'}
+ try{await({issues:vIssues,new:vNew,eval:vEval,agenda:vAgenda,tasks:vTasks,settings:vSettings}[p]||vIssues)(v,a)}catch(e){v.innerHTML='<p class="err">'+esc(msg(e))+'</p>'}
 }
 window.addEventListener('hashchange',render);
 
@@ -200,6 +197,19 @@ async function vTasks(v){
  v.querySelectorAll('select[data-t]').forEach(s=>s.onchange=()=>{const id=s.dataset.t,p=v.querySelector(`.pg[data-t="${id}"]`).value,st=v.querySelector(`.sx[data-t="${id}"]`).value;
   act(()=>call('cn_update_task',{p_id:Number(id),p_progress:Number(p),p_status:st}),'تم تحديث التكليف')});
  const f=$('#f');if(f)f.onsubmit=e=>{e.preventDefault();act(()=>call('cn_add_task',{p_code:$('#tc').value,p_desc:$('#td').value.trim(),p_solution:$('#so').value.trim()||null,p_role:$('#tr').value,p_deadline:$('#tdl').value,p_kpi:$('#tk').value.trim()||null}),'سُجّل التكليف وأُشعر المسؤول')};
+}
+async function vSettings(v){
+ if(me.role!=='ped')throw new Error('الإعدادات متاحة للمدير البيداغوجي فقط.');
+ const{data:s}=await sb.from('cn_settings').select('data').eq('id',1).single(),d=s.data;
+ const F=[['capacity','سعة الدورة (عدد الإشكالات)'],['minutes','المدة المخصصة لكل إشكال (دقيقة)'],['quorum','النصاب (عدد المقيّمين)'],['variance','عتبة تنبيه التباين (نقاط)'],['thr_vh','عتبة أولوية مرتفعة جدًا'],['thr_h','عتبة أولوية مرتفعة'],['thr_m','عتبة أولوية متوسطة'],['dec_hi','علامة المعالجة الجماعية (فأكثر)'],['dec_lo','علامة المعالجة الثنائية أو التأجيل (فأكثر)'],['col_min','أدنى عدد أطراف للمعالجة الجماعية'],['pair_min','أدنى عدد أطراف للمعالجة الثنائية/الثلاثية'],['pair_max','أقصى عدد أطراف للمعالجة الثنائية/الثلاثية'],['win_start','يوم بداية نافذة التدوين والتقييم'],['win_end','يوم نهاية النافذة (من الشهر الموالي)']];
+ v.innerHTML=`<h2>إعدادات الإشكالات</h2><p class="mu">يُطبَّق أي تغيير فورًا، وتُعاد معه حسابات كل الإشكالات.</p><form id="f"><div class="grid2">${F.map(([k,t])=>`<label>${t}<input type="number" min="0" step="1" data-k="${k}" value="${d[k]}" required></label>`).join('')}</div>
+ <fieldset><legend>أوزان المعايير (المجموع 100)</legend>${cfg.criteria.map((c,i)=>`<label>${esc(c.name)}<input type="number" min="0" max="100" step="1" data-w="${i}" value="${Math.round(d.weights[i]*100)}" required></label>`).join('')}<p id="ws" class="mu"></p></fieldset>
+ <p><button class="btn o">حفظ الإعدادات</button></p></form>`;
+ const upd=()=>{const t=[...v.querySelectorAll('[data-w]')].reduce((a,x)=>a+Number(x.value||0),0);$('#ws').textContent='المجموع الحالي: '+t;return t};
+ v.querySelectorAll('[data-w]').forEach(x=>x.oninput=upd);upd();
+ $('#f').onsubmit=e=>{e.preventDefault();if(upd()!==100)return toast('يجب أن يكون مجموع الأوزان 100.',1);
+  const p={};v.querySelectorAll('[data-k]').forEach(x=>p[x.dataset.k]=Number(x.value));p.weights=[...v.querySelectorAll('[data-w]')].map(x=>Number(x.value)/100);
+  act(async()=>{await call('cn_save_settings',{p_patch:p});cfg=(await sb.from('cn_settings').select('data').eq('id',1).single()).data.data},'تم حفظ الإعدادات وإعادة حساب الإشكالات')};
 }
 boot();
 </script>
