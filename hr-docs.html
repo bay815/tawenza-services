@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#014baa">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>المراسلات ودليل الملفات - مدرسة تاونزة العلمية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--soft:#e6f0fb;--navy:#014baa;--deep:#2b2e73;--rust:#c93b08;--orange:#f44c10;--sky:#019ce2;--bg:#f4f7fc;--line:#d6e0f0;--ink:#131b2e;--mute:#4a5063;--ok:#0f7a4a;--bad:#b42318}
+*{box-sizing:border-box}
+html{scroll-padding-top:90px}
+body{margin:0;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px;padding-top:env(safe-area-inset-top,0px)}
+[hidden]{display:none!important}
+a{color:var(--navy)}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.bar{max-width:1180px;margin:auto;padding:8px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--navy);line-height:1.35;text-decoration:none;margin-inline-end:auto}
+.brand img{height:46px;width:auto}.brand small{display:block;font-weight:400;color:var(--rust);font-size:13px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 16px;font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
+.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.usr{display:flex;align-items:center;gap:10px;font-size:14px}
+.lnk{background:none;border:0;color:var(--navy);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline;padding:0}
+.pill{display:inline-block;background:var(--soft);color:var(--navy);border-radius:99px;padding:1px 12px;font-size:13px;font-weight:600}
+main{max-width:1180px;margin:auto;padding:20px 16px 90px}
+.hero{background:radial-gradient(120% 90% at 50% 140%,rgba(244,76,16,.5),transparent 62%),linear-gradient(135deg,var(--deep),var(--navy));color:#fff;border-radius:16px;padding:22px 28px 24px;margin-bottom:16px}
+.hero h1{margin:0 0 4px;font-size:25px;line-height:1.5}.hero p{margin:0;color:#d3e0fa;font-size:15px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.tools input[type=search]{flex:1;min-width:190px;width:auto}
+textarea{min-height:140px;line-height:1.8}
+.btn{font:inherit;font-weight:600;font-size:14px;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;white-space:nowrap}
+.btn:hover{filter:brightness(1.12)}.btn:disabled{opacity:.6;cursor:wait}
+.btn.alt{background:#fff;color:var(--navy)}.btn.dg{background:#fff;color:var(--bad);border-color:var(--bad)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:5px 14px;border-radius:99px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--mute)}
+.chip.on{background:var(--soft);color:var(--navy);border-color:var(--navy)}
+.grid{display:grid;gap:14px}@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:#fff;border:1px solid var(--line);border-inline-start:5px solid var(--orange);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;box-shadow:0 2px 10px rgba(14,58,130,.06)}
+.card.old{border-inline-start-color:var(--line);opacity:.85}
+.hd{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+h3{margin:0;font-size:17px;color:var(--deep)}
+.badge{font-size:12px;background:var(--soft);color:var(--navy);border-radius:99px;padding:1px 11px;white-space:nowrap;font-weight:600}
+.tag{font-size:12px;color:var(--mute);margin-inline-end:8px}
+.pv{font-size:14.5px;color:var(--mute);line-height:1.9;max-height:86px;overflow:hidden;white-space:pre-wrap;cursor:pointer}.pv.open{max-height:none}
+.ph{color:var(--rust);font-weight:700}
+.val{align-self:flex-start;font-size:13px;font-weight:600;background:var(--soft);color:var(--navy);border-radius:8px;padding:2px 12px}
+.sug{font-size:12.5px;color:var(--rust);margin:0}
+ol{list-style:none;margin:0;padding:0}
+li{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:15px;cursor:pointer}
+li input{width:auto;margin-top:7px;accent-color:var(--navy)}li.done .t{text-decoration:line-through;color:var(--mute)}
+.cond{display:block;font-size:12.5px;color:var(--rust)}
+.act{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.empty,.deny{text-align:center;padding:40px 16px;color:var(--mute);border:1px dashed var(--line);border-radius:12px;background:#fff}
+.deny{max-width:460px;margin:15vh auto}
+.hint{font-size:13px;color:var(--mute);margin:6px 0 0}
+dialog{border:0;border-radius:16px;padding:0;width:min(600px,94vw);max-height:90vh;color:var(--ink)}
+dialog::backdrop{background:rgba(43,46,115,.5)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line)}.dh h3{font-size:18px}
+.x{background:none;border:0;font-size:26px;line-height:1;cursor:pointer;color:var(--mute)}
+.db{padding:6px 20px 12px;overflow:auto}.df{display:flex;gap:8px;justify-content:flex-end;padding:12px 20px;border-top:1px solid var(--line)}
+.f{margin-top:12px}.f label{display:block;font-weight:600;font-size:14px;color:var(--mute);margin-bottom:4px}
+#toasts{position:fixed;bottom:20px;inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;z-index:50}
+.toast{background:var(--deep);color:#fff;padding:9px 20px;border-radius:99px;font-size:14px}.toast.ok{background:var(--ok)}.toast.bad{background:var(--bad)}
+@media(max-width:600px){.hero{padding:18px}.usr{width:100%}}
+</style></head><body>
+<div id="app" hidden>
+<header class="top"><div class="bar">
+  <a class="brand" href="index.html#admin"><img src="logo.gif" alt="" onerror="this.style.display='none'"><span>مدرسة تاونزة العلمية<small>الموارد البشرية · المراسلات والملفات</small></span></a>
+  <nav class="tabs" aria-label="أقسام الأداة"><button id="m-tpl" class="on" type="button">✉ سجل المراسلات</button><button id="m-gd" type="button">📁 دليل الملفات</button></nav>
+  <div class="usr"><span class="pill" id="who"></span><a class="lnk" href="hr-vouchers.html">السندات</a><a class="lnk" href="index.html#admin">المنصة</a></div>
+</div></header>
+<main>
+  <section class="hero"><h1 id="ht"></h1><p id="hp"></p></section>
+  <div class="tools"><input id="q" type="search" placeholder="ابحث في العناوين والنصوص..." aria-label="بحث">
+    <button class="btn" id="add" type="button" hidden>+ إضافة</button><button class="btn alt" id="arc" type="button" hidden>الأرشيف</button>
+    <button class="btn alt" id="exp" type="button">⭳ نسخة احتياطية</button><button class="btn alt" id="imp" type="button" hidden>⭱ استيراد</button><input type="file" id="file" accept="application/json" hidden></div>
+  <div class="chips" id="chips"></div><div id="out" aria-live="polite"><div class="empty">جارٍ التحميل...</div></div>
+</main></div>
+<dialog id="dlg"></dialog><div id="toasts" role="status" aria-live="polite"></div>
+<script>
+const SB_URL="https://vzvkpobtsvofizagiraa.supabase.co",SB_KEY="sb_publishable_H7POoqOnaMziz9IZFMt0fQ_2f0SzbgJ";
+const G=i=>document.getElementById(i),esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const hl=s=>esc(s).replace(/\{([^}]+)\}/g,'<span class="ph">{$1}</span>');
+const LV={admin:"مسؤول",entry:"مُدخِل",reader:"قارئ"};
+let mode="tpl",cat="الكل",term="",arcView=false,lvl=null,L=[],D=[],ck={};
+try{ck=JSON.parse(localStorage.getItem("hrd_ck")||"{}")}catch{}
+const saveCk=()=>{try{localStorage.setItem("hrd_ck",JSON.stringify(ck))}catch{}};
+function toast(m,k){const e=document.createElement("div");e.className="toast "+(k||"");e.textContent=m;G("toasts").appendChild(e);setTimeout(()=>e.remove(),2600)}
+const msg=x=>x.status===401||x.status===403||/row-level|42501/.test(x.message)?"ليست لديك صلاحية لهذا الإجراء.":/Failed to fetch|NetworkError|Load failed/i.test(x.message)?"تعذّر الاتصال بالخادم. تحقق من الشبكة.":x.message;
+
+/* الاتصال بقاعدة البيانات بنفس جلسة المنصة */
+const tk=()=>sessionStorage.getItem("twz_tok"),toPlatform=()=>location.replace("index.html#admin");
+async function refresh(){const rt=sessionStorage.getItem("twz_rt");if(!rt)return false;
+ try{const r=await fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:rt})});
+  if(!r.ok)return false;const j=await r.json();sessionStorage.setItem("twz_tok",j.access_token);sessionStorage.setItem("twz_rt",j.refresh_token||rt);return true}catch{return false}}
+async function api(path,o){o=o||{};
+ const go=()=>{const h={apikey:SB_KEY,Authorization:"Bearer "+tk(),"Content-Type":"application/json"};if(o.prefer)h.Prefer=o.prefer;
+  return fetch(SB_URL+"/rest/v1"+path,{method:o.method||"GET",headers:h,body:o.body===undefined?undefined:JSON.stringify(o.body)})};
+ let r=await go();if(r.status===401){if(await refresh())r=await go();else return toPlatform()}
+ const t=await r.text();let j=null;try{j=t?JSON.parse(t):null}catch{}
+ if(!r.ok){const e=new Error((j&&(j.message||j.msg))||"HTTP "+r.status);e.status=r.status;throw e}return j}
+
+/* البيانات */
+const arr=()=>mode==="tpl"?L:D,tbl=()=>mode==="tpl"?"hr_letters":"hr_guides";
+const itemsTxt=g=>g.items.map(x=>x[0]+(x[1]?" | "+x[1]:"")).join("\n");
+async function load(){const[l,g]=await Promise.all([api("/hr_letters?select=*&order=cat,title"),api("/hr_guides?select=*&order=cat,title")]);L=l||[];D=g||[];draw()}
+const shown=()=>arr().filter(r=>!!r.archived_at===arcView);
+function match(r){const s=mode==="tpl"?r.title+r.cat+r.body+(r.tags||[]).join(" "):r.title+r.cat+r.val+itemsTxt(r);return(cat==="الكل"||r.cat===cat)&&s.includes(term)}
+function chips(){const cs=["الكل",...new Set(shown().map(r=>r.cat))];if(!cs.includes(cat))cat="الكل";
+ G("chips").innerHTML=cs.map(c=>`<button type="button" class="chip ${c===cat?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}
+function miss(g,onlyMissing){const rows=g.items.map((x,n)=>({x,n})).filter(r=>!onlyMissing||!ck[g.id+r.n]);if(!rows.length)return null;
+ return `السيد(ة) {اسم الموظف} المحترم(ة)،\n\nلاستكمال «${g.title}» نرجو تزويدنا بالوثائق التالية:\n\n`+rows.map((r,k)=>`${k+1}. ${r.x[0]}${r.x[1]?" ("+r.x[1]+")":""}`).join("\n")+"\n\nمع الشكر،\nإدارة الموارد البشرية"}
+function draw(){
+ G("ht").textContent=mode==="tpl"?"سجل المراسلات":"دليل الملفات الإدارية";
+ G("hp").textContent=mode==="tpl"?"نماذج رسائل جاهزة للنسخ. الحقول المتغيرة بين أقواس {هكذا}.":"قوائم الوثائق المطلوبة لكل ملف، مع مدة الصلاحية وشروط كل وثيقة.";
+ G("arc").textContent=arcView?"العودة للنشطة":"الأرشيف";chips();
+ const l=shown().filter(match),o=G("out");
+ if(!l.length){o.innerHTML=`<div class="empty">${arcView?"الأرشيف فارغ.":"لا توجد نتائج."+(lvl!=="reader"?" أضف عنصرًا جديدًا بزر «+ إضافة».":"")}</div>`;return}
+ const ad=r=>lvl!=="admin"?"":arcView?`<button class="btn alt" data-a="rest" data-id="${r.id}">استرجاع</button>`:`<button class="btn alt" data-a="edit" data-id="${r.id}">تعديل</button><button class="btn dg" data-a="arch" data-id="${r.id}">أرشفة</button>`;
+ o.innerHTML='<div class="grid">'+l.map(r=>{const old=arcView?" old":"";return mode==="tpl"?
+ `<article class="card${old}"><div class="hd"><h3>${esc(r.title)}</h3><span class="badge">${esc(r.cat)}</span></div><div>${(r.tags||[]).map(t=>`<span class="tag">#${esc(t)}</span>`).join("")}</div>
+ <div class="pv" data-a="open">${hl(r.body)}</div><div class="act"><button class="btn" data-a="copy" data-id="${r.id}">نسخ النص</button>${ad(r)}</div></article>`:
+ `<article class="card${old}"><div class="hd"><h3>${esc(r.title)}</h3><span class="badge">${esc(r.cat)}</span></div><span class="val">⏱ ${esc(r.val)}</span>${r.sug?'<p class="sug">مقترح: تحقّق من المتطلبات الحالية قبل الاعتماد.</p>':""}
+ <ol>${r.items.map((x,n)=>`<li class="${ck[r.id+n]?"done":""}" data-a="tick" data-k="${r.id+n}"><input type="checkbox" tabindex="-1" ${ck[r.id+n]?"checked":""}><span class="t">${esc(x[0])}${x[1]?`<span class="cond">${esc(x[1])}</span>`:""}</span></li>`).join("")}</ol>
+ <div class="act"><button class="btn" data-a="all" data-id="${r.id}">نسخ القائمة</button><button class="btn alt" data-a="miss" data-id="${r.id}">نسخ الناقص</button><button class="btn alt" data-a="rst" data-id="${r.id}">تصفير</button>${ad(r)}</div></article>`}).join("")+"</div>"+
+ (mode==="gd"?'<p class="hint">علامات الإنجاز تُحفظ على هذا الجهاز فقط ولا تُرسل إلى الخادم.</p>':"")}
+
+/* نوافذ */
+const dlg=G("dlg");
+function ask(title,okLabel){return new Promise(res=>{dlg.innerHTML=`<form method="dialog"><div class="dh"><h3>${esc(title)}</h3></div><div class="df"><button class="btn dg" value="ok">${esc(okLabel)}</button><button class="btn alt" value="">تراجع</button></div></form>`;
+ dlg.onclose=()=>res(dlg.returnValue==="ok");dlg.returnValue="";dlg.showModal()})}
+function form(r){const n=!r;r=r||{cat:"",title:"",tags:[],body:"",val:"",items:[]};dlg.onclose=null;
+ const cats=[...new Set(arr().map(x=>x.cat))],T=mode==="tpl";
+ dlg.innerHTML=`<form method="dialog"><div class="dh"><h3>${n?"إضافة":"تعديل"} ${T?"رسالة":"ملف"}</h3><button class="x" type="button" aria-label="إغلاق">×</button></div><div class="db">
+ <div class="f"><label for="f-t">العنوان</label><input id="f-t" maxlength="200" value="${esc(r.title)}"></div>
+ <div class="f"><label for="f-c">التصنيف (اختر أو اكتب تصنيفًا جديدًا)</label><input id="f-c" maxlength="80" list="dl" value="${esc(r.cat)}"><datalist id="dl">${cats.map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div>`+
+ (T?`<div class="f"><label for="f-g">الوسوم (بفاصلة)</label><input id="f-g" value="${esc((r.tags||[]).join("، "))}"></div>
+ <div class="f"><label for="f-b">نص الرسالة</label><textarea id="f-b" maxlength="6000">${esc(r.body)}</textarea><p class="hint">اكتب الحقول المتغيرة بين أقواس مثل {اسم الموظف}، ولا تدرج بيانات شخصية حقيقية.</p></div>`:
+ `<div class="f"><label for="f-v">مدة الصلاحية أو التحيين</label><input id="f-v" maxlength="120" value="${esc(r.val)}" placeholder="مثال: التحيين كل 6 أشهر"></div>
+ <div class="f"><label for="f-b">الوثائق: وثيقة في كل سطر، والشرط بعد الرمز |</label><textarea id="f-b">${esc(n?"":itemsTxt(r))}</textarea><p class="hint">مثال: شهادة عائلية | إن كان متزوجًا</p></div>`)+
+ `</div><div class="df"><button class="btn" value="ok">حفظ</button><button class="btn alt" value="">تراجع</button></div></form>`;
+ dlg.querySelector(".x").onclick=()=>dlg.close();
+ dlg.querySelector("form").onsubmit=async e=>{if(!e.submitter||e.submitter.value!=="ok")return;e.preventDefault();
+  const t=G("f-t").value.trim(),c=G("f-c").value.trim(),b=G("f-b").value.trim();if(!t||!c||!b)return toast("العنوان والتصنيف والمحتوى مطلوبة","bad");
+  const d=T?{cat:c,title:t,body:b,tags:G("f-g").value.split(/[،,]/).map(s=>s.trim()).filter(Boolean)}:
+  {cat:c,title:t,val:G("f-v").value.trim()||"عند الطلب",items:b.split("\n").map(s=>s.trim()).filter(Boolean).map(s=>{const p=s.split("|");return[p[0].trim(),p.slice(1).join("|").trim()]})};
+  try{await(n?api("/"+tbl(),{method:"POST",body:d,prefer:"return=minimal"}):api("/"+tbl()+"?id=eq."+r.id,{method:"PATCH",body:d,prefer:"return=minimal"}));dlg.close();await load();toast("تم الحفظ","ok")}catch(x){toast(msg(x),"bad")}};
+ dlg.showModal();G("f-t").focus()}
+
+/* الأحداث */
+G("out").onclick=async e=>{const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,r=arr().find(x=>x.id===b.dataset.id);
+ if(a==="open")b.classList.toggle("open");
+ else if(a==="tick"){const k=b.dataset.k;ck[k]=!ck[k];saveCk();draw()}
+ else if(a==="copy")navigator.clipboard.writeText(r.body).then(()=>toast("تم النسخ","ok"),()=>toast("تعذّر النسخ","bad"));
+ else if(a==="all"||a==="miss"){const m=miss(r,a==="miss");if(!m)toast("كل الوثائق مكتملة","ok");else navigator.clipboard.writeText(m).then(()=>toast("تم نسخ الرسالة","ok"),()=>toast("تعذّر النسخ","bad"))}
+ else if(a==="rst"){r.items.forEach((_,n)=>delete ck[r.id+n]);saveCk();draw()}
+ else if(a==="edit")form(r);
+ else if(a==="arch"||a==="rest"){if(a==="arch"&&!await ask("أرشفة «"+r.title+"»؟","أرشفة"))return;
+  try{await api("/"+tbl()+"?id=eq."+r.id,{method:"PATCH",body:{archived_at:a==="arch"?new Date().toISOString():null},prefer:"return=minimal"});await load();toast(a==="arch"?"نُقل إلى الأرشيف":"أُعيد إلى القائمة","ok")}catch(x){toast(msg(x),"bad")}}};
+G("chips").onclick=e=>{const c=e.target.closest(".chip");if(c){cat=c.dataset.c;draw()}};
+G("q").oninput=e=>{term=e.target.value;draw()};
+G("add").onclick=()=>form(null);
+G("arc").onclick=()=>{arcView=!arcView;cat="الكل";draw()};
+["tpl","gd"].forEach(m=>G("m-"+m).onclick=()=>{mode=m;cat="الكل";G("m-tpl").classList.toggle("on",m==="tpl");G("m-gd").classList.toggle("on",m==="gd");draw()});
+G("exp").onclick=()=>{const d={templates:L.filter(x=>!x.archived_at).map(x=>({cat:x.cat,title:x.title,body:x.body,tags:x.tags})),guides:D.filter(x=>!x.archived_at).map(x=>({cat:x.cat,title:x.title,val:x.val,items:x.items,sug:x.sug}))};
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,1)],{type:"application/json"}));a.download="نسخة-احتياطية-الموارد-البشرية.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)};
+G("imp").onclick=()=>G("file").click();
+G("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+ rd.onload=async()=>{let d;try{d=JSON.parse(rd.result)}catch{return toast("الملف غير صالح","bad")}
+  const ts=(d.templates||[]).filter(t=>t.title&&t.body).map(t=>({cat:t.cat||t.category||"غير مصنف",title:t.title,body:t.body,tags:t.tags||[]})),
+   gs=(d.guides||[]).filter(g=>g.title&&Array.isArray(g.items)&&g.items.length).map(g=>({cat:g.cat||"غير مصنف",title:g.title,val:g.val||"عند الطلب",items:g.items.map(x=>[String(x[0]||""),String(x[1]||"")]),sug:!!g.sug}));
+  try{if(ts.length)await api("/hr_letters",{method:"POST",body:ts,prefer:"return=minimal"});if(gs.length)await api("/hr_guides",{method:"POST",body:gs,prefer:"return=minimal"});await load();toast("تم الاستيراد ("+(ts.length+gs.length)+")","ok")}catch(x){toast(msg(x),"bad")}};
+ rd.readAsText(f);e.target.value=""};
+
+/* الإقلاع */
+(async()=>{
+ if(!tk())return toPlatform();
+ try{lvl=await api("/rpc/hr_level",{method:"POST",body:{}})}catch{return toPlatform()}
+ if(!lvl){document.body.innerHTML='<div class="deny"><h2>لا صلاحية</h2><p>هذه الأداة خاصة بالموارد البشرية.</p><p><a href="index.html#admin">← العودة إلى المنصة</a></p></div>';return}
+ G("app").hidden=false;G("who").textContent=LV[lvl]||lvl;
+ if(lvl!=="reader"){G("add").hidden=false;G("imp").hidden=false}
+ if(lvl==="admin")G("arc").hidden=false;
+ try{await load()}catch(x){G("out").innerHTML='<div class="empty">'+esc(msg(x))+"</div>"}
+})();
+</script></body></html>

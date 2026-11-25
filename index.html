@@ -926,7 +926,7 @@ async function loadHrLink(){
   const el = $("#hrLink"); if (!el) return;
   try {
     const lv = await authed("/rest/v1/rpc/hr_level", {method:"POST", body:"{}"});
-    el.innerHTML = lv ? `<div class="hrc"><div class="hrc-ico" aria-hidden="true">🧾</div><div class="hrc-tx"><b>سندات الاستفادة من الجهات المتعاقدة</b><small>إدارة الموارد البشرية · إصدار السندات وتسجيلها وأرشفتها ومتابعتها</small></div><a class="hrc-btn" href="hr-vouchers.html">فتح الأداة ←</a></div>` : "";
+    el.innerHTML = lv ? `<div class="hrc"><div class="hrc-ico" aria-hidden="true">🧾</div><div class="hrc-tx"><b>سندات الاستفادة من الجهات المتعاقدة</b><small>إدارة الموارد البشرية · إصدار السندات وتسجيلها وأرشفتها ومتابعتها</small></div><a class="hrc-btn" href="hr-vouchers.html">فتح الأداة ←</a></div><div class="hrc"><div class="hrc-ico" aria-hidden="true">✉️</div><div class="hrc-tx"><b>سجل المراسلات ودليل الملفات الإدارية</b><small>إدارة الموارد البشرية · رسائل جاهزة للنسخ وقوائم الوثائق المطلوبة</small></div><a class="hrc-btn" href="hr-docs.html">فتح الأداة ←</a></div>` : "";
   } catch { el.innerHTML = ""; }
 }
 async function loadCnLink(){
