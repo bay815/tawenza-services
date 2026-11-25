@@ -148,9 +148,9 @@ async function vIssues(v){
   ${i.score!=null?`<div class="score">${i.score}<small> / 100</small> <small>${i.decision?L.dec[i.decision]:'بانتظار اكتمال النصاب'}</small></div>`:''}
   ${i.quality_flag?`<div class="flag">${esc(i.quality_flag)}</div>`:''}
   ${i.decision_locked?`<div class="flag" style="background:var(--bl);color:var(--b)">قرار مُلزَم من المجلس${i.decision_note?': '+esc(i.decision_note):''}</div>`:''}
-  ${open(i.status)?`<p><a class="btn ${todo?'o':'g'}" href="#/eval/${esc(i.code)}">${done.has(i.id)?'عدّل تقييمي':'قيّم الآن'}</a></p>`:''}
-  ${(me.admin||done.has(i.id))&&i.eval_count>0?`<p><button class="btn g" data-ev="${esc(i.code)}">تقييمات الجميع</button></p><div id="ev-${i.id}" class="sc"></div>`:''}
-  ${MG()?`<div class="row" style="margin-top:6px">${(i.quality_flag||i.decision_locked)&&i.eval_count>=cfg.quorum&&!['returned','done','closed'].includes(i.status)?`<button class="btn g" data-ov="${esc(i.code)}">اعتماد قرار المجلس</button>`:''}<button class="btn g" style="color:var(--rdt)" data-del="${esc(i.code)}">حذف الإشكال</button></div>`:''}</article>`}).join(''):'<p class="mu">لا إشكالات مدوَّنة بعد. ابدأ بتدوين الإشكال الأول.</p>');
+  <div class="row" style="margin-top:10px">${open(i.status)?`<a class="btn ${todo?'o':'g'}" href="#/eval/${esc(i.code)}">${done.has(i.id)?'عدّل تقييمي':'قيّم الآن'}</a>`:''}${(me.admin||done.has(i.id))&&i.eval_count>0?`<button class="btn g" data-ev="${esc(i.code)}">تقييمات الجميع</button>`:''}${MG()&&(i.quality_flag||i.decision_locked)&&i.eval_count>=cfg.quorum&&!['returned','done','closed'].includes(i.status)?`<button class="btn g" data-ov="${esc(i.code)}">اعتماد قرار المجلس</button>`:''}${MG()?`<button class="btn g" style="color:var(--rdt)" data-del="${esc(i.code)}">حذف الإشكال</button>`:''}</div>
+  <div id="ev-${i.id}" class="sc" style="margin-top:8px"></div>
+  </article>`}).join(''):'<p class="mu">لا إشكالات مدوَّنة بعد. ابدأ بتدوين الإشكال الأول.</p>');
 const byCode=Object.fromEntries(is.map(x=>[x.code,x]));
  v.querySelectorAll('[data-ev]').forEach(b=>b.onclick=async()=>{const i=byCode[b.dataset.ev],box=v.querySelector('#ev-'+i.id);
   if(box.innerHTML){box.innerHTML='';return}
