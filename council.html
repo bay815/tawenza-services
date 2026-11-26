@@ -66,9 +66,18 @@ summary{cursor:pointer;font-weight:800;color:var(--bd)}
 .bar{display:grid;grid-template-columns:minmax(110px,1.4fr) 2fr auto;gap:8px;align-items:center;margin:6px 0;font-size:.92rem}
 .bar i{display:block;height:10px;border-radius:5px;background:var(--b)}.bar b{color:var(--od)}
 .card h3{margin:0 0 8px;color:var(--bd)}
+.about{background:#fff;border:2px solid var(--ln);border-radius:14px;margin:0 0 20px;overflow:hidden}
+.about[open]{border-color:var(--o)}
+.about>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 20px;font-weight:700;font-size:18px;color:var(--bd)}
+.about>summary::-webkit-details-marker{display:none}
+.about>summary::after{content:"▾";margin-inline-start:auto;font-size:22px;color:var(--o);transition:transform .2s}
+.about[open]>summary::after{transform:rotate(180deg)}
+.about summary small{display:block;font-weight:400;color:var(--mu);font-size:14px}
+.ab-ic{font-size:30px;width:52px;height:52px;border-radius:12px;background:var(--bl);display:grid;place-items:center;flex:none}
+.about .gd{padding:0 20px 18px}
 .gd details{margin:10px 0}.gd ul,.gd ol{margin:6px 0;padding-inline-start:22px}.gd li{margin:5px 0}.gd p{margin:8px 0}
 .gd summary{font-size:1.02rem}
-@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}.about>summary{font-size:16px;padding:14px}}
 </style>
 </head>
 <body>
@@ -152,9 +161,8 @@ async function vDash(v){
  const K=[['إجمالي الإشكالات المدوَّنة',is.length],['بانتظار التقييم أو النصاب',n(is,x=>['pending_eval','partial'].includes(x.status))],['قرار نهائي معتمد',n(is,x=>['ready','scheduled','postponed'].includes(x.status))],['متوسط العلامة (من 100)',avg],['مبرمجة في جدول الأعمال',n(is,x=>x.status==='scheduled')],['تكليفات قيد التنفيذ',n(T0,x=>['not_started','in_progress'].includes(x.status))],['تكليفات متأخرة',n(T0,x=>x.status==='overdue')],['تكليفات منجزة',n(T0,x=>x.status==='done')]];
  const tally=(f,lab)=>{const m={};is.forEach(x=>{const k=f(x);if(k)m[k]=(m[k]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([k,c])=>[lab&&lab[k]||k,c])};
  const tbl=(t,rows)=>{const mx=Math.max(1,...rows.map(r=>r[1]));return`<section class="card"><h3>${t}</h3>${rows.length?rows.map(([k,c])=>`<div class="bar"><span>${esc(k)}</span><i style="width:${Math.round(c/mx*100)}%"></i><b>${c}</b></div>`).join(''):'<p class="mu">لا بيانات بعد.</p>'}</section>`};
- v.innerHTML=`<h2>لوحة القيادة</h2><div class="kpis">${K.map(([t,x],i)=>`<div class="kpi k${i%2}"><small>${t}</small><b>${x}</b></div>`).join('')}</div>
- <div class="grid2">${tbl('الإشكالات حسب مستوى الأولوية',tally(x=>x.priority,L.pr))}${tbl('القرارات النهائية المعتمدة',tally(x=>x.decision,L.dec))}${tbl('الإشكالات حسب المجال',tally(x=>x.domain))}${tbl('الإشكالات حسب الحالة',tally(x=>x.status,L.st))}</div>
- <h2 style="margin-top:22px">دليل العمل بالمنصة</h2>${guide()}`;
+ v.innerHTML=`<h2>لوحة القيادة</h2><details class="about"><summary><span class="ab-ic" aria-hidden="true">💡</span><span>ما فكرة منصة الإشكالات؟ تعرّف على طريقة عملها وكيف يعمل المجلس بها<small>اضغط هنا لعرض الشرح المبسّط</small></span></summary>${guide()}</details><div class="kpis">${K.map(([t,x],i)=>`<div class="kpi k${i%2}"><small>${t}</small><b>${x}</b></div>`).join('')}</div>
+ <div class="grid2">${tbl('الإشكالات حسب مستوى الأولوية',tally(x=>x.priority,L.pr))}${tbl('القرارات النهائية المعتمدة',tally(x=>x.decision,L.dec))}${tbl('الإشكالات حسب المجال',tally(x=>x.domain))}${tbl('الإشكالات حسب الحالة',tally(x=>x.status,L.st))}</div>`;
 }
 
 async function vIssues(v){
